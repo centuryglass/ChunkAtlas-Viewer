@@ -1,0 +1,93 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>MCMap Viewer</title>
+    <link rel="stylesheet" href="style.css?v=1.0">
+</head>
+
+<body>
+    <script src="js/Util/Validator.js"></script>
+    <script src="js/Util/Util.js"></script>
+    <script src="js/Util/Point.js"></script>
+    <script src="js/Util/Enum.js"></script>
+    <script src="js/Util/ReplaceWithServer.js"></script>
+    <script src="js/MapKey.js"></script>
+    <script src="js/MapPoint.js"></script>
+    <script src="js/ImageTiles.js"></script>
+    <script src="js/MapCanvas.js"></script>
+    <script src="js/MapInput.js"></script>
+    <script src="js/MCMap.js"></script>
+    <div class="mainContent mainContent-landscape">
+
+        <!-- Map dimension and type button panel: -->
+        <div id="buttonPanel" class="controlPanel controlPanel-landscape panel">
+            <!-- Pick mapped dimension: -->
+            <p id="dimLabel" class="mapThemed mapButtonGroupLabel">Dimension:</p>
+            <div id="dimButtons" class="mapButtonGroup mapButtonGroup-landscape">
+                <div class="mapThemed mapButtonHolder">
+                    <button id="Overworld" class="mapButton dimButton"></button>
+                    <p class="mapButtonLabel">Overworld</p>
+                </div>
+                <div class="mapThemed mapButtonHolder">
+                    <button id="Nether" class="mapButton dimButton"></button>
+                    <p class="mapButtonLabel">Nether</p>
+                </div>
+                <div class="mapThemed mapButtonHolder">
+                    <button id="End" class="mapButton dimButton"></button>
+                    <p class="mapButtonLabel">End</p>
+                </div>
+            </div>
+            <!-- Pick the type of map: -->
+            <p id="typeLabel" class="mapThemed mapButtonGroupLabel">Map Type:</p>
+            <div id="typeButtons" class="mapButtonGroup mapButtonGroup-landscape">
+                <div class="mapThemed mapButtonHolder">
+                    <button id="Biome" class="mapButton typeButton"></button>
+                    <p class="mapButtonLabel">Biome</p>
+                </div>
+                <div class="mapThemed mapButtonHolder">
+                    <button id="Error" class="mapButton typeButton"></button>
+                    <p class="mapButtonLabel">Error</p>
+                </div>
+                <div class="mapThemed mapButtonHolder">
+                    <button id="Structure" class="mapButton typeButton"></button>
+                    <p class="mapButtonLabel">Structure</p>
+                </div>
+                <div class="mapThemed mapButtonHolder">
+                    <button id="TotalActivity" class="mapButton typeButton"></button>
+                    <p class="mapButtonLabel">Total Activity</p>
+                </div>
+            </div>
+            <!-- Show or hide directory info: -->
+            <label id="directorySwitch" class="mapThemed switch">
+                <span class="directoryLabel">Show Directory Items</span>
+                <input id="directoryCheckbox" type="checkbox" checked=""/>
+            </label>
+        </div>
+        <div>
+            <!-- Map background and canvas: -->
+            <div id="mapFrame" class="mapFrame">
+                <canvas id="mapCanvas" class="mapCanvas" width="0" height="0">
+                </canvas>
+            </div>
+            <!-- Map navigation/coordinate panel: -->
+            <div class="navPanel panel">
+                <button name="reset" id="resetButton" class="mapThemed" value="reset" type="button">
+                    Reset view
+                </button>
+                <div id="lastClicked" class="mapThemed">Last Clicked: none</div>
+                <div id="clickedPoint" class="mapThemed"></div>
+            </div>
+        </div>
+        <!-- Map key/information panel: -->
+        <div class="infoPanel infoPanel-landscape panel">
+            <!-- Map color/symbol key: -->
+            <p class="mapThemed">Key:</p>
+            <div id="keyContainer" class="keyContainer">
+                <!-- Key items will be dynamically inserted by MapKey.js. -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

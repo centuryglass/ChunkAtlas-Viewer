@@ -1,0 +1,286 @@
+:root {
+    /* reused color variables: */
+    --bg-main: #001a33;
+    --map-light: #d7be96;
+    --map-dark: #99876a;
+    --map-shadow: #4a4338;
+    --map-highlight: #ffff00;
+    --text-color: #ffffff;
+}
+
+/* Minecraft font: */
+@font-face {
+    font-family: 'MineFont';
+    src: url(resources/minecraftfont.ttf);
+}
+
+body {
+    background-color: var(--bg-main);
+    width: auto;
+    height: auto;
+}
+
+/* Common element appearance class: */
+.mapThemed {
+    background-color: var(--map-light);
+    box-shadow: 0.3vmin 0.3vmin var(--map-shadow);
+    font-family: 'MineFont';
+    font-size: 1.8vmin;
+    text-align: center;
+    line-height: 210%;
+    padding-left: 0.5vmin;
+    padding-right: 0.5vmin;
+    margin-left: 0.5vmin;
+    margin-right: 0.5vmin;
+}
+
+/*--- All page content: ---*/
+.mainContent {
+    display: flex;
+    justify-content: center;
+}
+.mainContent-landscape {
+    flex-direction: row;
+}
+.mainContent-portrait {
+    flex-direction: column;
+}
+
+/*--- Shared content panel appearance class: ---*/
+.panel {
+    background-color: var(--map-dark);
+    box-shadow: 0.3vmin 0.3vmin var(--map-shadow);
+}
+
+/*------------------ Main map canvas and frame: -----------------------------*/
+.mapFrame {
+    background-image: url(resources/images/emptyMap.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+    image-rendering: pixelated;
+    width: 80vmin;
+    height: 80vmin;
+    padding-left: 2vmin;
+    padding-right: 2vmin;
+    padding-top: 3vmin;
+    padding-bottom: 2vmin;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+.mapCanvas {
+    margin-left: auto;
+    margin-right: auto;
+    background-color: var(--map-dark);
+    padding: 0;
+    margin-top: 3vmin;
+    margin-bottom: 1vmin;
+    display: flex;
+    outline-color: var(--map-shadow);
+    outline-style: solid;
+    outline-width: small;
+}
+
+/*---------------------- Map navigation panel: ------------------------------*/
+.navPanel {
+    display: flex;
+    flex-direction: row
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    margin-top: 1%;
+    margin-bottom: 2%;
+    padding-top: 1vmin;
+    padding-bottom: 1vmin;
+}
+.navPanel-landscape {
+    height: auto;
+}
+.navPanel-portrait {
+}
+
+/*-------------------------- Map control panel: -----------------------------*/
+.controlPanel {
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+.controlPanel-landscape {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    padding-left: 2vmin;
+    padding-right: 2vmin;
+    padding-top: 3vmin;
+    padding-bottom: 2vmin;
+}
+.controlPanel-portrait {
+    display: grid;
+    grid-template-areas:
+        "dimHeader dimButtons typeHeader typeButtons"
+        "directoryToggle directoryToggle . .";
+    grid-gap: 0.2vmin;
+    justify-items: center;
+    align-items: center;
+    justify-content: space-evenly;
+    align-content: space-evenly;
+}
+#dimLabel { grid-area: dimHeader; }
+#dimButtons { grid-area: dimButtons; }
+#typeLabel { grid-area: typeHeader; }
+#typeButtons { grid-area: typeButtons; }
+#directorySwitch { grid-area: directoryToggle; justify-self: stretch; }
+
+/*--- Groups of related buttons: ---*/
+.mapButtonGroup {
+    display: grid;
+}
+.mapButtonGroup-landscape {
+    align-items: stretch;
+    justify-items: stretch;
+    grid-template-columns: repeat(2, 50%);
+    grid-row-gap: 3%;
+    grid-column-gap: 1%;
+    width: 100%;
+    flex: 0 3 content;
+}
+.mapButtonGroup-portrait {
+    grid-template-columns: repeat(5, auto);
+}
+.mapButtonGroupLabel {
+    text-align: center;
+    font-size: 1.3vmin;
+}
+.mapButtonGroupLabel-landscape {
+    width: auto;
+}
+.mapButtonGroupLabel-portrait {
+    width: 8vmin;
+    height: 12vmin;
+}
+
+/*--- Map button element classes: ---*/
+.mapButtonHolder {
+    display: flex;
+    flex-direction: column;
+    width: 8vmin;
+    height: 12vmin;
+}
+.mapButton {
+    background-color: var(--map-light);
+    box-shadow: 0.5vmin 0.5vmin var(--map-shadow);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+    image-rendering: pixelated;
+    width: 8vmin;
+    height: 8vmin;
+    flex: 0 2 auto;
+}
+.mapButtonLabel {
+    flex: 0 1 auto;
+    text-align: center;
+    font-size: 1.1vmin;
+    line-height: 85%;
+}
+
+/*--- Individual button images: ---*/
+#Overworld { background-image: url(resources/images/grass_side.png); }
+#Nether { background-image: url(resources/images/netherrack.png); }
+#End { background-image: url(resources/images/end_stone.png); }
+#Biome { background-image: url(resources/images/biome.png); }
+#Error { background-image: url(resources/images/error.png); }
+#Structure { background-image: url(resources/images/structure.png); }
+#TotalActivity { background-image: url(resources/images/totalActivity.png); }
+
+/*--- Map toggle switches: ---*/
+.switch {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: auto;
+    height: auto;
+    margin: 1vmin;
+    font-size: 1.1vmin;
+}
+.directoryLabel {
+    flex: 0 10 auto;
+}
+
+
+/*------------------------ Map key and info panel: --------------------------*/
+.infoPanel
+{
+    background-color: var(--map-dark);
+    display: flex;
+    flex-direction: column;
+    padding-left: 2vmin;
+    padding-right: 2vmin;
+    padding-top: 1vmin;
+    padding-bottom: 1vmin;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+.infoPanel-landscape
+{
+    height: 90vmin;
+}
+.infoPanel-portrait
+{
+    height: 20vh;
+}
+
+/*--- Map Key: ---*/
+.keyContainer
+{
+    overflow: auto;
+}
+.keyContainer-landscape
+{
+}
+.keyContainer-portrait
+{
+    display: grid;
+    align-items: stretch;
+    justify-items: stretch;
+    grid-template-columns: repeat(3, 33%);
+    grid-row-gap: 2%;
+}
+
+/*--- Individual key items: ---*/
+.keyItem
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.keyBox
+{
+    width: 3vmin;
+    height: 1vmin;
+    background-size: 100%;
+    outline-color: var(--map-shadow);
+    outline-style: solid;
+    outline-width: medium;
+    margin: 0.5vmin;
+}
+.keyLabel
+{
+    text-align: center;
+    font-size: 1.3vmin;
+    width: auto; 
+    margin-left: 0.5vmin;
+    margin-right: 1vmin;
+}
