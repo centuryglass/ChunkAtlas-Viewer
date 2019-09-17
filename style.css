@@ -269,8 +269,13 @@ body {
 .keyBox
 {
     width: 3vmin;
-    height: 1vmin;
+    height: 3vmin;
     background-size: 100%;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+    image-rendering: pixelated;
     outline-color: var(--map-shadow);
     outline-style: solid;
     outline-width: medium;

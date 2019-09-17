@@ -10,10 +10,13 @@ class MapKey {
         this.values = [];
     }
 
-    addValue(itemName, itemColor) {
-        assert(isHexColorString(itemColor), "MapKey.addValue: itemColor \""
-                + itemColor + "\" is not a valid color string.");
-        this.values.push( { name: itemName, color: itemColor });
+    addValue(itemName, colorOrImage) {
+        if (isHexColorString(colorOrImage)) {
+            this.values.push({name: itemName, color: colorOrImage });
+        }
+        else {
+            this.values.push({name: itemName, image: colorOrImage });
+        }
     }
 
     length() {
@@ -21,7 +24,13 @@ class MapKey {
     }
 
     foreachKeyPair(action) {
-        this.values.forEach( v => action(v.name, v.color));
+        this.values.forEach( v => {
+            let colorOrImage = v.image;
+            if (! isDefined(colorOrImage)) {
+                colorOrImage = v.color;
+            }
+            action(v.name, colorOrImage)
+        });
     }
 }
 
@@ -39,20 +48,26 @@ function clearDisplayedKeys() {
     }
 }
 
-function addKeyItemElement(itemName, itemColor)
+function addKeyItemElement(itemName, colorOrImage)
 {
-    assert(isHexColorString(itemColor), "addKeyItemElement: itemColor \""
-            + itemColor + "\" is not a valid color string.");
     // create key item, add to key container:
     let newKeyItem = document.createElement("div");
     newKeyItem.classList.add("keyItem");
     newKeyItem.classList.add("mapThemed");
     document.getElementById("keyContainer").appendChild(newKeyItem);
     // create key item color box, add to the new item:
-    let colorBox = document.createElement("span");
-    colorBox.classList.add("keyBox");
-    colorBox.setAttribute("style", "background-color: " + itemColor);
-    newKeyItem.appendChild(colorBox);
+    let imageBox = document.createElement("span");
+    imageBox.classList.add("keyBox");
+    if (isHexColorString(colorOrImage))
+    {
+        imageBox.setAttribute("style", "background-color: " + colorOrImage);
+    }
+    else
+    {
+        imageBox.setAttribute("style", "background-image: url(" + colorOrImage
+                + ")");
+    }
+    newKeyItem.appendChild(imageBox);
     // create key item label, add to the new item:
     let itemLabel = document.createElement("span");
     itemLabel.classList.add("keyLabel");
@@ -84,8 +99,8 @@ function loadMapTypeKey(mapType) {
                         + MapTypeEnum.properties[mapType].name + "\" keys.");
         }
         clearDisplayedKeys();
-        typeKeys.foreachKeyPair((name, color) => 
-                addKeyItemElement(name, color));
+        typeKeys.foreachKeyPair((name, colorOrImage) => 
+                addKeyItemElement(name, colorOrImage));
     });
 }
 

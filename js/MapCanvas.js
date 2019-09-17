@@ -272,6 +272,9 @@ class MapCanvas {
      */
     drawMap() {
         const ctx = this.canvas.getContext("2d");
+        // Disable image smoothing to make pixel art tiles look nicer:
+        ctx.imageSmoothingEnabled = false;
+        ctx.webkitImageSmoothingEnabled = false;
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (this.imageTiles == null) { return; }
 
