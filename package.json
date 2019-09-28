@@ -1,0 +1,22 @@
+{
+  "name": "mcmap",
+  "version": "0.1.0",
+  "description": "A Minecraft server map viewer.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/centuryglass/MCMap.git"
+  },
+  "author": "Anthony Brown",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/centuryglass/MCMap/issues"
+  },
+  "homepage": "https://github.com/centuryglass/MCMap#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
