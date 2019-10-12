@@ -6,3 +6,6 @@ MCMap
 *test.png
 gzstream/*.o
 gzstream/*.a
+dbLaunch.sh
+node_modules
+upload
