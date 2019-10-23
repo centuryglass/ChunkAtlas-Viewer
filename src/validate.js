@@ -77,7 +77,8 @@ module.exports = {
      *                       assertion fails.
      */
     assertIsClass: (value, classType, messagePrefix) => {
-        assert(value instanceof classType && isDefined(value),
+        module.exports.assert(value instanceof classType
+                && module.exports.isDefined(value),
                 messagePrefix + ": \"" + value + "\" is not an object of type "
                 + classType.constructor.name + ".");
     },
@@ -93,7 +94,8 @@ module.exports = {
      *                       assertion fails.
      */
     assertIsEnum: (value, enumType, messagePrefix) => { 
-        assert(enumType.isValid(value), messagePrefix + ": \"" + value
+        module.exports.assert(enumType.isValid(value),
+                messagePrefix + ": \"" + value
                 + "\" is not a valid enum value of type " + enumType.name
                 + ".");
     }
