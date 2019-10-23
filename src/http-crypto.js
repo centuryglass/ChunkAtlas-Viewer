@@ -61,10 +61,12 @@ module.exports = {
         //       keeping message data secret is not terribly critical for this
         //       application.
         const aes = new aesjs.ModeOfOperation.ecb(decrypted);
-        const messageBytes = aes.decrypt(req.body);
-        // Decode UTF-8 bytes, remove control characters used as padding:
-        const messageStr = new TextDecoder("utf-8").decode(messageBytes)
-                .replace(/[\cA-\cZ]/g, '');
+        let messageBytes = aes.decrypt(req.body);
+        // Remove padding from decrypted message:
+        const paddingBytes = messageBytes[messageBytes.length - 1];
+        messageBytes = messageBytes.slice(0, messageBytes.length
+                - paddingBytes);
+        const messageStr = new TextDecoder("utf-8").decode(messageBytes);
         try {
             req.body = JSON.parse(messageStr);
         }

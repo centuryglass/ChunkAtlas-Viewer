@@ -20,9 +20,9 @@ Paths.In = {
 // Server data paths:
 Paths.Data = {};
 // Main project directory:
-Paths.Data.PROJECT    = path.dirname(__dirname);
+Paths.Data.PROJECT    = path.join(__dirname, "../");
 // Main public data directory:
-Paths.Data.PUBLIC     = path.join(__dirname, "public");
+Paths.Data.PUBLIC     = path.join(Paths.Data.PROJECT, "public");
 // Main file resource directory:
 Paths.Data.RESOURCES  = path.join(Paths.Data.PUBLIC, "resources");
 // Main image resource directory:
@@ -107,7 +107,8 @@ var pendingImages = {};
 // Handle JSON update data:
 app.post(Paths.In.UPDATE, (req, res) => {
     const updateMessage = req.body;
-    if (! updateMessage || Object.keys(updateMessage).length === 0)
+    if (! updateMessage || Buffer.isBuffer(updateMessage)
+            || Object.keys(updateMessage).length === 0)
     {
         console.log("Invalid update message received and ignored.");
         res.end();
