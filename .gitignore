@@ -9,3 +9,6 @@ gzstream/*.a
 dbLaunch.sh
 node_modules
 upload
+webTestKeys
+*.pub
+*.key
