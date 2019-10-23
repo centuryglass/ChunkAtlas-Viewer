@@ -1,7 +1,6 @@
 build
 target
 map
-server*
 chunk-atlas
 *test.png
 gzstream/*.o

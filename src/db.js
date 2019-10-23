@@ -1,5 +1,5 @@
 /**
- * @file db/index.js
+ * @file db.js
  *
  * Handles all direct database access.
  */

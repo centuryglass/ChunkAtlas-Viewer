@@ -1,5 +1,5 @@
 /**
- * @file const-util/index.js
+ * @file const-util.js
  *
  * Applies constant values to objects.
  */
