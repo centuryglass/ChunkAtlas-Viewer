@@ -37,6 +37,9 @@ function isDefined(value) {
  *               '#'.
  */
 function isHexColorString(value) {
+    if (! (typeof value === 'string' || value instanceof String)) {
+        return false;
+    }
     if (value.length != 7) {
         return false;
     }
@@ -63,6 +66,28 @@ function assert(condition, message) {
     if (! condition) {
         throw new Error(message || "ASSERTION FAILED");
     }
+}
+
+/**
+ * Throws an error if a value is either undefined or is an empty string.
+ *
+ * @param value          The value to test.
+ *
+ * @param messagePrefix  A string to print before the error message if the
+ *                       assertion fails.
+ *
+ * @param valueName      An optional name for the value to add to the error
+ *                       message.
+ */
+function assertDefinedAndNonEmpty(value, messagePrefix, valueName) {
+    if (isDefined(valueName)) {
+        messagePrefix = messagePrefix + ": Value \"" + valueName + "\"";
+    }
+    else {
+        messagePrefix = messagePrefix + ": Value ";
+    }
+    assert (isDefined(value), messagePrefix + " was not defined.");
+    assert (value !== '', messagePrefix + " was empty.");
 }
 
 /**
