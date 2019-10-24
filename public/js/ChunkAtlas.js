@@ -50,9 +50,17 @@ function pageLoaded() {
             console.log("Map keys loaded.");
             keyManager.setDisplayedKey(mapCanvas.getDimension(),
                     mapCanvas.getMapType());
+        })
+        .catch((err) => {
+            console.log("ChunkAtlas: Error loading map keys:");
+            console.dir(err);
         });
         highlightSelectedButtons();
     })
+    .catch((err) => {
+        console.log("ChunkAtlas: Error loading map tiles:");
+        console.dir(err);
+    });
     window.onload = updateWindow;
     window.onresize = updateWindow;
 
@@ -88,10 +96,10 @@ function pageLoaded() {
 
     document.getElementById("Biome").onclick
         = function() { setMapType(MapTypeEnum.BIOME); };
-    document.getElementById("Error").onclick
-        = function() { setMapType(MapTypeEnum.ERROR); };
     document.getElementById("Structure").onclick
             = function() { setMapType(MapTypeEnum.STRUCTURE); };
+    document.getElementById("RecentActivity").onclick
+        = function() { setMapType(MapTypeEnum.RECENT_ACTIVITY); };
     document.getElementById("TotalActivity").onclick
             = function() { setMapType(MapTypeEnum.TOTAL_ACTIVITY); };
 

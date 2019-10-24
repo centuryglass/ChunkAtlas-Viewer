@@ -19,7 +19,7 @@ class MapKeyManager {
         const keySets = this;
         const keyRequest = new Request('/keys');
         console.log("Requesting map keys:");
-        this.loadingPromise = fetch(keyRequest)
+        this._loadingPromise = fetch(keyRequest)
         .then(response => response.json())
         .then((keyArray) => {
             console.log("got map keys.");
@@ -44,7 +44,6 @@ class MapKeyManager {
                     return;
                 }
                 let imageOrColor = "#000000";
-                console.dir(key);
                 if ("image_url" in key && key.image_url != null) {
                     imageOrColor = key.image_url;
                 }
@@ -54,6 +53,10 @@ class MapKeyManager {
                 keySets.types[dimType][mapType].addKeyItem(
                         new MapKeyItem(key.description, imageOrColor));
             });
+        })
+        .catch((err) => {
+            console.log("MapKeyManager: Error loading map keys:");
+            console.dir(err);
         });
     }
 
@@ -64,7 +67,7 @@ class MapKeyManager {
      *                will not be passed any parameters.
      */
     then(onLoad) {
-        this.loadingPromise.then(onLoad);
+        return this._loadingPromise.then(onLoad);
     }
 
     /**

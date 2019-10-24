@@ -198,8 +198,8 @@ body {
 #Nether { background-image: url(resources/images/netherrack.png); }
 #End { background-image: url(resources/images/end_stone.png); }
 #Biome { background-image: url(resources/images/biome.png); }
-#Error { background-image: url(resources/images/error.png); }
 #Structure { background-image: url(resources/images/structure.png); }
+#RecentActivity { background-image: url(resources/images/error.png); }
 #TotalActivity { background-image: url(resources/images/totalActivity.png); }
 
 /*--- Map toggle switches: ---*/

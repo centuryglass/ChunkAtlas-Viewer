@@ -35,7 +35,10 @@ function loadImageList(urlList) {
             return failedImg;
         }))
     });
-    return Promise.all(imagePromises);
+    return Promise.all(imagePromises).catch((err) => {
+        console.log("loadImageList: Error loading images:");
+        console.dir(err);
+    });
 }
 
 /**
