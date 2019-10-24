@@ -16,16 +16,24 @@
  *
  * - Mandatory properties defined for each Enum type: -
  *
- *  name:           A name string used to describe the Enum type.
+ *  name:                      A name string used to describe the Enum type.
  *
- *  count:          The number of distinct values the Enum type may represent.
+ *  count:                     The number of distinct values the Enum type may
+ *                             represent.
  *
- *  foreach(fn):    A function property, used to call an arbitrary function for
- *                  each of the values the Enum type may represent.
+ *  forEach(fn):               A function property, used to call an arbitrary
+ *                             function for each of the values the Enum type
+ *                             may represent. If the function returns false,
+ *                             the loop will exit early.
  *
- *  isValid(value): A function property that returns true if and only if the
- *                  parameter passed to it is a valid value the enum type may
- *                  represent.
+ *  isValid(value):             A function property that returns true if and
+ *                              only if the parameter passed to it is a valid
+ *                              value the enum type may represent.
+ *
+ *  withProperty(name, value):  A function property that returns the first Enum
+ *                              value with a property named "name" that exactly
+ *                              matches "value". Returns undefined if no match
+ *                              is found.
  */
 
 /**
@@ -90,8 +98,25 @@ function createEnum(name, values, properties) {
     }
     setConstProperty(enumObject, "forEach", action => {
         for (let i = 1; i <= enumObject.count; i++) {
-            action(i);
+            if (action(i) === false) {
+                break;
+            }
         }
+    });
+    setConstProperty(enumObject, "withProperty", (name, value) => {
+        assert (isDefined(name) && name.length > 0,
+                "withProperty: property name was undefined or empty.");
+        let match = undefined;
+        if (enumObject.properties)
+        {
+            enumObject.forEach(enumType => {
+                if (enumObject.properties[enumType][name] === value) {
+                    match = enumType;
+                    return false;
+                }
+            });
+        }
+        return match;
     });
     setConstProperty(enumObject, "isValid", value => {
         return Number.isInteger(value) && value > 0
