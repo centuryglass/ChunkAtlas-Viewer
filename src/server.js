@@ -87,7 +87,7 @@ const SQL = {
                       + "LEFT OUTER JOIN image_resources ir "
                       + "on ir.resource_id = ki.icon_resource_id;",
     // Get all map tiles:
-    GET_TILES:        "SELECT * FROM map_tiles mt"
+    GET_TILES:        "SELECT * FROM map_tiles mt "
                       + "LEFT OUTER JOIN image_resources ir "
                       + "on ir.resource_id = mt.image_resource_id;"
 };
@@ -278,8 +278,9 @@ app.get(Paths.In.KEY_REQUEST, (req, res) => {
 app.get(Paths.In.TILE_REQUEST, (req, res) => {
     console.log("Got tile request, querying DB for tiles.");
     db.query(SQL.GET_TILES, (err, dbRes) => {
-        console.log("Replying with " + dbRes.rows.length + " map tiles.");
+        console.dir(dbRes);
         adjustUploadedImagePaths(dbRes);
+        console.log("Replying with " + dbRes.rows.length + " map tiles.");
         res.json(dbRes.rows);
     });
 });

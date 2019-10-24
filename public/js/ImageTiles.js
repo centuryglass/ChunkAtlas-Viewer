@@ -8,44 +8,59 @@ class ImageTiles {
      * Starts loading all tile image element lists.
      */
     constructor() {
-        this.tiles = {};
-        this.imagesLoading = 0;
-        this.totalImages = 0;
-        // Iterate through each dimension/map type/size combination and load
-        // images:
-        const numCombinations = DimensionEnum.count * MapTypeEnum.count
-                * TileSizeEnum.count;
-        let promisedTileSets = [];
-        for (let i = 0; i < numCombinations; i++) {
-            let factoredIdx = i;
-            const dimIdx = 1 + (factoredIdx % DimensionEnum.count);
-            factoredIdx = Math.floor(factoredIdx / DimensionEnum.count);
-            const typeIdx = 1 + (factoredIdx % MapTypeEnum.count);
-            factoredIdx = Math.floor(factoredIdx / MapTypeEnum.count);
-            const sizeIdx = 1 + factoredIdx;
-            if (typeof this.tiles[dimIdx] === "undefined") {
-                this.tiles[dimIdx] = {};
+        this._tiles = {};
+        const imageURLs = {};
+        DimensionEnum.forEach((dimType) => {
+            this._tiles[dimType] = {};
+            imageURLs[dimType] = {};
+            MapTypeEnum.forEach((mapType) => {
+                this._tiles[dimType][mapType] = {};
+                imageURLs[dimType][mapType] = {};
+                TileSizeEnum.forEach((sizeType) => {
+                    this._tiles[dimType][mapType][sizeType] = [];
+                    imageURLs[dimType][mapType][sizeType] = [];
+                });
+            });
+        });
+        this._imagesLoading = 0;
+        this._totalImages = 0;
+        const imageTiles = this;
+        const tileRequest = new Request('/tiles');
+        this._loadingPromise = fetch(tileRequest)
+        .then((response) => response.json())
+        .then((tileArray) => {
+            imageTiles._totalImages = tileArray.length;
+            imageTiles._imagesLoading = imageTiles._totalImages;
+            tileArray.forEach((tile) => {
+                const region = DimensionEnum.withProperty("name",
+                        tile.region_name);
+                const mapType = MapTypeEnum.withProperty("name",
+                        tile.map_type);
+                const sizeType = TileSizeEnum.withProperty("size",
+                        tile.tile_size);
+                imageURLs[region][mapType][sizeType].push(tile.image_url);
+            });
+            // Iterate through each dimension/map type/size combination and
+            // load images:
+            const numCombinations = DimensionEnum.count * MapTypeEnum.count
+                    * TileSizeEnum.count;
+            let promisedTileSets = [];
+            for (let i = 0; i < numCombinations; i++) {
+                let factoredIdx = i;
+                const dimIdx = 1 + (factoredIdx % DimensionEnum.count);
+                factoredIdx = Math.floor(factoredIdx / DimensionEnum.count);
+                const typeIdx = 1 + (factoredIdx % MapTypeEnum.count);
+                factoredIdx = Math.floor(factoredIdx / MapTypeEnum.count);
+                const sizeIdx = 1 + factoredIdx;
+                var tileSetPromise
+                        = loadImageList(imageURLs[dimIdx][typeIdx][sizeIdx])
+                .then((imageList) => {
+                    imageTiles._tiles[dimIdx][typeIdx][sizeIdx] = imageList;
+                });
+                promisedTileSets.push(tileSetPromise);
             }
-            if (typeof this.tiles[dimIdx][typeIdx] === "undefined") {
-                this.tiles[dimIdx][typeIdx] = {};
-            }
-            if (typeof this.tiles[dimIdx][typeIdx][sizeIdx] === "undefined") {
-                this.tiles[dimIdx][typeIdx][sizeIdx] = {};
-            }
-            const dimType = DimensionEnum.properties[dimIdx].name;
-            const mapType = MapTypeEnum.properties[typeIdx].name;
-            const sizeType = TileSizeEnum.properties[sizeIdx].size;
-            const tileClass = "tile-" + dimType + "-" + mapType + "-"
-                    + sizeType;
-            const imageTiles = this;
-            var tileSetPromise = loadTileURLs(dimIdx, typeIdx, sizeIdx)
-                    .then(urlList => loadImageList(urlList))
-                    .then(imageList => {
-                        imageTiles.tiles[dimIdx][typeIdx][sizeIdx] = imageList;
-                    });
-            promisedTileSets.push(tileSetPromise);
-        }
-        this.loadingPromise = Promise.all(promisedTileSets);
+            return Promise.all(promisedTileSets);
+        });
     }
 
     /**
@@ -55,7 +70,7 @@ class ImageTiles {
      *                will not be passed any parameters.
      */
     then(onLoad) {
-        this.loadingPromise.then(onLoad);
+        return this._loadingPromise.then(onLoad);
     }
 
     /**
@@ -75,6 +90,6 @@ class ImageTiles {
         assertIsEnum(dimension, DimensionEnum, "ImageTiles.getTileSet");
         assertIsEnum(mapType, MapTypeEnum, "ImageTiles.getTileSet");
         assertIsEnum(sizeType, TileSizeEnum, "ImageTiles.getTileSet");
-        return this.tiles[dimension][mapType][sizeType];
+        return this._tiles[dimension][mapType][sizeType];
     }
 }
