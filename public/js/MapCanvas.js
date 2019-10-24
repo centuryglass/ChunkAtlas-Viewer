@@ -428,7 +428,17 @@ class MapCanvas {
                 return;
             }
             else {
-                ctx.drawImage(imageTile, x, z, sizeOnCanvas, sizeOnCanvas);
+                try {
+                    ctx.drawImage(imageTile, x, z, sizeOnCanvas, sizeOnCanvas);
+                }
+                catch (exception) {
+                    if (exception.name === "NS_ERROR_NOT_AVAILABLE") {
+                        // Image couldn't load, draw a black rectangle.
+                        ctx.fillStyle = "#FF0000";
+                        ctx.fillRect(x, z, sizeOnCanvas, sizeOnCanvas);
+                    }
+                    else { throw exception; }
+                }
             }
         }
     }
