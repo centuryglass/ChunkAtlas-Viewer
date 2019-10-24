@@ -3,27 +3,6 @@
  *
  * Loads and shares sets of map image tiles.
  */
-
-// Enumerates Minecraft dimension types:
-const DimensionEnum = createEnum("DimensionEnum",
-    ["OVERWORLD", "NETHER", "END"], [
-        [["name", "Overworld"]],
-        [["name", "Nether"]],
-        [["name", "End"]]
-    ]
-);
-
-
-// Enumerates tile size options:
-const TileSizeEnum = createEnum("TileSizeEnum",
-        ["TILES_512", "TILES_128", "TILES_64", "TILES_32"], [
-            [["name", "tiles-512"], ["size", 512]],
-            [["name", "tiles-128"], ["size", 128]],
-            [["name", "tiles-64"], ["size", 64]],
-            [["name", "tiles-32"], ["size", 32]],
-        ]
-);
-
 class ImageTiles {
     /**
      * Starts loading all tile image element lists.
