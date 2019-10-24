@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", pageLoaded);
 
 // Map canvas element object manager:
 var mapCanvas;
+// Map key element manager:
+var keyManager;
 // Image tile collection object:
 var imageTiles;
 // User input handler object:
@@ -33,15 +35,22 @@ const ASPECT_SPECIFIC_CLASSES = [
  * Initialize the MapCanvas and set up other event managers when the DOM loads.
  */
 function pageLoaded() {
+    console.log("Page content loaded.");
     imageTiles = new ImageTiles();
+    keyManager = new MapKeyManager();
     imageTiles.then(function() {
+        console.log("Image tiles loaded.");
         const canvas = document.getElementById("mapCanvas");
         mapCanvas = new MapCanvas(canvas, imageTiles, TILE_SIZE);
         inputHandler = new MapInput(mapCanvas, canvas);
         const resetButton = document.getElementById("resetButton");
         resetButton.onclick = function() {mapCanvas.reset();};
         scaleCanvas();
-        loadMapTypeKey(mapCanvas.getMapType());
+        keyManager.then(function() {
+            console.log("Map keys loaded.");
+            keyManager.setDisplayedKey(mapCanvas.getDimension(),
+                    mapCanvas.getMapType());
+        });
         highlightSelectedButtons();
     })
     window.onload = updateWindow;
@@ -49,8 +58,12 @@ function pageLoaded() {
 
     // Set up dimension button handlers:
     function setDimension(dimension) {
+        assertIsEnum(dimension, DimensionEnum,
+                "setDimension in ChunkAtlas.pageLoaded");
         if (mapCanvas != null) {
             mapCanvas.setDimension(dimension);
+            keyManager.then(() => keyManager.setDisplayedKey(
+                    dimension, mapCanvas.getMapType()));
             highlightSelectedButtons();
         }
     }
@@ -63,9 +76,12 @@ function pageLoaded() {
 
     // Set up map type button handlers:
     function setMapType(type) {
+        assertIsEnum(type, MapTypeEnum,
+                "setMapType in ChunkAtlas.pageLoaded");
         if (mapCanvas != null) {
             mapCanvas.setMapType(type);
-            loadMapTypeKey(type);
+            keyManager.then(() => keyManager.setDisplayedKey(
+                    mapCanvas.getDimension(), type));
             highlightSelectedButtons();
         }
     }

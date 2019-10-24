@@ -1,0 +1,90 @@
+/**
+ * @file MapKeyManager.js
+ *
+ * Loads MapKeys for all map regions and types, and controls which key is shown
+ * on the page.
+ */
+class MapKeyManager {
+    /**
+     * Loads MapKey objects for each map type and region.
+     */
+    constructor() {
+        this.types = {};
+        DimensionEnum.forEach((regionType) => {
+            this.types[regionType] = {};
+            MapTypeEnum.forEach((mapType) => {
+                this.types[regionType][mapType] = new MapKey();
+            });
+        });
+        const keySets = this;
+        const keyRequest = new Request('/keys');
+        console.log("Requesting map keys:");
+        this.loadingPromise = fetch(keyRequest)
+        .then(response => response.json())
+        .then((keyArray) => {
+            console.log("got map keys.");
+            keyArray.forEach((key) => {
+                assert(isDefined(key) && key !== null
+                        && typeof key === "object"
+                        && isDefined(key.description)
+                        && isDefined(key.map_type),
+                        "MapKeySets: received invalid map key " + key);
+                const mapType = MapTypeEnum.withProperty("name",
+                        key.map_type);
+                const dimType = DimensionEnum.withProperty("name",
+                        key.region_name);
+                if (! isDefined(mapType)) {
+                    console.log("MapKeySets: invalid map type "
+                            + key.map_type);
+                    return;
+                }
+                if (! isDefined(dimType)) {
+                    console.log("MapKeySets: invalid dimension type "
+                            + key.region_name);
+                    return;
+                }
+                let imageOrColor = "#000000";
+                console.dir(key);
+                if ("image_url" in key && key.image_url != null) {
+                    imageOrColor = key.image_url;
+                }
+                else if ("color" in key && key.color != null) {
+                    imageOrColor = "#" + key.color;
+                }
+                keySets.types[dimType][mapType].addKeyItem(
+                        new MapKeyItem(key.description, imageOrColor));
+            });
+        });
+    }
+
+    /**
+     * Performs some action when all key items have loaded.
+     *
+     * @param onLoad  A function to run after the map key loads. This function
+     *                will not be passed any parameters.
+     */
+    then(onLoad) {
+        this.loadingPromise.then(onLoad);
+    }
+
+    /**
+     * Sets the current map key that is displayed on the page.
+     *
+     * @param region   The RegionEnum value of the key that should be shown.
+     *
+     * @param mapType  The MapTypeEnum value of the key that should be shown.
+     */
+    setDisplayedKey(region, mapType)
+    {
+        assertIsEnum(region, DimensionEnum, "MapKeyManager.setKey");
+        assertIsEnum(mapType, MapTypeEnum, "MapKeyManager.setKey");
+        if (isDefined(this._activeKey)) {
+            this._activeKey.removeFromPage();
+        }
+        else {
+            console.log("no active key to remove.");
+        }
+        this._activeKey = this.types[region][mapType];
+        this._activeKey.showOnPage();
+    }
+}

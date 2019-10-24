@@ -15,7 +15,13 @@ Paths.In = {
     // Used for sending JSON update status messages:
     UPDATE:       "/update",
     // Used for uploading map images:
-    IMAGE_UPLOAD: "/imageUpload"
+    IMAGE_UPLOAD: "/imageUpload",
+    // Used for requesting map keys:
+    KEY_REQUEST: "/keys",
+    // Used for requesting map tiles:
+    TILE_REQUEST: "/tiles",
+    // Source directory for all image resources:
+    IMG_RESOURCE: "/resources/images/upload"
 };
 // Server data paths:
 Paths.Data = {};
@@ -29,10 +35,6 @@ Paths.Data.RESOURCES  = path.join(Paths.Data.PUBLIC, "resources");
 Paths.Data.IMAGES     = path.join(Paths.Data.RESOURCES, "images");
 // Uploaded image resource directory:
 Paths.Data.IMG_UPLOAD = path.join(Paths.Data.IMAGES, "upload");
-// Uploaded map tile image directory:
-Paths.Data.TILES      = path.join(Paths.Data.IMG_UPLOAD, "tiles");
-// Uploaded location icon image directory:
-Paths.Data.ICONS      = path.join(Paths.Data.IMG_UPLOAD, "icons");
 constUtils.recursiveFreeze(Paths);
 
 
@@ -69,10 +71,6 @@ const SQL = {
                       + "\nVALUES\n",
     // Gets the list of image resources that need to be uploaded to the web
     // server:
-    /*
-    FIND_MISSING_IMG: "SELECT image_url FROM image_resources WHERE "
-                      + "resource_loaded IS FALSE",
-    */
     FIND_MISSING_IMG: "SELECT image_url "
                       + "FROM image_resources ir "
                       + "LEFT OUTER JOIN staging_map_tiles mt "
@@ -83,22 +81,30 @@ const SQL = {
     IMG_FIND_OR_ADD:  "image_resources_find_or_add",
     // Applies staged updates:
     APPLY_STAGING:    "START TRANSACTION; SELECT apply_staging(); "
-                      + "END TRANSACTION;"
+                      + "END TRANSACTION;",
+    // Gets all map key data:
+    GET_KEYS:         "SELECT * FROM key_items ki "
+                      + "LEFT OUTER JOIN image_resources ir "
+                      + "on ir.resource_id = ki.icon_resource_id;",
+    // Get all map tiles:
+    GET_TILES:        "SELECT * FROM map_tiles mt"
+                      + "LEFT OUTER JOIN image_resources ir "
+                      + "on ir.resource_id = mt.image_resource_id;"
 };
 constUtils.recursiveFreeze(SQL);
 
 // Init express server:
 const app = express();
 const port = 8080;
-app.use(bodyParser.raw({
-    limit: "1000kb",
-    type: () => true
-}));
-app.use(bodyParser.raw({
-    limit: "1000kb",
-    type:  "*/image"
-}));
-app.use(httpCrypto.decrypt);
+const updateMiddleware = [
+    bodyParser.raw({
+        limit: "1000kb",
+        type: () => true
+    }),
+    httpCrypto.decrypt
+];
+const updatePaths = [ Paths.In.UPDATE, Paths.In.IMAGE_UPLOAD ];
+app.use(updatePaths, updateMiddleware);
 app.use(express.static(Paths.Data.PUBLIC));
 
 // Pending image files:
@@ -238,5 +244,45 @@ app.post(Paths.In.IMAGE_UPLOAD, (req, res) => {
     }
     res.end();
 });
+
+/**
+ * Adjusts image paths within a database result object, making them relative
+ * to the server's root public directory rather than relative to the image
+ * upload directory.
+ *
+ * @param dbResult  A set of database query result rows from the PostgreSQL
+ *                  database.
+ */
+function adjustUploadedImagePaths(dbResult) {
+    dbResult.rows.forEach((row) => {
+        let img = row.image_url;
+        if ((typeof img === 'string' || img instanceof String)
+                && img !== '') {
+            const fullPath = path.join(Paths.In.IMG_RESOURCE, img);
+            row.image_url = fullPath;
+        }
+    });
+}
+
+// Handle map key requests:
+app.get(Paths.In.KEY_REQUEST, (req, res) => {
+    console.log("Got key request, querying DB for keys.");
+    db.query(SQL.GET_KEYS, (err, dbRes) => {
+        console.log("Replying with " + dbRes.rows.length + " keys.");
+        adjustUploadedImagePaths(dbRes);
+        res.json(dbRes.rows);
+    });
+});
+
+// Handle map tile requests:
+app.get(Paths.In.TILE_REQUEST, (req, res) => {
+    console.log("Got tile request, querying DB for tiles.");
+    db.query(SQL.GET_TILES, (err, dbRes) => {
+        console.log("Replying with " + dbRes.rows.length + " map tiles.");
+        adjustUploadedImagePaths(dbRes);
+        res.json(dbRes.rows);
+    });
+});
+
 
 app.listen(port, () => console.log('listening on port ' + port));
