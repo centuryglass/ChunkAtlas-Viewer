@@ -31,7 +31,7 @@ function loadImageList(urlList) {
     let imagePromises = [];
     urlList.forEach(url => {
         imagePromises.push(loadImage(url).catch(failedImg => {
-            throw new Error("loadImageList: failed to load " + failedImg.src);
+            console.log("loadImageList: failed to load " + failedImg.src);
             return failedImg;
         }))
     });
