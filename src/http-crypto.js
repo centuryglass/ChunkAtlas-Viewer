@@ -12,6 +12,7 @@ const aesjs = require("aes-js");
 const RSASet = require("./rsa-set.js");
 const constUtils = require("./const-util.js");
 const validate = require("./validate.js");
+const { StringDecoder } = require("string_decoder");
 
 // Relevent HTTP header value keys:
 const HeaderKeys =
@@ -66,7 +67,8 @@ module.exports = {
         const paddingBytes = messageBytes[messageBytes.length - 1];
         messageBytes = messageBytes.slice(0, messageBytes.length
                 - paddingBytes);
-        const messageStr = new TextDecoder("utf-8").decode(messageBytes);
+        const messageStr = new StringDecoder().write(
+                Buffer.from(messageBytes));
         try {
             req.body = JSON.parse(messageStr);
         }
