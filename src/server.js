@@ -203,6 +203,11 @@ app.post(Paths.In.UPDATE, (req, res) => {
         return db.query(tileInsert, tileInsertValues);
     }).then(() => { // Get the list of images that need to be loaded:
         return db.query(SQL.FIND_MISSING_IMG, (err, pendingRes) => {
+            if (! validate.isDefined(pendingRes)
+                    || ! validate.isDefined(pendingRes.rows)) {
+                res.end();
+                return;
+            }
             const urls = [];
             pendingRes.rows.forEach(row => {
                 urls.push(row.image_url);
@@ -268,6 +273,10 @@ function adjustUploadedImagePaths(dbResult) {
 app.get(Paths.In.KEY_REQUEST, (req, res) => {
     console.log("Got key request, querying DB for keys.");
     db.query(SQL.GET_KEYS, (err, dbRes) => {
+        if (! validate.isDefined(dbRes) || ! validate.isDefined(dbRes.rows)) {
+            res.end();
+            return;
+        }
         console.log("Replying with " + dbRes.rows.length + " keys.");
         adjustUploadedImagePaths(dbRes);
         res.json(dbRes.rows);
@@ -278,6 +287,10 @@ app.get(Paths.In.KEY_REQUEST, (req, res) => {
 app.get(Paths.In.TILE_REQUEST, (req, res) => {
     console.log("Got tile request, querying DB for tiles.");
     db.query(SQL.GET_TILES, (err, dbRes) => {
+        if (! validate.isDefined(dbRes) || ! validate.isDefined(dbRes.rows)) {
+            res.end();
+            return;
+        }
         console.dir(dbRes);
         adjustUploadedImagePaths(dbRes);
         console.log("Replying with " + dbRes.rows.length + " map tiles.");
