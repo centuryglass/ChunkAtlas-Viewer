@@ -13,7 +13,7 @@
     <script src="js/Util/Point.js"></script>
     <script src="js/Util/Enum.js"></script>
     <script src="js/MapTypeEnum.js"></script>
-    <script src="js/DimensionEnum.js"></script>
+    <script src="js/RegionEnum.js"></script>
     <script src="js/TileSizeEnum.js"></script>
     <script src="js/Util/ReplaceWithServer.js"></script>
     <script src="js/MapKeys/MapKey.js"></script>
@@ -26,21 +26,21 @@
     <script src="js/ChunkAtlas.js"></script>
     <div class="mainContent mainContent-landscape">
 
-        <!-- Map dimension and type button panel: -->
+        <!-- Map region and type button panel: -->
         <div id="buttonPanel" class="majorPanel majorPanel-landscape controlPanel controlPanel-landscape panel">
-            <!-- Pick mapped dimension: -->
-            <p id="dimLabel" class="mapThemed mapButtonGroupLabel">Dimension:</p>
-            <div id="dimButtons" class="mapButtonGroup mapButtonGroup-landscape">
+            <!-- Pick mapped region: -->
+            <p id="regionLabel" class="mapThemed mapButtonGroupLabel">Region:</p>
+            <div id="regionButtons" class="mapButtonGroup mapButtonGroup-landscape">
                 <div class="mapThemed mapButtonHolder">
-                    <button id="Overworld" class="mapButton dimButton"></button>
+                    <button id="Overworld" class="mapButton regionButton"></button>
                     <p class="mapButtonLabel">Overworld</p>
                 </div>
                 <div class="mapThemed mapButtonHolder">
-                    <button id="Nether" class="mapButton dimButton"></button>
+                    <button id="Nether" class="mapButton regionButton"></button>
                     <p class="mapButtonLabel">Nether</p>
                 </div>
                 <div class="mapThemed mapButtonHolder">
-                    <button id="End" class="mapButton dimButton"></button>
+                    <button id="End" class="mapButton regionButton"></button>
                     <p class="mapButtonLabel">End</p>
                 </div>
             </div>

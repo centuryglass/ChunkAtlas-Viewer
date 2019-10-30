@@ -1,9 +1,9 @@
 /**
- * @file DimensionEnum.js
+ * @file RegionEnum.js
  *
- * Enumerates Minecraft dimension types:
+ * Enumerates Minecraft region types:
  */
-const DimensionEnum = createEnum("DimensionEnum",
+const RegionEnum = createEnum("RegionEnum",
     ["OVERWORLD", "NETHER", "END"], [
         [["name", "Overworld"]],
         [["name", "Nether"]],

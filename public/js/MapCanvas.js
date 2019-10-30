@@ -25,7 +25,7 @@ class MapCanvas {
         this.canvas = canvas;
         this.lastClicked = new Point(0, 0);
         this.updateBounds(1, new Point(0, 0));
-        this.dimension = DimensionEnum.OVERWORLD;
+        this.region = RegionEnum.OVERWORLD;
         this.mapType = MapTypeEnum.BIOME;
         this.mapPoints = [];
         this.drawPoints = true;
@@ -48,23 +48,23 @@ class MapCanvas {
     }
 
     /**
-     * Gets the Minecraft dimension currently set to draw within the map.
+     * Gets the Minecraft region currently set to draw within the map.
      *
-     * @return  The map's current selected DimensionEnum value.
+     * @return  The map's current selected RegionEnum value.
      */
-    getDimension()
+    getRegion()
     {
-        return this.dimension;
+        return this.region;
     }
 
     /**
-     * Sets the Minecraft dimension drawn within the map, and redraws the map.
+     * Sets the Minecraft region drawn within the map, and redraws the map.
      *
-     * @param dimension  A DimensionEnum value to set.
+     * @param region  A RegionEnum value to set.
      */
-    setDimension(dimension) {
-        assertIsEnum(dimension, DimensionEnum, "MapCanvas.setDimension");
-        this.dimension = dimension;
+    setRegion(region) {
+        assertIsEnum(region, RegionEnum, "MapCanvas.setRegion");
+        this.region = region;
         this.drawMap();
     }
 
@@ -209,7 +209,7 @@ class MapCanvas {
                 var closestPt;
                 var leastDistance;
                 this.mapPoints.forEach(function(mapPt) {
-                    if (mapCanvas.dimension !== mapPt.dimension) { return; }
+                    if (mapCanvas.region !== mapPt.region) { return; }
                     const ptCanvasPos = mapCanvas.worldToCanvasPos(
                             mapPt.position);
                     const distance = ptCanvasPos.distance(canvasPos);
@@ -289,7 +289,7 @@ class MapCanvas {
                 sizeType = i;
             }
         }
-        let tileList = this.imageTiles.getTileSet(this.dimension, this.mapType,
+        let tileList = this.imageTiles.getTileSet(this.region, this.mapType,
                 sizeType);
         for (let i = 0; i < tileList.length; i++) {
             this.drawTile(tileList[i], ctx);
@@ -310,7 +310,7 @@ class MapCanvas {
     /* Internal Drawing Functions: */
 
     /**
-     * Checks if a MapPoint is within the current map dimension and bounds, and
+     * Checks if a MapPoint is within the current map region and bounds, and
      * draws it to the map if it is.
      *
      * @param mapPoint  A point of interest on the map.
@@ -319,7 +319,7 @@ class MapCanvas {
      *                  the map canvas.
      */
     drawMapPoint(mapPoint, ctx) {
-        if (this.dimension !== mapPoint.dimension) { return; }
+        if (this.region !== mapPoint.region) { return; }
         const canvasPos = this.worldToCanvasPos(mapPoint.position);
         const iconSize = this.getMapPointDrawSize(mapPoint);
         const halfSize = iconSize / 2;

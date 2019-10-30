@@ -1,5 +1,5 @@
 /**
- * @file script.js
+ * @file ChunkAtlas.js
  *
  * The main ChunkAtlas page script.
  */
@@ -49,7 +49,7 @@ function pageLoaded() {
         scaleCanvas();
         keyManager.then(function() {
             console.log("Map keys loaded.");
-            keyManager.setDisplayedKey(mapCanvas.getDimension(),
+            keyManager.setDisplayedKey(mapCanvas.getRegion(),
                     mapCanvas.getMapType());
         })
         .catch((err) => {
@@ -65,23 +65,23 @@ function pageLoaded() {
     window.onload = updateWindow;
     window.onresize = updateWindow;
 
-    // Set up dimension button handlers:
-    function setDimension(dimension) {
-        assertIsEnum(dimension, DimensionEnum,
-                "setDimension in ChunkAtlas.pageLoaded");
+    // Set up region button handlers:
+    function setRegion(region) {
+        assertIsEnum(region, RegionEnum,
+                "setRegion in ChunkAtlas.pageLoaded");
         if (mapCanvas != null) {
-            mapCanvas.setDimension(dimension);
+            mapCanvas.setRegion(region);
             keyManager.then(() => keyManager.setDisplayedKey(
-                    dimension, mapCanvas.getMapType()));
+                    region, mapCanvas.getMapType()));
             highlightSelectedButtons();
         }
     }
     document.getElementById("Overworld").onclick
-            = function() { setDimension(DimensionEnum.OVERWORLD); };
+            = function() { setRegion(RegionEnum.OVERWORLD); };
     document.getElementById("Nether").onclick
-            = function() { setDimension(DimensionEnum.NETHER); };
+            = function() { setRegion(RegionEnum.NETHER); };
     document.getElementById("End").onclick
-            = function() { setDimension(DimensionEnum.END); };
+            = function() { setRegion(RegionEnum.END); };
 
     // Set up map type button handlers:
     function setMapType(type) {
@@ -90,7 +90,7 @@ function pageLoaded() {
         if (mapCanvas != null) {
             mapCanvas.setMapType(type);
             keyManager.then(() => keyManager.setDisplayedKey(
-                    mapCanvas.getDimension(), type));
+                    mapCanvas.getRegion(), type));
             highlightSelectedButtons();
         }
     }
@@ -115,15 +115,15 @@ function pageLoaded() {
 }
 
 /**
- * Ensures that the selected Dimension and Map Type buttons are highlighted.
+ * Ensures that the selected Region and Map Type buttons are highlighted.
  */
 function highlightSelectedButtons() {
     if (! isDefined(mapCanvas)) { return; }
     const highlightColor = "var(--map-highlight)";
     const normalColor = "var(--map-shadow)"
     const buttonSets = [
-        { buttonClass: "dimButton", type: DimensionEnum,
-                selected: mapCanvas.getDimension() },
+        { buttonClass: "regionButton", type: RegionEnum,
+                selected: mapCanvas.getRegion() },
         { buttonClass: "typeButton", type: MapTypeEnum,
             selected: mapCanvas.getMapType() }
     ];

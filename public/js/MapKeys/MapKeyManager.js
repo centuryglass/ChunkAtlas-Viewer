@@ -10,7 +10,7 @@ class MapKeyManager {
      */
     constructor() {
         this.types = {};
-        DimensionEnum.forEach((regionType) => {
+        RegionEnum.forEach((regionType) => {
             this.types[regionType] = {};
             MapTypeEnum.forEach((mapType) => {
                 this.types[regionType][mapType] = new MapKey();
@@ -31,15 +31,15 @@ class MapKeyManager {
                         "MapKeySets: received invalid map key " + key);
                 const mapType = MapTypeEnum.withProperty("name",
                         key.map_type);
-                const dimType = DimensionEnum.withProperty("name",
+                const regionType = RegionEnum.withProperty("name",
                         key.region_name);
                 if (! isDefined(mapType)) {
                     console.log("MapKeySets: invalid map type "
                             + key.map_type);
                     return;
                 }
-                if (! isDefined(dimType)) {
-                    console.log("MapKeySets: invalid dimension type "
+                if (! isDefined(regionType)) {
+                    console.log("MapKeySets: invalid region type "
                             + key.region_name);
                     return;
                 }
@@ -50,7 +50,7 @@ class MapKeyManager {
                 else if ("color" in key && key.color != null) {
                     imageOrColor = "#" + key.color;
                 }
-                keySets.types[dimType][mapType].addKeyItem(
+                keySets.types[regionType][mapType].addKeyItem(
                         new MapKeyItem(key.description, imageOrColor));
             });
         })
@@ -79,7 +79,7 @@ class MapKeyManager {
      */
     setDisplayedKey(region, mapType)
     {
-        assertIsEnum(region, DimensionEnum, "MapKeyManager.setKey");
+        assertIsEnum(region, RegionEnum, "MapKeyManager.setKey");
         assertIsEnum(mapType, MapTypeEnum, "MapKeyManager.setKey");
         if (isDefined(this._activeKey)) {
             this._activeKey.removeFromPage();

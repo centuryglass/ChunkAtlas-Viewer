@@ -135,8 +135,8 @@ body {
 .controlPanel-portrait {
     display: grid;
     grid-template-areas:
-        "dimHeader dimHeader typeHeader typeHeader"
-        "dimButtons dimButtons typeButtons typeButtons"
+        "regionHeader regionHeader typeHeader typeHeader"
+        "regionButtons regionButtons typeButtons typeButtons"
         "directoryToggle directoryToggle . .";
     grid-gap: 0.05vmin;
     justify-items: center;
@@ -144,8 +144,8 @@ body {
     justify-content: space-evenly;
     align-content: space-evenly;
 }
-#dimLabel { grid-area: dimHeader; }
-#dimButtons { grid-area: dimButtons; }
+#regionLabel { grid-area: regionHeader; }
+#regionButtons { grid-area: regionButtons; }
 #typeLabel { grid-area: typeHeader; }
 #typeButtons { grid-area: typeButtons; }
 #directorySwitch { grid-area: directoryToggle; justify-self: stretch; }
@@ -174,10 +174,6 @@ body {
     width: auto;
 }
 .mapButtonGroupLabel-portrait {
-    /*
-    width: 8vmin;
-    height: 12vmin;
-    */
 }
 
 /*--- Map button element classes: ---*/
@@ -185,9 +181,6 @@ body {
     display: flex;
     flex-direction: column;
     width: 8vmin;
-           /*
-    height: 12vmin;
-     */
 }
 .mapButton {
     background-color: var(--map-light);
@@ -200,9 +193,6 @@ body {
     image-rendering: -o-crisp-edges;
     image-rendering: pixelated;
     padding-top: 100%;
-    /*width: 8vmin;
-    height: 8vmin;
-     */
     flex: 0 2 auto;
 }
 .mapButtonLabel {

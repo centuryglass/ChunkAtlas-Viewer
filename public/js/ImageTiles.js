@@ -10,15 +10,15 @@ class ImageTiles {
     constructor() {
         this._tiles = {};
         const imageURLs = {};
-        DimensionEnum.forEach((dimType) => {
-            this._tiles[dimType] = {};
-            imageURLs[dimType] = {};
+        RegionEnum.forEach((regionType) => {
+            this._tiles[regionType] = {};
+            imageURLs[regionType] = {};
             MapTypeEnum.forEach((mapType) => {
-                this._tiles[dimType][mapType] = {};
-                imageURLs[dimType][mapType] = {};
+                this._tiles[regionType][mapType] = {};
+                imageURLs[regionType][mapType] = {};
                 TileSizeEnum.forEach((sizeType) => {
-                    this._tiles[dimType][mapType][sizeType] = [];
-                    imageURLs[dimType][mapType][sizeType] = [];
+                    this._tiles[regionType][mapType][sizeType] = [];
+                    imageURLs[regionType][mapType][sizeType] = [];
                 });
             });
         });
@@ -32,7 +32,7 @@ class ImageTiles {
             imageTiles._totalImages = tileArray.length;
             imageTiles._imagesLoading = imageTiles._totalImages;
             tileArray.forEach((tile) => {
-                const region = DimensionEnum.withProperty("name",
+                const region = RegionEnum.withProperty("name",
                         tile.region_name);
                 const mapType = MapTypeEnum.withProperty("name",
                         tile.map_type);
@@ -40,22 +40,22 @@ class ImageTiles {
                         tile.tile_size);
                 imageURLs[region][mapType][sizeType].push(tile.image_url);
             });
-            // Iterate through each dimension/map type/size combination and
+            // Iterate through each region/map type/size combination and
             // load images:
-            const numCombinations = DimensionEnum.count * MapTypeEnum.count
+            const numCombinations = RegionEnum.count * MapTypeEnum.count
                     * TileSizeEnum.count;
             let promisedTileSets = [];
             for (let i = 0; i < numCombinations; i++) {
                 let factoredIdx = i;
-                const dimIdx = 1 + (factoredIdx % DimensionEnum.count);
-                factoredIdx = Math.floor(factoredIdx / DimensionEnum.count);
+                const regionIdx = 1 + (factoredIdx % RegionEnum.count);
+                factoredIdx = Math.floor(factoredIdx / RegionEnum.count);
                 const typeIdx = 1 + (factoredIdx % MapTypeEnum.count);
                 factoredIdx = Math.floor(factoredIdx / MapTypeEnum.count);
                 const sizeIdx = 1 + factoredIdx;
                 var tileSetPromise
-                        = loadImageList(imageURLs[dimIdx][typeIdx][sizeIdx])
+                        = loadImageList(imageURLs[regionIdx][typeIdx][sizeIdx])
                 .then((imageList) => {
-                    imageTiles._tiles[dimIdx][typeIdx][sizeIdx] = imageList;
+                    imageTiles._tiles[regionIdx][typeIdx][sizeIdx] = imageList;
                 });
                 promisedTileSets.push(tileSetPromise);
             }
@@ -77,19 +77,19 @@ class ImageTiles {
      * Gets a specific set of tile image elements, possibly loading them
      * asynchronously.
      *
-     * @param dimension  A DimensionEnum value.
+     * @param region     A RegionEnum value.
      *
      * @param mapType    A MapTypeEnum value.
      *
      * @param sizeType   A TileSizeEnum value.
      *
-     * @return           A Promise returning the set of tiles with the given
-     *                   dimension, map type, and size.
+     * @return           A Promise returning the set of tile promises with the
+     *                   given region, map type, and size.
      */
-    getTileSet(dimension, mapType, sizeType) {
-        assertIsEnum(dimension, DimensionEnum, "ImageTiles.getTileSet");
+    getTileSet(region, mapType, sizeType) {
+        assertIsEnum(region, RegionEnum, "ImageTiles.getTileSet");
         assertIsEnum(mapType, MapTypeEnum, "ImageTiles.getTileSet");
         assertIsEnum(sizeType, TileSizeEnum, "ImageTiles.getTileSet");
-        return this._tiles[dimension][mapType][sizeType];
+        return this._tiles[region][mapType][sizeType];
     }
 }
