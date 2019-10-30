@@ -21,6 +21,7 @@ const DISPLAY_TRANSITION_RATIO = 1.25;
 // Classes with portrait/landscape specific modes:
 const ASPECT_SPECIFIC_CLASSES = [
     "mainContent",
+    "majorPanel",
     "controlPanel",
     "mapButtonGroup",
     "mapButtonGroupLabel",
