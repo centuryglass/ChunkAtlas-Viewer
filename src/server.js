@@ -291,7 +291,6 @@ app.get(Paths.In.TILE_REQUEST, (req, res) => {
             res.end();
             return;
         }
-        console.dir(dbRes);
         adjustUploadedImagePaths(dbRes);
         console.log("Replying with " + dbRes.rows.length + " map tiles.");
         res.json(dbRes.rows);
