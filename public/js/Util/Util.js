@@ -84,3 +84,22 @@ function setConstProperty(object, name, value) {
         configurable: false
     });
 }
+
+/**
+ * Recursively freezes an object and all of its child objects.
+ *
+ * @param object  An object that should be frozen, preventing its
+ *                properties from being added, removed, or changed.
+ *
+ * @return        The object parameter.
+ */
+function recursiveFreeze(object) {
+    if (object === null || typeof object !== "object") {
+        return object;
+    }
+    const keys = Object.keys(object);
+    keys.forEach((key) => {
+        recursiveFreeze(object[key]);
+    });
+    return Object.freeze(object);
+}

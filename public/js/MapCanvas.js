@@ -10,7 +10,7 @@ class MapCanvas {
      *
      * @param canvas         An HTML5 canvas element object.
      *
-     * @param imageTiles     An ImageTiles object holding all image elements
+     * @param imageTiles     A TileManager object holding all image elements
      *                       used to draw the map.
      *
      * @param tileSize       Width and height in chunks of each tile.
@@ -29,6 +29,7 @@ class MapCanvas {
         this.mapType = MapTypeEnum.BIOME;
         this.mapPoints = [];
         this.drawPoints = true;
+        this._loadingImage = loadImage("resources/images/loading.png");
         const mapCanvas = this;
         loadMapPoints().then(list => mapCanvas.mapPoints = list);
     }
@@ -291,8 +292,8 @@ class MapCanvas {
         }
         let tileList = this.imageTiles.getTileSet(this.region, this.mapType,
                 sizeType);
-        for (let i = 0; i < tileList.length; i++) {
-            this.drawTile(tileList[i], ctx);
+        for (let tile of tileList) {
+            this.drawTile(tile, ctx);
         }
         
         // Draw the x and z axis:
@@ -373,50 +374,33 @@ class MapCanvas {
     /**
      * Draws a single image tile within the map canvas.
      *
-     * @param imageTile  A document image element object holding a single map
-     *                   tile. The source image name must contain the tile's
-     *                   (x, z) chunk coordinates.
+     * @param tile        A single map tile object, possibly holding a tile
+     *                    image element.
      *
-     * @param ctx        A 2D drawing context that can be used to draw within
-     *                   the map canvas.
+     * @param ctx         A 2D drawing context that can be used to draw within
+     *                    the map canvas.
+     *
+     * @param clearFirst  If defined and true, the tile's space on the canvas
+     *                    will be cleared before the tile is drawn.
      */
-    drawTile(imageTile, ctx) {
-        assert(imageTile instanceof HTMLImageElement, "MapCanvas.drawTile:"
-                + " imageTile \"" + imageTile + "\" is not a valid "
-                + "HTMLImageElement.");
-        assert(ctx instanceof CanvasRenderingContext2D, "MapCanvas.drawTile:"
-                + " ctx \"" + ctx + "\" is not a valid "
-                + "CanvasRenderingContext2D.");
-        let coordinates = null;
-        let coordData = imageTile.getAttribute("data");
-        if (coordData == null) {
-            const imageName = imageTile.getAttribute("src");
-            if (! imageTile.complete) {
-                console.log(imageName + " hasn't loaded yet!");
-                return;
-            }
-            let tileValues = imageName.match(/-?[0-9]+/g);
-            if (tileValues == null) {
-                return;
-            }
-            let x = tileValues[tileValues.length - 2];
-            let z = tileValues[tileValues.length - 1];
-            coordinates = new Point(x, z);
-            imageTile.setAttribute("data", x + "," + z);
-        }
-        else if (coordData.length == 0) {
+    drawTile(tile, ctx, clearFirst) {
+        assertIsClass(tile, Tile, "MapCanvas.drawTile");
+        assertIsClass(ctx, CanvasRenderingContext2D, "MapCanvas.drawTile");
+        if (this.getMapType() !== tile.getMapType()
+                || this.getRegion() !== tile.getRegion()) {
             return;
         }
-        else {
-            coordData = coordData.split(",");
-            coordinates = new Point(coordData[0], coordData[1]);
-        }
+        const tileImage = tile.getImage();
+        const coordinates = tile.getCoordinates();
         const canvasPos = this.worldToCanvasPos(coordinates);
         const sizeOnCanvas = this.tileSize * this.drawScale;
         const x = canvasPos.x, z = canvasPos.y;
 
         if (x < this.canvas.width && z < this.canvas.height
                 && (x + sizeOnCanvas) > 0 && (z + sizeOnCanvas) > 0) {
+            if (clearFirst) {
+                ctx.clearRect(x, z, sizeOnCanvas, sizeOnCanvas);
+            }
             if (sizeOnCanvas < 4) {
                 // Image data would be scaled too small to be useful, just draw
                 // a point there to indicate that there's content that can be
@@ -428,16 +412,28 @@ class MapCanvas {
                 return;
             }
             else {
-                try {
-                    ctx.drawImage(imageTile, x, z, sizeOnCanvas, sizeOnCanvas);
-                }
-                catch (exception) {
-                    if (exception.name === "NS_ERROR_NOT_AVAILABLE") {
-                        // Image couldn't load, draw a black rectangle.
-                        ctx.fillStyle = "#FF0000";
-                        ctx.fillRect(x, z, sizeOnCanvas, sizeOnCanvas);
+                let validImage = (tileImage !== null);
+                if (validImage) {
+                    try {
+                    console.dir(canvasPos);
+                        ctx.drawImage(tileImage, x, z, sizeOnCanvas,
+                                sizeOnCanvas);
                     }
-                    else { throw exception; }
+                    catch (exception) {
+                        if (exception.name === "NS_ERROR_NOT_AVAILABLE") {
+                            validImage = false;
+                        }
+                        else { throw exception; }
+                    }
+                }
+                if (! validImage) {
+                    // Draw a grey rectangle for invalid or unloaded tiles.
+                    ctx.fillStyle = "#555555";
+                    this._loadingImage.then((img) => { ctx.drawImage(img); });
+                    // Set the tile's onLoad callback so it's drawn as soon
+                    // as it's available:
+                    const mapCanvas = this;
+                    tile.setOnLoad(() => mapCanvas.drawMap());
                 }
             }
         }

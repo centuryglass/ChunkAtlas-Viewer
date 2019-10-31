@@ -1,5 +1,5 @@
 /**
- * @file  ImageTiles.js
+ * @file TileManager.js
  *
  * Loads and shares sets of map image tiles.
  */
@@ -41,32 +41,27 @@ class ImageTiles {
                 imageURLs[region][mapType][sizeType].push(tile.image_url);
             });
             // Iterate through each region/map type/size combination and
-            // load images:
+            // load tile sets:
             const numCombinations = RegionEnum.count * MapTypeEnum.count
                     * TileSizeEnum.count;
-            let promisedTileSets = [];
             for (let i = 0; i < numCombinations; i++) {
                 let factoredIdx = i;
-                const regionIdx = 1 + (factoredIdx % RegionEnum.count);
-                factoredIdx = Math.floor(factoredIdx / RegionEnum.count);
+                const sizeIdx = 1 + (factoredIdx % TileSizeEnum.count);
+                factoredIdx = Math.floor(factoredIdx / TileSizeEnum.count);
                 const typeIdx = 1 + (factoredIdx % MapTypeEnum.count);
                 factoredIdx = Math.floor(factoredIdx / MapTypeEnum.count);
-                const sizeIdx = 1 + factoredIdx;
-                var tileSetPromise
-                        = loadImageList(imageURLs[regionIdx][typeIdx][sizeIdx])
-                .then((imageList) => {
-                    imageTiles._tiles[regionIdx][typeIdx][sizeIdx] = imageList;
-                });
-                promisedTileSets.push(tileSetPromise);
+                const regionIdx = 1 + factoredIdx;
+                const urlSet = imageURLs[regionIdx][typeIdx][sizeIdx];
+                imageTiles._tiles[regionIdx][typeIdx][sizeIdx]
+                        = new TileSet(urlSet, regionIdx, typeIdx, sizeIdx);
             }
-            return Promise.all(promisedTileSets);
         });
     }
 
     /**
-     * Takes action when all image tiles have loaded.
+     * Takes action when the list of tile URLs finishes loading.
      *
-     * @param onLoad  A function to run after all tiles load. This function
+     * @param onLoad  A function to run after all tile URLs load. This function
      *                will not be passed any parameters.
      */
     then(onLoad) {
@@ -74,8 +69,7 @@ class ImageTiles {
     }
 
     /**
-     * Gets a specific set of tile image elements, possibly loading them
-     * asynchronously.
+     * Gets a specific set of tile image elements.
      *
      * @param region     A RegionEnum value.
      *
@@ -83,8 +77,7 @@ class ImageTiles {
      *
      * @param sizeType   A TileSizeEnum value.
      *
-     * @return           A Promise returning the set of tile promises with the
-     *                   given region, map type, and size.
+     * @return           A TileSet with the given region, map type, and size.
      */
     getTileSet(region, mapType, sizeType) {
         assertIsEnum(region, RegionEnum, "ImageTiles.getTileSet");
