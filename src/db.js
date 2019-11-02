@@ -4,10 +4,11 @@
  * Handles all direct database access.
  */
 const { Pool } = require('pg');
+const logger = require('./logger.js');
 const pool = new Pool();
 
 pool.on('error', (err, client) => {
-    console.log("Postgres error: " + err);    
+    logger.error("Postgres error: " + err);    
 });
 
 module.exports = {

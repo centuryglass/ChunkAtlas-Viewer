@@ -3,6 +3,7 @@
  *
  * Provides functions for validating input/variable values.
  */
+const logger = require("./logger.js");
 
 module.exports = {
     /**
@@ -29,6 +30,20 @@ module.exports = {
     },
 
     /**
+     * Checks if a value is a string.
+     *
+     * @param value  The value to check.
+     *
+     * @return       Whether the value is a non-null, defined string value.
+     */
+    isString: (value) => {
+        if (value === null || ! module.exports.isDefined(value)) {
+            return false;
+        }
+        return value instanceof String || typeof value === "string";
+    },
+
+    /**
      * Checks if a value is a valid hex color string.
      *
      * @param value  The value to check.
@@ -37,6 +52,9 @@ module.exports = {
      *               with '#'.
      */
     isHexColorString: (value) => {
+        if (! module.exports.isString(value)) {
+            return false;
+        }
         if (value.length != 7) {
             return false;
         }
@@ -62,7 +80,9 @@ module.exports = {
      */
     assert: (condition, message) => {
         if (! condition) {
-            throw new Error(message || "ASSERTION FAILED");
+            if (! message) { message = "ASSERTION FAILED"; }
+            logger.error(message);
+            throw new Error(message);
         }
     },
 

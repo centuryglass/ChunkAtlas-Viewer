@@ -1,12 +1,27 @@
-const express = require("express");
-const bodyParser = require("body-parser");
+/**
+ * @file server.js
+ *
+ * The main server code file, responsible for starting the express server and
+ * managing incoming HTTP requests.
+ */
+
 const fs = require("fs");
 const path = require("path");
-
+// Non-standard dependencies:
+// HTTP server:
+const express = require("express");
+// HTTP message body parsing:
+const bodyParser = require("body-parser");
+// Postgres server access:
 const db = require("./db.js");
+// Creating const data objects:
 const constUtils = require("./const-util.js");
+// Input validation:
 const validate = require("./validate.js");
+// Message encryption and decryption:
 const httpCrypto = require("./http-crypto.js");
+// Logging:
+const logger = require("./logger.js");
 
 // Path constants:
 const Paths = {};
@@ -36,7 +51,6 @@ Paths.Data.IMAGES     = path.join(Paths.Data.RESOURCES, "images");
 // Uploaded image resource directory:
 Paths.Data.IMG_UPLOAD = path.join(Paths.Data.IMAGES, "upload");
 constUtils.recursiveFreeze(Paths);
-
 
 // JSON key constants:
 const JSONKeys = {};
@@ -93,7 +107,17 @@ const SQL = {
 };
 constUtils.recursiveFreeze(SQL);
 
-// Init express server:
+// Max DB string lengths:
+const MaxLengths = {
+    URL:             256,
+    REGION_NAME:     16,
+    MAP_TYPE_NAME:   16,
+    KEY_DESCRIPTION: 64,
+    COLOR:           6
+}
+constUtils.recursiveFreeze(MaxLengths);
+
+// Initialize Express HTTP server:
 const app = express();
 const port = 8080;
 const updateMiddleware = [
@@ -116,7 +140,7 @@ app.post(Paths.In.UPDATE, (req, res) => {
     if (! updateMessage || Buffer.isBuffer(updateMessage)
             || Object.keys(updateMessage).length === 0)
     {
-        console.log("Invalid update message received and ignored.");
+        logger.warn("Invalid update message received and ignored.");
         res.end();
         return;
     }
@@ -136,11 +160,24 @@ app.post(Paths.In.UPDATE, (req, res) => {
                 + "$" + (keyInsertIdx + 2) + ", "
                 + SQL.IMG_FIND_OR_ADD + "($" + (keyInsertIdx + 3) + "),"
                 + "$" + (keyInsertIdx + 4) + ")";
-        keyInsertValues.push(key[JSONKeys.In.MAP_KEY_DESCRIPTION]);
-        keyInsertValues.push(key[JSONKeys.In.REGION]);
-        keyInsertValues.push(key[JSONKeys.In.MAP_TYPE]);
-        keyInsertValues.push(key[JSONKeys.In.MAP_KEY_ICON]);
-        keyInsertValues.push(key[JSONKeys.In.MAP_KEY_COLOR]);
+        const insertKeyValue = (jsonKey, maxLength) => {
+            let stringValue = key[jsonKey];
+            if (validate.isString(stringValue)
+                    && stringValue.length > maxLength) {
+                logger.warn("Warning: value for \"" + jsonKey
+                        + "\" exceeds max length, trimming to "
+                        + maxLength + " characters.");
+                stringValue = stringValue.substring(0, (maxLength - 3))
+                        + "...";
+            }
+            keyInsertValues.push(stringValue);
+        }
+        insertKeyValue(JSONKeys.In.MAP_KEY_DESCRIPTION,
+                MaxLengths.KEY_DESCRIPTION);
+        insertKeyValue(JSONKeys.In.REGION, MaxLengths.REGION_NAME);
+        insertKeyValue(JSONKeys.In.MAP_TYPE, MaxLengths.MAP_TYPE_NAME);
+        insertKeyValue(JSONKeys.In.MAP_KEY_ICON, MaxLengths.URL);
+        insertKeyValue(JSONKeys.In.MAP_KEY_COLOR, MaxLengths.COLOR);
         keyInsertIdx += 5;
     });
 
@@ -167,13 +204,19 @@ app.post(Paths.In.UPDATE, (req, res) => {
                 tileInsertIdx++;
                 const tileGroup = tileList[region][mapType][size];
                 tileGroup.forEach((tile) => {
+                    if (tile.length > MaxLengths.URL) {
+                        logger.error("Tile \"" + tile 
+                                + "\" exceeds max URL length "
+                                + MaxLengths.URL);
+                        return;
+                    }
                     // read coordinates from the last numbers in the file name:
                     const coordRegex = /(-?\d+)\.(-?\d+)\.png$/g;
                     const match = coordRegex.exec(tile);
                     if (typeof match[1] === "undefined"
                             || typeof match[2] === "undefined") {
-                        console.log("Warning: found invalid tile \"" + tile
-                                + "\".");
+                        logger.error("Found invalid tile \"" + tile
+                                + "\" without embedded coordinates.");
                         res.end();
                         return;
                     }
@@ -224,7 +267,7 @@ app.post(Paths.In.IMAGE_UPLOAD, (req, res) => {
     const imagePath = req.headers.path;
     if (imagePath.includes("..") || imagePath.includes("~")
             || ! validate.isDefined(pendingImages[imagePath])) {
-        console.error("Illegal path " + imagePath);
+        logger.error("Illegal image upload path \"" + imagePath + "\"");
         res.end();
         return;
     }
@@ -238,13 +281,13 @@ app.post(Paths.In.IMAGE_UPLOAD, (req, res) => {
     delete pendingImages[imagePath];
     const keyCount = Object.keys(pendingImages).length;
     if (keyCount == 0) {
-        console.log("All images loaded, committing changes:");
+        logger.info("All images loaded, committing changes:");
         db.query(SQL.APPLY_STAGING, (err, dbRes) => {
-            console.log("update committed to database.");
+            logger.info("update committed to database.");
         });
     }
     else {
-        console.log("Received " + imagePath + ", " + keyCount
+        logger.info("Received " + imagePath + ", " + keyCount
                 + " images remaining.");
     }
     res.end();
@@ -261,8 +304,7 @@ app.post(Paths.In.IMAGE_UPLOAD, (req, res) => {
 function adjustUploadedImagePaths(dbResult) {
     dbResult.rows.forEach((row) => {
         let img = row.image_url;
-        if ((typeof img === 'string' || img instanceof String)
-                && img !== '') {
+        if (validate.isString(img) && img !== '') {
             const fullPath = path.join(Paths.In.IMG_RESOURCE, img);
             row.image_url = fullPath;
         }
@@ -271,13 +313,14 @@ function adjustUploadedImagePaths(dbResult) {
 
 // Handle map key requests:
 app.get(Paths.In.KEY_REQUEST, (req, res) => {
-    console.log("Got key request, querying DB for keys.");
+    logger.info("Got key request, querying DB for keys.");
     db.query(SQL.GET_KEYS, (err, dbRes) => {
         if (! validate.isDefined(dbRes) || ! validate.isDefined(dbRes.rows)) {
+            logger.info("No keys found, ending response.");
             res.end();
             return;
         }
-        console.log("Replying with " + dbRes.rows.length + " keys.");
+        logger.info("Replying with " + dbRes.rows.length + " keys.");
         adjustUploadedImagePaths(dbRes);
         res.json(dbRes.rows);
     });
@@ -285,17 +328,18 @@ app.get(Paths.In.KEY_REQUEST, (req, res) => {
 
 // Handle map tile requests:
 app.get(Paths.In.TILE_REQUEST, (req, res) => {
-    console.log("Got tile request, querying DB for tiles.");
+    logger.info("Got tile request, querying DB for tiles.");
     db.query(SQL.GET_TILES, (err, dbRes) => {
         if (! validate.isDefined(dbRes) || ! validate.isDefined(dbRes.rows)) {
+            logger.info("No tiles found, ending response.");
             res.end();
             return;
         }
         adjustUploadedImagePaths(dbRes);
-        console.log("Replying with " + dbRes.rows.length + " map tiles.");
+        logger.info("Replying with " + dbRes.rows.length + " map tiles.");
         res.json(dbRes.rows);
     });
 });
 
 
-app.listen(port, () => console.log('listening on port ' + port));
+app.listen(port, () => logger.info('listening on port ' + port));

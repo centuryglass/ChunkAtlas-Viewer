@@ -12,6 +12,7 @@ const aesjs = require("aes-js");
 const RSASet = require("./rsa-set.js");
 const constUtils = require("./const-util.js");
 const validate = require("./validate.js");
+const logger = require("./logger.js");
 const { StringDecoder } = require("string_decoder");
 
 // Relevent HTTP header value keys:
@@ -54,7 +55,7 @@ module.exports = {
         if (! decrypted)
         {
             // Discard signed messages with the wrong signature.
-            console.log("Warning: received message with invalid signature.");
+            logger.warn("Received message with invalid signature.");
             return;
         }
         // TODO: Switch from ECB (Electronic Codebook) encryption to something
@@ -71,10 +72,13 @@ module.exports = {
                 Buffer.from(messageBytes));
         try {
             req.body = JSON.parse(messageStr);
+            logger.info("Validated, decrypted, and saved JSON message.");
         }
         catch(parseException) {
             // Message is not javascript, set body to a buffer holding the raw
             // decrypted data:
+            logger.info("Encrypted message was not JSON, saving raw message "
+                    + "data to body.");
             req.body = Buffer.from(messageBytes);
         }
         next();
@@ -107,7 +111,7 @@ module.exports = {
             validate.assert(Buffer.isBuffer(body),
                     "Message body must be a string or Buffer.");
         }
-        console.log("Signing " + body.length + "-byte response body:");
+        logger.info("Signing " + body.length + "-byte response body:");
         const signatureBuf = rsaKeys.sign(body);
         const signature = signatureBuf.toString("base64");
         res.append(HeaderKeys.RESPONSE_SIGNATURE, signature);
