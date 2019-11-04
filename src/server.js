@@ -119,6 +119,7 @@ constUtils.recursiveFreeze(MaxLengths);
 
 // Initialize Express HTTP server:
 const app = express();
+app.enable("trust proxy");
 const port = 8080;
 const updateMiddleware = [
     bodyParser.raw({
@@ -136,6 +137,8 @@ var pendingImages = {};
 
 // Handle JSON update data:
 app.post(Paths.In.UPDATE, (req, res) => {
+    logger.info("Received map update description from ["
+            + req.ips.toString() + "]");
     const updateMessage = req.body;
     if (! updateMessage || Buffer.isBuffer(updateMessage)
             || Object.keys(updateMessage).length === 0)
@@ -267,7 +270,8 @@ app.post(Paths.In.IMAGE_UPLOAD, (req, res) => {
     const imagePath = req.headers.path;
     if (imagePath.includes("..") || imagePath.includes("~")
             || ! validate.isDefined(pendingImages[imagePath])) {
-        logger.error("Illegal image upload path \"" + imagePath + "\"");
+        logger.error("Illegal image upload path \"" + imagePath + "\" from "
+                + "[" + req.ips.toString() + "]");
         res.end();
         return;
     }
@@ -287,8 +291,8 @@ app.post(Paths.In.IMAGE_UPLOAD, (req, res) => {
         });
     }
     else {
-        logger.info("Received " + imagePath + ", " + keyCount
-                + " images remaining.");
+        logger.info("Received " + imagePath + " from [" + req.ips.toString()
+                + "], " + keyCount + " images remaining.");
     }
     res.end();
 });
@@ -313,7 +317,8 @@ function adjustUploadedImagePaths(dbResult) {
 
 // Handle map key requests:
 app.get(Paths.In.KEY_REQUEST, (req, res) => {
-    logger.info("Got key request, querying DB for keys.");
+    logger.info("Got key request from [" + req.ips.toString()
+            + "], querying DB for keys.");
     db.query(SQL.GET_KEYS, (err, dbRes) => {
         if (! validate.isDefined(dbRes) || ! validate.isDefined(dbRes.rows)) {
             logger.info("No keys found, ending response.");
@@ -328,7 +333,8 @@ app.get(Paths.In.KEY_REQUEST, (req, res) => {
 
 // Handle map tile requests:
 app.get(Paths.In.TILE_REQUEST, (req, res) => {
-    logger.info("Got tile request, querying DB for tiles.");
+    logger.info("Got tile request from [" + req.ips.toString()
+            + "], querying DB for tiles.");
     db.query(SQL.GET_TILES, (err, dbRes) => {
         if (! validate.isDefined(dbRes) || ! validate.isDefined(dbRes.rows)) {
             logger.info("No tiles found, ending response.");
