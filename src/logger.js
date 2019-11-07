@@ -34,7 +34,6 @@ const logger = winston.createLogger({
             ),
     defaultMeta: { service: 'user-service' },
     transports: [
-        new winston.transports.Console(),
         importantFileTransport,
         fullFileTransport
     ]
