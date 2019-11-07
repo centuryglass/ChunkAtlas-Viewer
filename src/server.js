@@ -270,8 +270,8 @@ app.post(Paths.In.IMAGE_UPLOAD, (req, res) => {
     const imagePath = req.headers.path;
     if (imagePath.includes("..") || imagePath.includes("~")
             || ! validate.isDefined(pendingImages[imagePath])) {
-        logger.error("Illegal image upload path \"" + imagePath + "\" from "
-                + "[" + req.ips.toString() + "]");
+        logger.warn("Illegal image upload path \"" + imagePath + "\" from "
+                + "[" + req.ips.toString() + "], ignoring image.");
         res.end();
         return;
     }
@@ -291,7 +291,7 @@ app.post(Paths.In.IMAGE_UPLOAD, (req, res) => {
         });
     }
     else {
-        logger.info("Received " + imagePath + " from [" + req.ips.toString()
+        logger.debug("Received " + imagePath + " from [" + req.ips.toString()
                 + "], " + keyCount + " images remaining.");
     }
     res.end();

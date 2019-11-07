@@ -6,19 +6,35 @@
 const path = require("path");
 const winston = require("winston");
 const { format } = require("logform");
-
-
-// Log file to hold all server messages:
-const FULL_LOG_FILE_PATH = process.env.FULL_LOG;
-// Log file to hold important server messages:
-const IMPORTANT_LOG_FILE_PATH = process.env.IMPORTANT_LOG;
+const { isDefined } = require("./validate.js");
 
 // Define where log data will be saved:
-const importantFileTransport = new winston.transports.File({
-        filename: IMPORTANT_LOG_FILE_PATH, level: "warn",
-        handleExceptions: true });
-const fullFileTransport = new winston.transports.File({
-        filename: FULL_LOG_FILE_PATH, handleExceptions: true });
+const logFiles = [
+    // Path to store complete server logs:
+    {
+        path: process.env.FULL_LOG,
+        level: "debug"
+    },
+    // Log file to hold general server logs:
+    {
+        path: process.env.GENERAL_LOG,
+        level: "info"
+    },
+    // Log file to hold important server messages:
+    {
+        path: process.env.IMPORTANT_LOG,
+        level: "warn"
+    }
+];
+let fileTransports = [];
+for (let file of logFiles) {
+    if (isDefined(file.path)) {
+        fileTransports.push(new winston.transports.File({
+            filename: file.path,
+            level: file.level,
+            handleExceptions: true }));
+    }
+}
 
 // Define how log lines will be formatted:
 const lineFormat = format.printf((info) => {
@@ -29,14 +45,10 @@ const lineFormat = format.printf((info) => {
 const logger = winston.createLogger({
     level: 'debug',
     format: format.combine(
-                format.timestamp({ format: "MM/DD/YYYY hh:mm:ssa: " }),
-                lineFormat
-            ),
+        format.timestamp({ format: "MM/DD/YYYY hh:mm:ssa: " }),
+        lineFormat ),
     defaultMeta: { service: 'user-service' },
-    transports: [
-        importantFileTransport,
-        fullFileTransport
-    ]
+    transports: fileTransports
 });
 
 module.exports = logger;
