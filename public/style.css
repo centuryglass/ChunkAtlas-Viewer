@@ -61,6 +61,7 @@ body {
     margin-bottom: 1%;
 }
 .majorPanel-landscape {
+    height: 88vmin;
     padding-left: 2vmin;
     padding-right: 2vmin;
     padding-top: 3vmin;

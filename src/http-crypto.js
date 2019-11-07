@@ -77,7 +77,7 @@ module.exports = {
         catch(parseException) {
             // Message is not javascript, set body to a buffer holding the raw
             // decrypted data:
-            logger.info("Encrypted message was not JSON, saving raw message "
+            logger.debug("Encrypted message was not JSON, saving raw message "
                     + "data to body.");
             req.body = Buffer.from(messageBytes);
         }
