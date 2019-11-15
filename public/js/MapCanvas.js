@@ -415,7 +415,6 @@ class MapCanvas {
                 let validImage = (tileImage !== null);
                 if (validImage) {
                     try {
-                    console.dir(canvasPos);
                         ctx.drawImage(tileImage, x, z, sizeOnCanvas,
                                 sizeOnCanvas);
                     }
@@ -429,7 +428,8 @@ class MapCanvas {
                 if (! validImage) {
                     // Draw a grey rectangle for invalid or unloaded tiles.
                     ctx.fillStyle = "#555555";
-                    this._loadingImage.then((img) => { ctx.drawImage(img); });
+                    this._loadingImage.then((img) => { ctx.drawImage(img, x, z,
+                                sizeOnCanvas, sizeOnCanvas); });
                     // Set the tile's onLoad callback so it's drawn as soon
                     // as it's available:
                     const mapCanvas = this;
