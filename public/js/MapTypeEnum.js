@@ -8,7 +8,7 @@ const MapTypeEnum = createEnum("MapTypeEnum",
             [["name", "Biome"]],
             [["name", "Error"]],
             [["name", "Structure"]],
-            [["name", "Total Activity"]],
-            [["name", "Recent Activity"]]
+            [["name", "Total_Activity"]],
+            [["name", "Recent_Activity"]]
         ]
 );
