@@ -26,6 +26,9 @@ class Tile {
         assertIsEnum(region, RegionEnum, "Tile constructor");
         assertIsEnum(type, MapTypeEnum, "Tile constructor");
         assertIsEnum(size, TileSizeEnum, "Tile constructor");
+        if (url.charAt(0) === '/') {
+            url = url.substr(1);
+        }
         setConstProperty(this, "_url", url);
         setConstProperty(this, "_region", region);
         setConstProperty(this, "_type", type);

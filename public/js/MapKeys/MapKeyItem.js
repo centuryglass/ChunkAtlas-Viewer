@@ -16,6 +16,9 @@ class MapKeyItem {
     constructor(description, colorOrImage) {
         assertDefinedAndNonEmpty(description, "MapKeyItem", "description");
         assertDefinedAndNonEmpty(colorOrImage, "MapKeyItem", "colorOrImage");
+        if (colorOrImage.charAt(0) === '/') {
+            colorOrImage = colorOrImage.substr(1);
+        }
         this.description = description;
         this.colorOrImage = colorOrImage;
         // Key item element css class constants:
