@@ -25,7 +25,7 @@ class ImageTiles {
         this._imagesLoading = 0;
         this._totalImages = 0;
         const imageTiles = this;
-        const tileRequest = new Request('/tiles');
+        const tileRequest = new Request('tiles');
         this._loadingPromise = fetch(tileRequest)
         .then((response) => response.json())
         .then((tileArray) => {

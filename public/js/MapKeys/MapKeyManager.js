@@ -17,7 +17,7 @@ class MapKeyManager {
             });
         });
         const keySets = this;
-        const keyRequest = new Request('/keys');
+        const keyRequest = new Request('keys');
         console.log("Requesting map keys:");
         this._loadingPromise = fetch(keyRequest)
         .then(response => response.json())
