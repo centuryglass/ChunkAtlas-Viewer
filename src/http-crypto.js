@@ -11,8 +11,8 @@
 const aesjs = require("aes-js");
 const RSASet = require("./rsa-set.js");
 const constUtils = require("./const-util.js");
-const validate = require("./validate.js");
 const logger = require("./logger.js");
+const { assert, isDefined } = require("./validate.js");
 const { StringDecoder } = require("string_decoder");
 
 // Relevent HTTP header value keys:
@@ -44,10 +44,19 @@ module.exports = {
      */
     decrypt: function (req, res, next) {
         const aesEncryptedKey = req.headers[HeaderKeys.ENCRYPTED_AES];
-        if (! validate.isDefined(aesEncryptedKey))
+        if (! isDefined(aesEncryptedKey))
         {
-            // No key provided, so no decryption necessary.
-            next();
+            // Requests without a valid signature are accepted only if the
+            // request has no body, and uses HTTP method GET, HEAD, or OPTIONS.
+            if (! isDefined(req.body) && (req.method === "GET" ||
+                    req.method === "HEAD" || req.method === "OPTIONS")) {
+                next();
+                return;
+            }
+            logger.warn("Received " + req.method + " call without required "
+                    + "signature/encryption data, responding with 401"
+                    + " Unauthorized.");
+            res.status(401).end();
             return;
         }
         const decrypted = rsaKeys.verifyAndDecrypt(Buffer.from(aesEncryptedKey,
@@ -55,7 +64,9 @@ module.exports = {
         if (! decrypted)
         {
             // Discard signed messages with the wrong signature.
-            logger.warn("Received message with invalid signature.");
+            logger.warn("Received message with invalid signature, responding"
+                    + " with 401 Unauthorized.");
+            res.status(401).end();
             return;
         }
         // TODO: Switch from ECB (Electronic Codebook) encryption to something
@@ -100,15 +111,13 @@ module.exports = {
      *              base-64 encoded.
      */
     signResponse : function (res, body) {
-        validate.assert(validate.isDefined(res),
-                "Response must be defined.");
-        validate.assert(validate.isDefined(body),
-                "Response body must be defined.");
+        assert(isDefined(res), "Response must be defined.");
+        assert(isDefined(body), "Response body must be defined.");
         if (typeof body === "string" || body instanceof String) {
             body = Buffer.from(body, "UTF-8");
         }
         else {
-            validate.assert(Buffer.isBuffer(body),
+            assert(Buffer.isBuffer(body),
                     "Message body must be a string or Buffer.");
         }
         logger.info("Signing " + body.length + "-byte response body:");

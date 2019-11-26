@@ -81,6 +81,7 @@ module.exports = {
     assert: (condition, message) => {
         if (! condition) {
             if (! message) { message = "ASSERTION FAILED"; }
+            console.log(message);
             logger.error(message);
             throw new Error(message);
         }

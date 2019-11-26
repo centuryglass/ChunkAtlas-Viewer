@@ -1,0 +1,719 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.2-beta" last-position="0,0" last-zoom="1" max-obj-count="10"
+	 default-schema="public" default-owner="postgres">
+<database name="MapDB" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layer="0" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<table name="regions" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Stores all mapped Minecraft regions/dimensions. Each region is a distinct plane with its own set of maps. In a typical Minecraft server, this includes the Overworld, the Nether, and the End, but modded servers may add additional regions.]]></comment>
+	<position x="321" y="461"/>
+	<column name="region_id" not-null="true">
+		<type name="varchar" length="16"/>
+		<comment><![CDATA[Identifies a mapped Minecraft region/dimension.]]></comment>
+	</column>
+	<column name="display_name" not-null="true">
+		<type name="varchar" length="32"/>
+		<comment><![CDATA[The name used to represent a region within the map viewer interface.]]></comment>
+	</column>
+	<column name="icon_uri">
+		<type name="varchar" length="512"/>
+		<comment><![CDATA[An optional URI for an image used to represent a region in the map viewer interface.]]></comment>
+	</column>
+	<column name="last_update" not-null="true" default-value="CURRENT_TIMESTAMP">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[The last time a map tile or location within a region was added or updated.]]></comment>
+	</column>
+	<constraint name="region_pk" type="pk-constr" table="public.regions">
+		<columns names="region_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="region_valid_id" type="ck-constr" table="public.regions">
+			<expression><![CDATA[--check_id_format(region_id::VARCHAR(16))
+region_id ~ '^[a-z](_?[a-z])*[a-z]$']]></expression>
+		<comment><![CDATA[The region ID must follow ID string naming conventions.]]></comment>
+	</constraint>
+	<constraint name="region_nonempty_display_name" type="ck-constr" table="public.regions">
+			<expression><![CDATA[(display_name = '') IS NOT TRUE]]></expression>
+		<comment><![CDATA[The display name must be a non-empty string.]]></comment>
+	</constraint>
+	<constraint name="region_display_name_unique" type="uq-constr" table="public.regions">
+		<columns names="display_name" ref-type="src-columns"/>
+		<comment><![CDATA[Region display names must be unique.]]></comment>
+	</constraint>
+</table>
+
+<table name="map_types" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Stores the different types of map available (e.g. biome, recent activity, etc.).]]></comment>
+	<position x="531" y="27"/>
+	<column name="type_id" not-null="true">
+		<type name="varchar" length="16"/>
+		<comment><![CDATA[Identifies a type of map image available.]]></comment>
+	</column>
+	<column name="display_name" not-null="true">
+		<type name="varchar" length="32"/>
+		<comment><![CDATA[The display name used to represent a map type within the map viewer interface.]]></comment>
+	</column>
+	<column name="icon_uri">
+		<type name="varchar" length="512"/>
+		<comment><![CDATA[An optional URI for an image used to represent a map type in the map viewer interface.]]></comment>
+	</column>
+	<column name="last_update" not-null="true" default-value="CURRENT_TIMESTAMP">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[The last time a map tile of a given type was added or updated.]]></comment>
+	</column>
+	<constraint name="map_types_type_id_pk" type="pk-constr" table="public.map_types">
+		<columns names="type_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="map_types_valid_id" type="ck-constr" table="public.map_types">
+			<expression><![CDATA[--check_id_format(type_id::VARCHAR(16))
+type_id ~ '^[a-z](_?[a-z])*[a-z]$']]></expression>
+		<comment><![CDATA[Map type IDs must meet ID string naming conventions.]]></comment>
+	</constraint>
+	<constraint name="map_types_display_name_unique" type="uq-constr" table="public.map_types">
+		<columns names="display_name" ref-type="src-columns"/>
+		<comment><![CDATA[Map types must have unique display names.]]></comment>
+	</constraint>
+	<constraint name="map_types_nonempty_display_name" type="ck-constr" table="public.map_types">
+			<expression><![CDATA[(display_name='') IS NOT TRUE]]></expression>
+		<comment><![CDATA[Map type display name cannot be the empty string.]]></comment>
+	</constraint>
+</table>
+
+<table name="tile_sizes" layer="0" collapse-mode="2" max-obj-count="2">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Lists all map tile image resolutions available.  Sizes are measured in pixels, and represent both the width and height of an image.]]></comment>
+	<position x="243" y="24"/>
+	<column name="size" not-null="true">
+		<type name="smallint" length="0"/>
+		<comment><![CDATA[A map tile image width and height in pixels.]]></comment>
+	</column>
+	<constraint name="tile_sizes_pk" type="pk-constr" table="public.tile_sizes">
+		<columns names="size" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="tile_sizes_positive" type="ck-constr" table="public.tile_sizes">
+			<expression><![CDATA[size > 0]]></expression>
+		<comment><![CDATA[Tile sizes must be positive numbers.]]></comment>
+	</constraint>
+</table>
+
+<table name="map_tiles" layer="0" collapse-mode="2" max-obj-count="8">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Stores information about ChunkAtlas map tile images.]]></comment>
+	<position x="18" y="18"/>
+	<column name="region_id" not-null="true">
+		<type name="varchar" length="16"/>
+		<comment><![CDATA[Identifies the mapped Minecraft region/dimension.]]></comment>
+	</column>
+	<column name="type_id" not-null="true">
+		<type name="varchar" length="16"/>
+		<comment><![CDATA[Identifies the tile's map format.]]></comment>
+	</column>
+	<column name="size" not-null="true">
+		<type name="smallint" length="0"/>
+		<comment><![CDATA[The tile image width and height in pixels.]]></comment>
+	</column>
+	<column name="block_x" not-null="true">
+		<type name="integer" length="0"/>
+		<comment><![CDATA[The x-coordinate of the tile's upper left corner within the mapped region, measured in Minecraft blocks.]]></comment>
+	</column>
+	<column name="block_z" not-null="true">
+		<type name="integer" length="0"/>
+		<comment><![CDATA[The z-coordinate of the tile's upper left corner within the mapped region, measured in Minecraft blocks.]]></comment>
+	</column>
+	<column name="tile_uri" not-null="true">
+		<type name="varchar" length="512"/>
+		<comment><![CDATA[The URI used to access the tile image.]]></comment>
+	</column>
+	<column name="last_update" not-null="true" default-value="CURRENT_TIMESTAMP">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[The time that this tile was created or last updated.]]></comment>
+	</column>
+	<constraint name="map_tiles_pk" type="pk-constr" table="public.map_tiles">
+		<columns names="region_id,type_id,size,block_x,block_z" ref-type="src-columns"/>
+		<comment><![CDATA[For each region, map type, image size, and coordinates, only one tile may exist.]]></comment>
+	</constraint>
+	<constraint name="map_tiles_valid_ids" type="ck-constr" table="public.map_tiles">
+			<expression><![CDATA[--check_id_format(region_id::VARCHAR(16))
+-- AND check_id_format(type_id::VARCHAR(16))
+region_id ~ '^[a-z](_?[a-z])*[a-z]$'
+AND type_id ~ '^[a-z](_?[a-z])*[a-z]$']]></expression>
+		<comment><![CDATA[All ID strings must meet ID naming conventions.]]></comment>
+	</constraint>
+	<constraint name="map_tiles_valid_size" type="ck-constr" table="public.map_tiles">
+			<expression><![CDATA[size > 0]]></expression>
+		<comment><![CDATA[Map tile size values must be positive.]]></comment>
+	</constraint>
+	<constraint name="map_tiles_uri_nonempty" type="ck-constr" table="public.map_tiles">
+			<expression><![CDATA[(tile_uri = '') IS NOT TRUE]]></expression>
+		<comment><![CDATA[Map tiles must be created with a nonempty URI.]]></comment>
+	</constraint>
+</table>
+
+<function name="regions_add_or_update"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="CALLED ON NULL INPUT"
+		function-type="VOLATILE"
+		security-type="SECURITY INVOKER"
+		execution-cost="1"
+		row-amount="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[If not already present in the regions table, add a new region_id, setting its initial display_name to match the region_id.]]></comment>
+	<language name="plpgsql" sql-disabled="true"/>
+	<return-type>
+	<type name="trigger" length="0"/>
+	</return-type>
+	<definition><![CDATA[BEGIN
+	INSERT INTO regions (region_id, display_name, last_update)
+	VALUES (NEW.region_id, NEW.region_id, NEW.last_update);
+	RETURN NEW;
+EXCEPTION WHEN unique_violation THEN
+	-- value already present, just update timestamp.
+	UPDATE regions
+	SET last_update = NEW.last_update;
+	RETURN NEW;
+END;]]></definition>
+</function>
+
+<trigger name="map_tiles_update_regions" firing-type="BEFORE" per-line="true" constraint="false"
+	 ins-event="true" del-event="false" upd-event="false" trunc-event="false"
+	 table="public.map_tiles">
+		<comment><![CDATA[Ensures that the region_id is added to the region table if it isn't already there, and changes its update timestamp.]]></comment>
+		<function signature="public.regions_add_or_update()"/>
+</trigger>
+
+<function name="map_types_add_or_update"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="CALLED ON NULL INPUT"
+		function-type="VOLATILE"
+		security-type="SECURITY INVOKER"
+		execution-cost="1"
+		row-amount="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Adds a new map type to map_types if a type_id is not found, setting display_name to match type_id.]]></comment>
+	<language name="plpgsql" sql-disabled="true"/>
+	<return-type>
+	<type name="trigger" length="0"/>
+	</return-type>
+	<definition><![CDATA[BEGIN
+	INSERT INTO map_types (type_id, display_name, last_update)
+	VALUES (NEW.type_id, NEW.type_id, NEW.last_update);
+	RETURN NEW;
+EXCEPTION WHEN unique_violation THEN
+	-- value already present, just update timestamp.
+	UPDATE map_types
+	SET last_update = NEW.last_update;
+	RETURN NEW;
+END;]]></definition>
+</function>
+
+<function name="tile_sizes_add_if_missing"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="CALLED ON NULL INPUT"
+		function-type="VOLATILE"
+		security-type="SECURITY INVOKER"
+		execution-cost="1"
+		row-amount="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<language name="plpgsql" sql-disabled="true"/>
+	<return-type>
+	<type name="trigger" length="0"/>
+	</return-type>
+	<definition><![CDATA[BEGIN
+	INSERT INTO tile_sizes VALUES (NEW.size);
+	RETURN NEW;
+EXCEPTION WHEN unique_violation THEN
+	-- value already present, do nothing.
+	RETURN NEW;
+END;]]></definition>
+</function>
+
+<trigger name="map_tiles_update_types" firing-type="BEFORE" per-line="true" constraint="false"
+	 ins-event="true" del-event="false" upd-event="false" trunc-event="false"
+	 table="public.map_tiles">
+		<comment><![CDATA[Ensures that the type_id is added to the map_type table if it isn't already there, and changes its update timestamp.]]></comment>
+		<function signature="public.map_types_add_or_update()"/>
+</trigger>
+
+<trigger name="map_tiles_update_sizes" firing-type="BEFORE" per-line="true" constraint="false"
+	 ins-event="true" del-event="false" upd-event="false" trunc-event="false"
+	 table="public.map_tiles">
+		<comment><![CDATA[Ensures that the size is added to the tile_sizes table if it isn't already there.]]></comment>
+		<function signature="public.tile_sizes_add_if_missing()"/>
+</trigger>
+
+<table name="locations" layer="0" collapse-mode="2" max-obj-count="9">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Stores notable locations within a mapped region.]]></comment>
+	<position x="17" y="390"/>
+	<column name="region_id" not-null="true">
+		<type name="varchar" length="16"/>
+		<comment><![CDATA[Identifies the Minecraft region/dimension that contains this location.]]></comment>
+	</column>
+	<column name="category_id" not-null="true">
+		<type name="varchar" length="16"/>
+		<comment><![CDATA[Sorts the location into a specific category.]]></comment>
+	</column>
+	<column name="block_x" not-null="true">
+		<type name="integer" length="0"/>
+		<comment><![CDATA[The location's x-coordinate within its region, measured in blocks.]]></comment>
+	</column>
+	<column name="block_z" not-null="true">
+		<type name="integer" length="0"/>
+		<comment><![CDATA[The location's z-coordinate within its region, measured in blocks.]]></comment>
+	</column>
+	<column name="display_name">
+		<type name="varchar" length="128"/>
+		<comment><![CDATA[An optional name used to label this location within the map viewer.]]></comment>
+	</column>
+	<column name="color">
+		<type name="char" length="6"/>
+		<comment><![CDATA[An optional color to use when drawing this location's point on the map viewer, represented as a six-digit hex string.]]></comment>
+	</column>
+	<column name="icon_uri">
+		<type name="varchar" length="512"/>
+		<comment><![CDATA[An optional icon URI to use when drawing this location's point on the map viewer.]]></comment>
+	</column>
+	<column name="last_update" not-null="true" default-value="CURRENT_TIMESTAMP">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[The time when the location was added or last updated.]]></comment>
+	</column>
+	<constraint name="locations_pk" type="pk-constr" table="public.locations">
+		<columns names="region_id,category_id,block_x,block_z" ref-type="src-columns"/>
+		<comment><![CDATA[Each region can have only one location with a given category at the same coordinates.]]></comment>
+	</constraint>
+	<constraint name="locations_valid_ids" type="ck-constr" table="public.locations">
+			<expression><![CDATA[--check_id_format(region_id::VARCHAR(16))
+--AND check_id_format(category_id::VARCHAR(16))
+region_id ~ '^[a-z](_?[a-z])*[a-z]$'
+AND category_id ~ '^[a-z](_?[a-z])*[a-z]$']]></expression>
+		<comment><![CDATA[All ID strings must meet ID naming conventions.]]></comment>
+	</constraint>
+	<constraint name="locations_valid_color" type="ck-constr" table="public.locations">
+			<expression><![CDATA[--color IS NULL OR check_color(color)
+color IS NULL OR color ~ '^[0-9a-fA-F]{6}$']]></expression>
+		<comment><![CDATA[If the color is non-null, it must be an appropriate six-digit hex string.]]></comment>
+	</constraint>
+</table>
+
+<table name="location_categories" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Stores all categories used within the locations table.]]></comment>
+	<position x="296" y="231"/>
+	<column name="category_id" not-null="true">
+		<type name="varchar" length="16"/>
+		<comment><![CDATA[A short string used to identify a location category.]]></comment>
+	</column>
+	<column name="display_name">
+		<type name="varchar" length="64"/>
+		<comment><![CDATA[A string to use when displaying category names to the user.]]></comment>
+	</column>
+	<column name="icon_uri">
+		<type name="varchar" length="512"/>
+		<comment><![CDATA[An optional icon used to represent a category within user interfaces.]]></comment>
+	</column>
+	<column name="last_update" not-null="true" default-value="CURRENT_TIMESTAMP">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[The time a category was added, or the last time a location in the category was added or updated.]]></comment>
+	</column>
+	<constraint name="location_categories_pk" type="pk-constr" table="public.location_categories">
+		<columns names="category_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="location_categories_display_name_unique" type="uq-constr" table="public.location_categories">
+		<columns names="display_name" ref-type="src-columns"/>
+		<comment><![CDATA[Categories must have distinct display names.]]></comment>
+	</constraint>
+	<constraint name="location_categories_display_name_nonempty" type="ck-constr" table="public.location_categories">
+			<expression><![CDATA[(display_name = '') IS NOT TRUE]]></expression>
+		<comment><![CDATA[Categories must have a non-empty display name]]></comment>
+	</constraint>
+	<constraint name="location_categories_valid_id" type="ck-constr" table="public.location_categories">
+			<expression><![CDATA[--check_id_format(category_id::VARCHAR(16))
+category_id ~ '^[a-z](_?[a-z])*[a-z]$']]></expression>
+		<comment><![CDATA[category_id values must meet string ID naming conventions.]]></comment>
+	</constraint>
+</table>
+
+<function name="location_categories_add_or_update"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="CALLED ON NULL INPUT"
+		function-type="VOLATILE"
+		security-type="SECURITY INVOKER"
+		execution-cost="1"
+		row-amount="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Adds a new location category, setting display_name to category_id, or updates the timestamp if the category already exists.]]></comment>
+	<language name="plpgsql" sql-disabled="true"/>
+	<return-type>
+	<type name="trigger" length="0"/>
+	</return-type>
+	<definition><![CDATA[BEGIN
+	INSERT INTO location_categories (category_id, display_name, last_update)
+	VALUES (NEW.category_id, NEW.category_id, NEW.last_update);
+	RETURN NEW;
+EXCEPTION WHEN unique_violation THEN
+	-- value already present, just update timestamp.
+	UPDATE location_categories
+	SET last_update = NEW.last_update;
+	RETURN NEW;
+END;]]></definition>
+</function>
+
+<table name="key_items" layer="0" collapse-mode="2" max-obj-count="7">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Stores items within a map key.  Each map type/region combination has its own key, displayed to the user within the map viewer to explain map symbols and/or colors.]]></comment>
+	<position x="607" y="248"/>
+	<column name="region_id" not-null="true">
+		<type name="varchar" length="16"/>
+		<comment><![CDATA[The map region described by a key item.]]></comment>
+	</column>
+	<column name="type_id" not-null="true">
+		<type name="varchar" length="16"/>
+		<comment><![CDATA[The map data type described by a key item.]]></comment>
+	</column>
+	<column name="description" not-null="true">
+		<type name="varchar" length="256"/>
+		<comment><![CDATA[Explains to the user what the key item's color or icon represents.]]></comment>
+	</column>
+	<column name="last_update" not-null="true" default-value="CURRENT_TIMESTAMP">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[The last time the key item was updated.]]></comment>
+	</column>
+	<column name="color">
+		<type name="char" length="6"/>
+		<comment><![CDATA[A map color explained by the key item, represented as a six-digit color string. This value may only be null if the icon URI is not null.]]></comment>
+	</column>
+	<column name="icon_uri">
+		<type name="varchar" length="512"/>
+		<comment><![CDATA[The image URI of a map icon or symbol explained by the key item.  This value may only be null if the icon color is not null.]]></comment>
+	</column>
+	<constraint name="key_items_pk" type="pk-constr" table="public.key_items">
+		<columns names="region_id,type_id,description" ref-type="src-columns"/>
+		<comment><![CDATA[Key items within a shared region and map type must have unique descriptions.]]></comment>
+	</constraint>
+	<constraint name="key_items_description_nonempty" type="ck-constr" table="public.key_items">
+			<expression><![CDATA[(description = '') IS NOT TRUE]]></expression>
+		<comment><![CDATA[Key items cannot have empty description strings.]]></comment>
+	</constraint>
+	<constraint name="key_items_color_or_icon_uri_valid" type="ck-constr" table="public.key_items">
+			<expression><![CDATA[(color IS NOT NULL OR icon_uri IS NOT NULL)
+AND (color IS NULL OR color ~'^[0-9a-fA-F]{6}$')
+AND (icon_uri IS  NULL OR (icon_uri = '') IS NOT TRUE)]]></expression>
+		<comment><![CDATA[Either the color or icon_uri must be non-null and non-empty, and colors must be valid color strings.]]></comment>
+	</constraint>
+</table>
+
+<function name="check_id_format"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="CALLED ON NULL INPUT"
+		function-type="VOLATILE"
+		security-type="SECURITY INVOKER"
+		execution-cost="1"
+		row-amount="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Checks that an ID string meets expected formatting rules.
+ID Constraints:
+- ID strings must contain 2-16 characters.
+- ID strings may only contain lowercase letters and underscores.
+- Underscores are not repeated.
+- ID strings must begin and end with lowercase letters.]]></comment>
+	<language name="sql" sql-disabled="true"/>
+	<return-type>
+	<type name="bool" length="0"/>
+	</return-type>
+	<parameter name="id_string" in="true">
+		<type name="varchar" length="16"/>
+	</parameter>
+	<definition><![CDATA[RETURN id_string SIMILAR TO '^[a-z](_?[a-z])*[a-z]$';]]></definition>
+</function>
+
+<trigger name="locations_update_regions" firing-type="BEFORE" per-line="false" constraint="false"
+	 ins-event="true" del-event="false" upd-event="false" trunc-event="false"
+	 table="public.locations">
+		<comment><![CDATA[Ensures that the region_id is added to the region table if it isn't already there, and changes its update timestamp.]]></comment>
+		<function signature="public.regions_add_or_update()"/>
+</trigger>
+
+<trigger name="locations_update_location_categories" firing-type="BEFORE" per-line="false" constraint="false"
+	 ins-event="true" del-event="false" upd-event="false" trunc-event="false"
+	 table="public.locations">
+		<comment><![CDATA[Ensures that category_id is added to the location_categories table if it isn't already there, and changes its update timestamp.]]></comment>
+		<function signature="public.location_categories_add_or_update()"/>
+</trigger>
+
+<function name="check_color"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="CALLED ON NULL INPUT"
+		function-type="IMMUTABLE"
+		security-type="SECURITY INVOKER"
+		execution-cost="1"
+		row-amount="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Ensures that a string is a valid hex color.]]></comment>
+	<language name="plpgsql" sql-disabled="true"/>
+	<return-type>
+	<type name="boolean" length="0"/>
+	</return-type>
+	<parameter name="color" in="true">
+		<type name="text" length="6"/>
+	</parameter>
+	<definition><![CDATA[BEGIN
+	RETURN color ~ '^[0-9a-fA-F]{6}$';
+END;]]></definition>
+</function>
+
+<table name="key_items_staging" layer="0" collapse-mode="2" max-obj-count="7">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Holds a new set of updated key items while waiting for update data to load, so that all related map updates may be applied atomically.]]></comment>
+	<position x="867" y="34"/>
+	<column name="region_id" not-null="true">
+		<type name="varchar" length="16"/>
+		<comment><![CDATA[The map region described by a key item.]]></comment>
+	</column>
+	<column name="type_id" not-null="true">
+		<type name="varchar" length="16"/>
+		<comment><![CDATA[The map data type described by a key item.]]></comment>
+	</column>
+	<column name="description" not-null="true">
+		<type name="varchar" length="256"/>
+		<comment><![CDATA[Explains to the user what the key item's color or icon represents.]]></comment>
+	</column>
+	<column name="last_update" not-null="true" default-value="CURRENT_TIMESTAMP">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[The last time the key item was updated.]]></comment>
+	</column>
+	<column name="color">
+		<type name="char" length="6"/>
+		<comment><![CDATA[A map color explained by the key item, represented as a six-digit color string. This value may only be null if the icon URI is not null.]]></comment>
+	</column>
+	<column name="icon_uri">
+		<type name="varchar" length="512"/>
+		<comment><![CDATA[The image URI of a map icon or symbol explained by the key item.  This value may only be null if the icon color is not null.]]></comment>
+	</column>
+	<constraint name="key_items_staging_pk" type="pk-constr" table="public.key_items_staging">
+		<columns names="region_id,type_id,description" ref-type="src-columns"/>
+		<comment><![CDATA[Key items within a shared region and map type must have unique descriptions.]]></comment>
+	</constraint>
+	<constraint name="key_items_staging_description_nonempty" type="ck-constr" table="public.key_items_staging">
+			<expression><![CDATA[(description = '') IS NOT TRUE]]></expression>
+		<comment><![CDATA[Key items cannot have empty description strings.]]></comment>
+	</constraint>
+	<constraint name="key_items_staging_color_or_icon_uri_valid" type="ck-constr" table="public.key_items_staging">
+			<expression><![CDATA[(color IS NOT NULL OR icon_uri IS NOT NULL)
+--AND (color IS NULL OR check_color(color))
+AND (color IS NULL OR color~ '^[0-9a-f]{6}$')
+AND (icon_uri IS  NULL OR (icon_uri = '') IS NOT TRUE)]]></expression>
+		<comment><![CDATA[Either the color or icon_uri must be non-null and non-empty, and colors must be valid color strings.]]></comment>
+	</constraint>
+</table>
+
+<table name="map_tiles_staging" layer="0" collapse-mode="2" max-obj-count="8">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Holds new additions and updates to map tile data, so that all related map updates may be applied atomically.]]></comment>
+	<position x="879" y="271"/>
+	<column name="region_id" not-null="true">
+		<type name="varchar" length="16"/>
+		<comment><![CDATA[Identifies the mapped Minecraft region/dimension.]]></comment>
+	</column>
+	<column name="type_id" not-null="true">
+		<type name="varchar" length="16"/>
+		<comment><![CDATA[Identifies the tile's map format.]]></comment>
+	</column>
+	<column name="size" not-null="true">
+		<type name="smallint" length="0"/>
+		<comment><![CDATA[The tile image width and height in pixels.]]></comment>
+	</column>
+	<column name="block_x" not-null="true">
+		<type name="integer" length="0"/>
+		<comment><![CDATA[The x-coordinate of the tile's upper left corner within the mapped region, measured in Minecraft blocks.]]></comment>
+	</column>
+	<column name="block_z" not-null="true">
+		<type name="integer" length="0"/>
+		<comment><![CDATA[The z-coordinate of the tile's upper left corner within the mapped region, measured in Minecraft blocks.]]></comment>
+	</column>
+	<column name="tile_uri" not-null="true">
+		<type name="varchar" length="512"/>
+		<comment><![CDATA[The URI used to access the tile image.]]></comment>
+	</column>
+	<column name="last_update" not-null="true" default-value="CURRENT_TIMESTAMP">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[The time that this tile was created or last updated.]]></comment>
+	</column>
+	<constraint name="map_tiles_staging_pk" type="pk-constr" table="public.map_tiles_staging">
+		<columns names="region_id,type_id,size,block_x,block_z" ref-type="src-columns"/>
+		<comment><![CDATA[For each region, map type, image size, and coordinates, only one tile may exist.]]></comment>
+	</constraint>
+	<constraint name="map_tiles_staging_valid_ids" type="ck-constr" table="public.map_tiles_staging">
+			<expression><![CDATA[--check_id_format(region_id::VARCHAR(16)) AND
+--check_id_format(type_id::VARCHAR(16))
+region_id ~ '^[a-z](_?[a-z])*[a-z]$'
+AND type_id ~ '^[a-z](_?[a-z])*[a-z]$']]></expression>
+		<comment><![CDATA[All ID strings must meet ID naming conventions.]]></comment>
+	</constraint>
+	<constraint name="map_tiles_staging_valid_size" type="ck-constr" table="public.map_tiles_staging">
+			<expression><![CDATA[size > 0]]></expression>
+		<comment><![CDATA[Map tile size values must be positive.]]></comment>
+	</constraint>
+	<constraint name="map_tiles_staging_uri_nonempty" type="ck-constr" table="public.map_tiles_staging">
+			<expression><![CDATA[(tile_uri = '') IS NOT TRUE]]></expression>
+		<comment><![CDATA[Map tiles must be created with a nonempty URI.]]></comment>
+	</constraint>
+</table>
+
+<trigger name="map_tiles_update_regions" firing-type="BEFORE" per-line="true" constraint="false"
+	 ins-event="true" del-event="false" upd-event="false" trunc-event="false"
+	 table="public.map_tiles_staging">
+		<comment><![CDATA[Ensures that the region_id is added to the region table if it isn't already there, and changes its update timestamp.]]></comment>
+		<function signature="public.regions_add_or_update()"/>
+</trigger>
+
+<trigger name="map_tiles_update_types" firing-type="BEFORE" per-line="true" constraint="false"
+	 ins-event="true" del-event="false" upd-event="false" trunc-event="false"
+	 table="public.map_tiles_staging">
+		<comment><![CDATA[Ensures that the type_id is added to the map_type table if it isn't already there, and changes its update timestamp.]]></comment>
+		<function signature="public.map_types_add_or_update()"/>
+</trigger>
+
+<trigger name="map_tiles_update_sizes" firing-type="BEFORE" per-line="true" constraint="false"
+	 ins-event="true" del-event="false" upd-event="false" trunc-event="false"
+	 table="public.map_tiles_staging">
+		<comment><![CDATA[Ensures that the size is added to the tile_sizes table if it isn't already there.]]></comment>
+		<function signature="public.tile_sizes_add_if_missing()"/>
+</trigger>
+
+<function name="apply_staging"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="CALLED ON NULL INPUT"
+		function-type="VOLATILE"
+		security-type="SECURITY INVOKER"
+		execution-cost="1"
+		row-amount="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<language name="sql" sql-disabled="true"/>
+	<return-type>
+	<type name="void" length="0"/>
+	</return-type>
+	<definition><![CDATA[TRUNCATE key_items;
+INSERT INTO key_items (region_id, type_id, description, last_update, color, icon_uri)
+	SELECT region_id, type_id, description, last_update, color, icon_uri
+	FROM key_items_staging;
+TRUNCATE key_items_staging;
+TRUNCATE map_tiles;
+INSERT INTO map_tiles (region_id, type_id, size, block_x, block_z, tile_uri, last_update)
+	SELECT region_id, type_id, size, block_x, block_z, tile_uri, last_update
+	FROM map_tiles_staging;
+TRUNCATE map_tiles_staging;]]></definition>
+</function>
+
+<constraint name="map_tiles_type_id_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.map_types" table="public.map_tiles">
+	<columns names="type_id" ref-type="src-columns"/>
+	<columns names="type_id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="map_tiles_region_id_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.regions" table="public.map_tiles">
+	<columns names="region_id" ref-type="src-columns"/>
+	<columns names="region_id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="map_tiles_size_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.tile_sizes" table="public.map_tiles">
+	<columns names="size" ref-type="src-columns"/>
+	<columns names="size" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="locations_region_id_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.regions" table="public.locations">
+	<columns names="region_id" ref-type="src-columns"/>
+	<columns names="region_id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="locations_category_id_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.location_categories" table="public.locations">
+	<columns names="category_id" ref-type="src-columns"/>
+	<columns names="category_id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="key_items_region_id_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.regions" table="public.key_items">
+	<columns names="region_id" ref-type="src-columns"/>
+	<columns names="region_id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="key_items_type_id_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.map_types" table="public.key_items">
+	<columns names="type_id" ref-type="src-columns"/>
+	<columns names="type_id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_map_tiles_map_types" type="relfk" layer="0"
+	 src-table="public.map_tiles"
+	 dst-table="public.map_types" reference-fk="map_tiles_type_id_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_map_tiles_regions" type="relfk" layer="0"
+	 src-table="public.map_tiles"
+	 dst-table="public.regions" reference-fk="map_tiles_region_id_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_map_tiles_tile_sizes" type="relfk" layer="0"
+	 src-table="public.map_tiles"
+	 dst-table="public.tile_sizes" reference-fk="map_tiles_size_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_locations_regions" type="relfk" layer="0"
+	 src-table="public.locations"
+	 dst-table="public.regions" reference-fk="locations_region_id_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_locations_location_categories" type="relfk" layer="0"
+	 src-table="public.locations"
+	 dst-table="public.location_categories" reference-fk="locations_category_id_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_key_items_regions" type="relfk" layer="0"
+	 src-table="public.key_items"
+	 dst-table="public.regions" reference-fk="key_items_region_id_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_key_items_map_types" type="relfk" layer="0"
+	 src-table="public.key_items"
+	 dst-table="public.map_types" reference-fk="key_items_type_id_fk"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+</dbmodel>

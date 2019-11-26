@@ -6,7 +6,6 @@
 const path = require("path");
 const winston = require("winston");
 const { format } = require("logform");
-const { isDefined } = require("./validate.js");
 
 // Define where log data will be saved:
 const logFiles = [
@@ -28,7 +27,7 @@ const logFiles = [
 ];
 let fileTransports = [];
 for (let file of logFiles) {
-    if (isDefined(file.path)) {
+    if (file.path !== undefined) {
         fileTransports.push(new winston.transports.File({
             filename: file.path,
             level: file.level,

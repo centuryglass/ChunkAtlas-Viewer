@@ -22,6 +22,17 @@ const validate = require("./validate.js");
 const httpCrypto = require("./http-crypto.js");
 // Logging:
 const logger = require("./logger.js");
+const errorhandler = require('errorhandler')
+
+// REST API resources:
+const PrimaryResource = require("./REST/resources/primary-resource.js");
+const RegionResource = require("./REST/resources/region_resources.js");
+
+// Log uncaught exceptions:
+process.on("uncaughtException", (exception) => {
+    console.log(exception);
+    logger.error(exception);
+});
 
 // Path constants:
 const Paths = {};
@@ -129,8 +140,15 @@ const updateMiddleware = [
     httpCrypto.decrypt
 ];
 const updatePaths = [ Paths.In.UPDATE, Paths.In.IMAGE_UPLOAD ];
+app.use(errorhandler({ dumpExceptions: true, showStack: true }));
 app.use(updatePaths, updateMiddleware);
 app.use(express.static(Paths.Data.PUBLIC));
+
+// TESTING: initialize new REST API resource handling.
+const resources = [
+    new PrimaryResource(app),
+    new RegionResource(app)
+];
 
 // Pending image files:
 var pendingImages = {};
@@ -314,7 +332,6 @@ function adjustUploadedImagePaths(dbResult) {
         }
     });
 }
-
 // Handle map key requests:
 app.get(Paths.In.KEY_REQUEST, (req, res) => {
     logger.info("Got key request from [" + req.ips.toString()
@@ -346,6 +363,5 @@ app.get(Paths.In.TILE_REQUEST, (req, res) => {
         res.json(dbRes.rows);
     });
 });
-
-
+console.log("starting server..");
 app.listen(port, () => logger.info('listening on port ' + port));
