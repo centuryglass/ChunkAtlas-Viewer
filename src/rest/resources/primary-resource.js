@@ -7,9 +7,9 @@
 const RESTResource
         = require("../rest-resource.js");
 const db
-        = require("../../db.js");
+        = require("../../db/db.js");
 const dbStructure
-        = require("../../db-structure.js");
+        = require("../../db/db-structure.js");
 const logger
         = require("../../logger.js");
 const resourceTypes

@@ -5,11 +5,11 @@
  */
 
 const logger = require("../../logger.js");
-const db = require("../../db.js");
+const db = require("../../db/db.js");
 const path = require("path");
 
 const resourceTypes = require("../resource-types.js");
-const dbStructure = require("../../db-structure.js");
+const dbStructure = require("../../db/db-structure.js");
 
 const RESTResource
         = require("../rest-resource.js");

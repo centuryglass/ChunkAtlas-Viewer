@@ -13,7 +13,7 @@ const express = require("express");
 // HTTP message body parsing:
 const bodyParser = require("body-parser");
 // Postgres server access:
-const db = require("./db.js");
+const db = require("./db/db.js");
 // Creating const data objects:
 const constUtils = require("./const-util.js");
 // Input validation:
@@ -25,8 +25,8 @@ const logger = require("./logger.js");
 const errorhandler = require('errorhandler')
 
 // REST API resources:
-const PrimaryResource = require("./REST/resources/primary-resource.js");
-const RegionResource = require("./REST/resources/region_resources.js");
+const PrimaryResource = require("./rest/resources/primary-resource.js");
+const RegionResource = require("./rest/resources/region_resources.js");
 
 // Log uncaught exceptions:
 process.on("uncaughtException", (exception) => {
