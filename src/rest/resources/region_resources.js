@@ -5,11 +5,12 @@
  */
 
 const logger = require("../../logger.js");
-const db = require("../../db/db.js");
 const path = require("path");
 
 const resourceTypes = require("../resource-types.js");
 const dbStructure = require("../../db/db-structure.js");
+const dbRegions = require("../../db/db-regions.js");
+const dbMapTypes = require("../../db/db-map-types.js");
 
 const RESTResource
         = require("../rest-resource.js");
@@ -61,33 +62,15 @@ class RegionResource extends RESTResource {
         // Creates a Promise to check the database and see if a request's 
         // Region resource path is valid.
         const regionCheckPromise = (request) => {
-            return db.query("SELECT * FROM $1 WHERE ($2 = $3)", [
-                    dbStructure.tables.REGIONS, dbStructure.regions.REGION_ID,
-                    request.url.substr(1)])
-            .then((dbResponse) => {
-                if (isDefined(dbResponse) && isDefined(dbResponse.rows)
-                        && dbResponse.rows.length > 0) {
-                    return true;
-                }
-                return false;
-            });
+            return dbRegions.regionExists(this.getResourceId(request));
         };
 
         // Creates a Promise to get all distinct map type ids, then add the
         // region count to the response header.
         const typeQueryLoadPromise = (response) => {
-            const REGION_QUERY = "SELECT type_id FROM map_types";
-            return db.query("SELECT $1 FROM $2", [ resourceKeys.TYPE_ID,
-                    tableNames.MAP_TYPES ])
-            .then((dbResponse) => {
-                if (isDefined(dbResponse) && isDefined(dbResponse.rows)) {
-                    response.set(headerKeys.MAP_TYPE_COUNT,
-                            dbResponse.rows.length);
-                }
-                else {
-                    response.set(resourceKeys.REGION_COUNT, 0);
-                }
-                return dbResponse;
+            return dbMapTypes.getMapTypeIds().then((typeIDs) => {
+                response.set(headerKeys.MAP_TYPE_COUNT, typeIDs.length);
+                return typeIDs;
             });
         };
 
@@ -99,51 +82,25 @@ class RegionResource extends RESTResource {
         this.setHTTPMethodHandler("GET", (request, response) => {
             const content = { regionURIs : [] };
             // Request region properties:
-            db.query("SELECT $1, $2, $3 FROM $4 WHERE ($5 = $6)", [
-                    dbStructure.regions.DISPLAY_NAME,
-                    dbStructure.regions.ICON_URI,
-                    dbStructure.regions.LAST_UPDATE,
-                    dbStructure.tables.REGIONS,
-                    dbStructure.regions.REGION_ID,
-                    this.getResourceId(request)])
-            // Save region properties, request map type list property:
-            .then((dbResponse, err) => {
-                if (err) {
-                    logger.error("Database error responding to GET for region"
-                            + " at " + request.url + ": " + err.toString());
-                    response.status(500).end();
-                    return;
-                }
-                if (! isDefined(dbResponse.rows)
-                        || dbResponse.rows.length === 0) {
+            dbRegions.getRegionData(this.getResourceId(request))
+            .then((typeData) => {
+                if (! isDefined(typeData)) {
                     logger.warn("Failed to find region resource at "
                             + request.url);
                     response.status(404).end();
                     return;
                 }
-                content[resourceKeys.DISPLAY_NAME]
-                        = dbResponse.rows[dbStructure.regions.DISPLAY_NAME];
-                content[resourceKeys.ICON_URI]
-                        = dbResponse.rows[dbStructure.regions.ICON_URI];
-                content[resourceKeys.LAST_UPDATE]
-                        = dbResponse.rows[dbStructure.regions.LAST_UPDATE];
+                Object.keys(typeData).forEach((key) => {
+                    content[key] = typeData[key];
+                });
                 return typeQueryLoadPromise(response);
             })
             // Convert type list to subordinate map_type resource URIs, send
             // completed response.
-            .then((dbResponse, err) => {
-                if (err) {
-                    logger.error("Failed to load type resource list from "
-                            + "region at " + request.url + ": "
-                            + err.toString());
-                    response.status(500).end();
-                    return;
-                }
-                if (response.get(resourceKeys.MAP_TYPE_COUNT) > 0) {
-                    for (let mapType of dbResponse.rows) {
-                        const typeURI = request.url + '/' + mapType;
-                        content[resourceKeys.MAP_TYPE_URIS].push(typeURI);
-                    }
+            .then((typeIDs) => {
+                for (let mapType of typeIDs) {
+                    const typeURI = request.url + '/' + mapType;
+                    content[resourceKeys.MAP_TYPE_URIS].push(typeURI);
                 }
                 response.json(content);
             }).catch((err) => {
@@ -158,7 +115,7 @@ class RegionResource extends RESTResource {
         // Just respond with the subordinate region resource count header
         // normally sent with GET requests.
         this.setHTTPMethodHandler("HEAD", (request, response) => {
-            typeQueryLoadPromise(response).then((dbResponse) => {
+            typeQueryLoadPromise(response).then(() => {
                 response.end()
             }).catch((err) => {
                 logger.error("Error responding to HEAD for region resource "
@@ -172,33 +129,28 @@ class RegionResource extends RESTResource {
         // If not already defined, set the region's UI icon.
         this.setHTTPMethodHandler("POST", (request, response) => {
             const iconURI = request.url + "/icon.png";
-            db.query("SELECT $1 FROM $2 WHERE ($3 = $4)", [
-                    dbStructure.regions.ICON_URI,
-                    dbStructure.tables.REGIONS,
-                    dbStructure.regions.REGION_ID,
-                    this.getResourceId(request) ])
-            .then((dbResponse, err) => {
-                if (err) {
-                    logger.error("Error checking for region icon: " + err);
-                    response.status(500).end();
-                    return;
-                }
+            const resourceID = this.getResourceId(request);
+            // Check if the icon was set already:
+            dbRegions.isRegionIconSet(resourceID)
+            .then((iconWasSet) => {
                 // If the region icon already exists, it can only be replaced
                 // by sending a PUT method directly to the icon URI.
-                if (isDefined(dbResponse) && isDefined(dbResponse.rows)
-                        && dbResponse.rows.length != 0) {
-                    const iconURI
-                            = dbResponse.rows[dbStructure.regions.ICON_URI];
-                    if (iconURI !== null) {
-                        logger.warn("Region icon POSTed, but icon already "
-                                + "exists at '" + iconURI + "', sending "
-                                + "status 409 Conflict.");
-                        response.status(409).end();
-                        return;
-                    }
+                if (iconWasSet) {
+                    logger.warn("POSTing to '" + resourceID
+                            + "' attempts to set the region icon, but the "
+                            + "icon already exists. Returning status 409 "
+                            + "Conflict.");
+                    response.status(409).end();
+                    return false;
                 }
-                const iconPath = path.join(getResourceFileDirectory(request),
-                        "icon.png");
+                return true;
+            })
+            // If icon wasn't set, attempt to save the request body as a new
+            // region icon:
+            .then((shouldContinue) => {
+                if (! shouldContinue) { return; }
+                const iconPath = path.join(
+                        this.getResourceFileDirectory(request), "icon.png");
                 if (! isDefined(request.body)
                         || ! hasClass(request.body, Buffer)) {
                     logger.warn("Received invalid region icon for '" + iconPath
@@ -215,12 +167,7 @@ class RegionResource extends RESTResource {
                 logger.info("Saved new region icon to '" + iconPath + "', "
                         + "updating database.");
                 // TODO: check that the file is actually a valid image!
-                return db.query("UPDATE $1 SET $2 = $3 WHERE ($4 = $5)", [
-                        dbStructure.tables.REGIONS,
-                        dbStructure.regions.ICON_URI,
-                        iconURI,
-                        dbStructure.regions.REGION_ID,
-                        this.getResourceId(request) ]);
+                return dbRegions.setIconURI(regionID, iconURI);
             })
             .then((dbResponse, err) => {
                 if (! isDefined(dbResponse)) {
@@ -252,13 +199,9 @@ class RegionResource extends RESTResource {
                 response.status(400).end();
                 return;
             }
+            const regionID = this.getResourceId(request);
             const displayName = request.body[resourceKeys.DISPLAY_NAME];
-            db.query("UPDATE $1 SET $2 = $3 WHERE ($4 = $5)", [
-                    dbStructure.tables.REGIONS,
-                    dbStructure.regions.DISPLAY_NAME,
-                    displayName,
-                    dbStructure.regions.REGION_ID,
-                    this.getResourceId(request) ])
+            dbRegions.setDisplayName(regionID, displayName)
             .then((dbResponse, err) => {
                 if (err) {
                     logger.error("Error setting region display name: " + err);

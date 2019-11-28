@@ -6,10 +6,8 @@
 
 const RESTResource
         = require("../rest-resource.js");
-const db
-        = require("../../db/db.js");
-const dbStructure
-        = require("../../db/db-structure.js");
+const dbRegions
+        = require("../../db/db-regions.js");
 const logger
         = require("../../logger.js");
 const resourceTypes
@@ -41,21 +39,14 @@ class PrimaryResource extends RESTResource {
         }
 
         // Creates a Promise to get all distinct region names, then add the
-        // region count to the response header.
+        // region count to the response header. The list of region names will
+        // be passed to the promise's success callback.
         const regionQueryLoadPromise = (response) => {
-            const table = dbStructure.tables.REGIONS;
-            const column = dbStructure[table].REGION_ID;
-            return db.query("SELECT $1 FROM " + table, [ column ])
-                .then((dbResponse) => {
-                    if (isDefined(dbResponse) && isDefined(dbResponse.rows)) {
-                        response.set(headerKeys.REGION_COUNT,
-                                dbResponse.rows.length);
-                    }
-                    else {
-                        response.set(headerKeys.REGION_COUNT, "0");
-                    }
-                    return dbResponse;
-                });
+            return dbRegions.getRegionIds()
+            .then((regionIDs) => {
+                response.set(headerKeys.REGION_COUNT, regionIDs.length);
+                return regionIDs;
+            });
         };
 
 
@@ -65,11 +56,12 @@ class PrimaryResource extends RESTResource {
         // Respond with all region resource names in body, region resource
         // count in header.
         this.setHTTPMethodHandler("GET", (request, response) => {
-            regionQueryLoadPromise(response).then((dbResponse) => {
+            regionQueryLoadPromise(response).then((regionIDs) => {
                 let content = { regionURIs : [] };
                 if (response.get(headerKeys.REGION_COUNT) > 0) {
-                    for (let region of dbResponse.rows) {
-                        content.regionURIs.push(region);
+                    for (let region of regionIDs) {
+                        content.regionURIs.push(PRIMARY_RESOURCE_URI
+                                + "/" + region);
                     }
                 }
                 response.json(content);
