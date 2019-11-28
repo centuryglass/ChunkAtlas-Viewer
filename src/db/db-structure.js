@@ -5,7 +5,7 @@
  * ChunkAtlas database, using a set of immutable objects.
  */
 
-const { recursiveFreeze } = require("./const-util.js");
+const { recursiveFreeze } = require("../const-util.js");
 
 // Initially list all database constants in a set of named arrays:
 const dbConstants = {
