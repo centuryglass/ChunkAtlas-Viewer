@@ -109,8 +109,9 @@ module.exports = {
                     onFailure(err);
                 }
                 else if (! module.exports.responseReturnedData(dbResponse)) {
-                    onFailure("Found no rows in '" + table + "' where '"
-                            + checkedColumn + "' = '" + columnValue + "'");
+                    onFailure(new Error("Found no rows in '" + table
+                            + "' where '" + checkedColumn + "' = '"
+                            + columnValue + "'"));
                 }
                 else {
                     onSuccess(dbResponse.rows);
@@ -141,18 +142,18 @@ module.exports = {
         .then((matchingRows) => {
             return new Promise((onSuccess, onFailure) => {
                 if (matchingRows.length === 0) {
-                    onFailure("Found no row in '" + table + "' where '"
-                            + checkedColumn + "' = '" + columnValue + "'");
+                    onFailure(new Error("Found no row in '" + table
+                            + "' where '" + checkedColumn + "' = '"
+                            + columnValue + "'"));
                 }
                 else if (matchingRows.length === 1) {
                     onSuccess(matchingRows[0]);
                 }
                 else {
-                    onFailure("Expected no more than one row in table '"
-                            + table + "' where column '" + checkedColumn
-                            + "' = '" + columnValue + "', found "
-                            + matchingRows.length + ".");
-
+                    onFailure(new Error("Expected no more than one row in "
+                            + "table '" + table + "' where column '"
+                            + checkedColumn + "' = '" + columnValue
+                            + "', found " + matchingRows.length + "."));
                 }
             });
         });
@@ -186,9 +187,9 @@ module.exports = {
                     onSuccess(dbResponse.rows[0][column]);
                 }
                 else {
-                    onFailure("Failed to find single '" + column
+                    onFailure(new Error("Failed to find single '" + column
                             + "' cell in '" + table + "' where '"
-                            + rowIDColumn + "' = '" + rowID + "'");
+                            + rowIDColumn + "' = '" + rowID + "'"));
                 }
             });
         });
@@ -199,7 +200,7 @@ module.exports = {
      *
      * @param table        The table containing the cell(s) to update.
      *
-     * @param column       The column containing the cell(d) to update
+     * @param column       The column containing the cell(s) to update
      *
      * @param newValue     The new value to save to the given column in all
      *                     matching rows.
@@ -210,11 +211,20 @@ module.exports = {
      *                     should be assigned the new column value.
      *
      * @return             A Promise that may be used to find if and when
-     *                     the new value is successfully applied.
+     *                     the new value is successfully applied. If no rows
+     *                     are changed or a database error occurs, the promise
+     *                     will reject.
      */
     setColumnValues : (table, column, newValue, rowIDColumn, rowID) => {
         testDBVar([ table, column, rowIDColumn ]);
         return module.exports.query("UPDATE " + table + " SET " + column
-               + " = $1 WHERE (" + rowIDColumn + " = $2)", [newValue, rowID ]);
+               + " = $1 WHERE (" + rowIDColumn + " = $2)", [newValue, rowID ])
+        .then((dbResponse, err) => {
+            if (err) { throw err; }
+            else if (dbResponse.rowCount === 0) {
+                throw new Error("Found no rows in '" + table + "' where '"
+                        + rowIDColumn + "' = '" + rowID + "'");
+            }
+        });
     }
 }

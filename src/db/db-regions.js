@@ -67,11 +67,12 @@ module.exports = {
             return cell !== null;
         })
         .catch((err) => {
-            const expectedErr = "Failed to find single '"
+            const expectedErr = "Error: Failed to find single '"
             + dbStructure.regions.ICON_URI + "' cell in '" + regionTable
             + "' where '" + idColumn + "' = '" + regionID + "'";
-            if (err === expectedErr) {
-                throw new Error("Region '" + regionID + "' was not found");
+            if (err.toString() === expectedErr) {
+                throw new Error("Found no rows in '" + regionTable
+                        + "' where '" + idColumn + "' = '" + regionID + "'");
             }
             else {
                 throw err;

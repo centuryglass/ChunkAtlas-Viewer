@@ -9,6 +9,9 @@ describe("DBRegions", function() {
     const dbRegions = require("../../src/db/db-regions.js");
     const dbStructure = require("../../src/db/db-structure.js");
 
+    const { testPromiseResolution, testPromiseRejection }
+            = require("../../src/testing/promise-testing.js");
+
     const regionTable = dbStructure.tables.REGIONS;
     const columns = dbStructure.regions;
 
@@ -16,6 +19,19 @@ describe("DBRegions", function() {
     // display_name
     const testRegionID = "main_test";
     const testDisplayName = "Test Region";
+
+    // Descriptions of tests repeated in multiple contexts:
+    const rejectMsg = "should reject with a relevant error ";
+    const rejectMissingRegionMsg = rejectMsg
+            + "if the region doesn't exist";
+    const rejectEmptyStringMsg = rejectMsg
+            + "if it tries to set a value to the empty string.";
+    const rejectDuplicateValueMsg = rejectMsg
+            + "if it tries to set a value that is already in use.";
+
+    // Expected error strings needed more than once:
+    const missingRegionErr = "Error: Found no rows in '" + regionTable
+            + "' where '" + columns.REGION_ID + "' = '" + testRegionID + "'";
 
     // Insert the test region into the database:
     // If undefined, default values are used in place of regionID and
@@ -56,10 +72,11 @@ describe("DBRegions", function() {
                 paramIdx++;
                 params.push(regionID);
             }
-            return db.query(query, params)
+            const testPromise = db.query(query, params)
             .then((dbResult, err) => {
                 if (err) {
-                    done.fail("Unexpected error setting region IDs: " + err);
+                    throw new Error("Unexpected error setting region IDs: "
+                            + err);
                     return;
                 }
                 return dbRegions.getRegionIds();
@@ -69,30 +86,24 @@ describe("DBRegions", function() {
                 for (let i = 0; i < testIDs.length; i++) {
                     expect(regionIDs[i]).toEqual(testIDs[i]);
                 }
-                done();
-            })
-            .catch((err) => {
-                done.fail("Unexpected error: " + err);
             });
+            return testPromiseResolution(testPromise, done);
         });
 
         it("should resolve [] when no regions exist", (done) => {
-            return dbRegions.getRegionIds()
+            const testPromise = dbRegions.getRegionIds()
             .then((regionIDs) => {
                 expect(Array.isArray(regionIDs) && regionIDs.length === 0)
                         .toBe(true);
-                done();
-            })
-            .catch((err) => {
-                done.fail("Unexpected error: " + err);
             });
+            return testPromiseResolution(testPromise, done);
         });
     });
 
     describe("getRegionData", () => {
         it("should resolve all data for a region", (done) => {
             const displayName = "getRegionData Test";
-            return insertTestRegion(undefined, displayName)
+            const testPromise = insertTestRegion(undefined, displayName)
             .then(() => {
                 return dbRegions.getRegionData(testRegionID);
             })
@@ -100,34 +111,21 @@ describe("DBRegions", function() {
                 expect(region[columns.REGION_ID]).toEqual(testRegionID);
                 expect(region[columns.DISPLAY_NAME]).toEqual(displayName);
                 expect(region[columns.LAST_UPDATE]).not.toBe(null);
-                done();
-            })
-            .catch((err) => {
-                done.fail("Unexpected error: " + err);
             });
+            return testPromiseResolution(testPromise, done);
         });
 
-        it("should reject with a relevant error if the region isn't found",
-                (done) => {
-            const expectedErr = "Found no rows in '" + regionTable
-                    + "' where '" + columns.REGION_ID + "' = '"
-                    + testRegionID + "'";
-            return dbRegions.getRegionData(testRegionID)
-            .then((regionData) => {
-                done.fail("getRegionData should have rejected for missing "
-                        + "regionID, but found " + regionData);
-            })
-            .catch((err) => {
-                expect(err).toEqual(expectedErr);
-                done();
-            });
+        it(rejectMissingRegionMsg, (done) => {
+            const description = "getRegionData " + rejectMissingRegionMsg;
+            return testPromiseRejection(dbRegions.getRegionData(testRegionID),
+                    description, missingRegionErr, done);
         });
     });
 
     describe("regionExists", () => {
         it("should resolve to true if the region id is found, false otherwise",
                 (done) => {
-            return dbRegions.regionExists(testRegionID)
+            const testPromise = dbRegions.regionExists(testRegionID)
             .then((foundRegion) => {
                 expect(foundRegion).toBe(false);
                 return insertTestRegion();
@@ -138,10 +136,8 @@ describe("DBRegions", function() {
             .then((foundRegion) => {
                 expect(foundRegion).toBe(true);
                 done();
-            })
-            .catch((err) => {
-                done.fail("Unexpected error testing regionExists: " + err);
             });
+            return testPromiseResolution(testPromise, done);
         });
     });
 
@@ -149,7 +145,7 @@ describe("DBRegions", function() {
         const testIcon = "/api/" + testRegionID + "/icon.png";
         it("should resolve to true if the icon was set, false otherwise",
                 (done) => {
-            return insertTestRegion()
+            const testPromise = insertTestRegion()
             .then(() => {
                 return dbRegions.isRegionIconSet(testRegionID);
             })
@@ -162,24 +158,15 @@ describe("DBRegions", function() {
             .then((isIconSet) => {
                 expect(isIconSet).toBe(true);
                 done();
-            })
-            .catch((err) => {
-                done.fail("Unexpected error testing isRegionIconSet: " + err);
             });
+            return testPromiseResolution(testPromise, done);
         });
-        it("should reject with a relevant error if the region does not exist",
-                (done) => {
-            const expectedErr = "Error: Region '" + testRegionID
-                    + "' was not found";
-            return dbRegions.isRegionIconSet(testRegionID)
-            .then((isIconSet) => {
-                done.fail("isRegionIconSet should have rejected, but it "
-                        + "resolved with value " + isIconSet);
-            })
-            .catch((err) => {
-                expect(err.toString()).toEqual(expectedErr);
-                done();
-            });
+
+        it(rejectMissingRegionMsg, (done) => {
+            const description = "isRegionIconSet " + rejectMissingRegionMsg;
+            return testPromiseRejection(
+                    dbRegions.isRegionIconSet(testRegionID), description,
+                    missingRegionErr, done);
         });
     });
 
@@ -190,7 +177,7 @@ describe("DBRegions", function() {
 
         it("should update the correct region row when given a valid name",
                 (done) => {
-            return insertTestRegion()
+            const testPromise = insertTestRegion()
             .then(() => {
                 return dbRegions.setDisplayName(testRegionID, altTestName);
             })
@@ -201,69 +188,58 @@ describe("DBRegions", function() {
             .then((displayName) => {
                 expect(displayName).toEqual(altTestName);
                 done();
-            })
-            .catch((err) => {
-                done.fail("Unexpected error testing setDisplayName: " + err);
             });
+            return testPromiseResolution(testPromise, done);
         });
 
-        it("should reject with a relevant error when given an empty name",
-                (done) => {
-            return insertTestRegion()
+        it(rejectMissingRegionMsg, (done) => {
+            const testPromise
+                    = dbRegions.setDisplayName(testRegionID, testDisplayName);
+            const description = "setDisplayName " + rejectMissingRegionMsg;
+            return testPromiseRejection(testPromise, description,
+                    missingRegionErr, done);
+        });
+
+        it(rejectEmptyStringMsg, (done) => {
+            const testPromise = insertTestRegion()
             .then(() => {
                 return dbRegions.setDisplayName(testRegionID, "");
-            })
-            .then(() => {
-                done.fail("setDisplayName should not resolve when given an "
-                        + "empty string as the name parameter.")
-            })
-            .catch((err) => {
-                const expectedError = "error: new row for relation "
-                        + "\"regions\" violates check constraint "
-                        + "\"region_nonempty_strings\"";
-                expect(err.toString()).toEqual(expectedError);
-                done();
             });
+            const description = "setDisplayName " + rejectEmptyStringMsg;
+            const expectedErr = "error: new row for relation \"regions\" "
+                    + "violates check constraint \"region_nonempty_strings\"";
+            return testPromiseRejection(testPromise, description, expectedErr,
+                    done);
         });
 
-        it("should reject with a relevant error when given a name that's "
-                + "already in use", (done) => {
+        it(rejectDuplicateValueMsg, (done) => {
             const altRegionID = "alt_region";
-            return insertTestRegion()
+            const testPromise = insertTestRegion()
             .then(() => {
                 return insertTestRegion(altRegionID, altTestName);
             })
             .then(() => {
                 return dbRegions.setDisplayName(altRegionID, testDisplayName);
-            })
-            .then(() => {
-                done.fail("setDisplayName should not resolve when setting a "
-                        + "region display name that's already in use.")
-            })
-            .catch((err) => {
-                const expectedError = "error: duplicate key value violates "
-                        + "unique constraint \"region_display_name_unique\"";
-                expect(err.toString()).toEqual(expectedError);
-                done();
             });
+            const description = "setDisplayName " + rejectDuplicateValueMsg;
+            const expectedErr = "error: duplicate key value violates "
+                    + "unique constraint \"region_display_name_unique\"";
+            return testPromiseRejection(testPromise, description, expectedErr,
+                    done);
         });
 
-        it("should reject with a relevant error when given a name that's "
-                + "longer than 32 characters", (done) => {
-            return insertTestRegion()
+        const rejectLongNameMsg = rejectMsg + "when given a name that's "
+                + "longer than 32 characters";
+        it(rejectLongNameMsg, (done) => {
+            const testPromise = insertTestRegion()
             .then(() => {
                 return dbRegions.setDisplayName(testRegionID, tooLongName);
-            })
-            .then(() => {
-                done.fail("setDisplayName should not resolve when given a "
-                        + "name parameter longer than 32 characters.");
-            })
-            .catch((err) => {
-                const expectedError = "error: value too long for type "
-                        + "character varying(32)";
-                expect(err.toString()).toEqual(expectedError);
-                done();
             });
+            const description = "setDisplayName " + rejectLongNameMsg;
+            const expectedErr = "error: value too long for type character "
+                    + "varying(32)";
+            return testPromiseRejection(testPromise, description, expectedErr,
+                    done);
         });
     });
 
@@ -272,7 +248,7 @@ describe("DBRegions", function() {
 
         it("should update the correct region row when given a valid URI",
                 (done) => {
-            return insertTestRegion()
+            const testPromise = insertTestRegion()
             .then(() => {
                 return dbRegions.setIconURI(testRegionID, testURI);
             })
@@ -283,15 +259,13 @@ describe("DBRegions", function() {
             .then((iconURI) => {
                 expect(iconURI).toEqual(testURI);
                 done();
-            })
-            .catch((err) => {
-                done.fail("Unexpected error testing setIconURI: " + err);
             });
+            return testPromiseResolution(testPromise, done);
         });
 
         it("should update the correct region row when given a null URI",
                 (done) => {
-            return insertTestRegion()
+            const testPromise = insertTestRegion()
             .then(() => {
                 return dbRegions.setIconURI(testRegionID, testURI);
             })
@@ -305,29 +279,20 @@ describe("DBRegions", function() {
             .then((iconURI) => {
                 expect(iconURI).toEqual(null);
                 done();
-            })
-            .catch((err) => {
-                done.fail("Unexpected error testing setIconURI: " + err);
             });
+            return testPromiseResolution(testPromise, done);
         });
 
-        it("should reject with a relevant error when given an empty URI",
-                (done) => {
-            return insertTestRegion()
+        it(rejectEmptyStringMsg, (done) => {
+            const testPromise = insertTestRegion()
             .then(() => {
                 return dbRegions.setIconURI(testRegionID, "");
-            })
-            .then(() => {
-                done.fail("setIconURI should not resolve if given an empty "
-                        + "string as the URI parameter.");
-            })
-            .catch((err) => {
-                const expectedError = "error: new row for relation "
-                        + "\"regions\" violates check constraint "
-                        + "\"region_nonempty_strings\"";
-                expect(err.toString()).toEqual(expectedError);
-                done();
             });
+            const description = "setIconURI " + rejectEmptyStringMsg;
+            const expectedErr = "error: new row for relation \"regions\" "
+                    + "violates check constraint \"region_nonempty_strings\"";
+            return testPromiseRejection(testPromise, description, expectedErr,
+                    done);
         });
     });
 });
