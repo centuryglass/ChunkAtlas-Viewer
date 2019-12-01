@@ -184,23 +184,22 @@ describe("DBRegions", function() {
     });
 
     describe("setDisplayName", () => {
-        const defaultName = "default";
-        const testName    = "Test Region Name";
+        const altTestName    = "Test Region Name";
         const tooLongName = "This name is longer than 32 characters, so "
                 + "the database should not allow it.";
 
         it("should update the correct region row when given a valid name",
                 (done) => {
-            return insertTestRegion(undefined, defaultName)
+            return insertTestRegion()
             .then(() => {
-                return dbRegions.setDisplayName(testRegionID, testName);
+                return dbRegions.setDisplayName(testRegionID, altTestName);
             })
             .then(() => {
                 return db.getCell(regionTable, columns.DISPLAY_NAME,
                         columns.REGION_ID, testRegionID);
             })
             .then((displayName) => {
-                expect(displayName).toEqual(testName);
+                expect(displayName).toEqual(altTestName);
                 done();
             })
             .catch((err) => {
@@ -210,27 +209,61 @@ describe("DBRegions", function() {
 
         it("should reject with a relevant error when given an empty name",
                 (done) => {
-                // TODO: create region with defaultName
-                // call setDisplayName, changing region's name to ""
-                // check that the returned promise rejects with a proper error.
+            return insertTestRegion()
+            .then(() => {
+                return dbRegions.setDisplayName(testRegionID, "");
+            })
+            .then(() => {
+                done.fail("setDisplayName should not resolve when given an "
+                        + "empty string as the name parameter.")
+            })
+            .catch((err) => {
+                const expectedError = "error: new row for relation "
+                        + "\"regions\" violates check constraint "
+                        + "\"region_nonempty_strings\"";
+                expect(err.toString()).toEqual(expectedError);
                 done();
+            });
         });
 
         it("should reject with a relevant error when given a name that's "
                 + "already in use", (done) => {
-                // TODO: create region with defaultName
-                // create another region with testName
-                // call setDisplayName, changing the first region's name to
-                // testName
-                // check that the returned promise rejects with a proper error.
+            const altRegionID = "alt_region";
+            return insertTestRegion()
+            .then(() => {
+                return insertTestRegion(altRegionID, altTestName);
+            })
+            .then(() => {
+                return dbRegions.setDisplayName(altRegionID, testDisplayName);
+            })
+            .then(() => {
+                done.fail("setDisplayName should not resolve when setting a "
+                        + "region display name that's already in use.")
+            })
+            .catch((err) => {
+                const expectedError = "error: duplicate key value violates "
+                        + "unique constraint \"region_display_name_unique\"";
+                expect(err.toString()).toEqual(expectedError);
                 done();
+            });
         });
 
         it("should reject with a relevant error when given a name that's "
-                + "longer than 32 characters", () => {
-                // TODO: create region with defaultName
-                // call setDisplayName, changing region's name to tooLongName
-                // check that the returned promise rejects with a proper error.
+                + "longer than 32 characters", (done) => {
+            return insertTestRegion()
+            .then(() => {
+                return dbRegions.setDisplayName(testRegionID, tooLongName);
+            })
+            .then(() => {
+                done.fail("setDisplayName should not resolve when given a "
+                        + "name parameter longer than 32 characters.");
+            })
+            .catch((err) => {
+                const expectedError = "error: value too long for type "
+                        + "character varying(32)";
+                expect(err.toString()).toEqual(expectedError);
+                done();
+            });
         });
     });
 
@@ -239,26 +272,62 @@ describe("DBRegions", function() {
 
         it("should update the correct region row when given a valid URI",
                 (done) => {
-            // TODO: create region with no URI
-            // call setIconURI to set the region URI to testURI
-            // check that the region's stored URI is now testURI
-            done();
+            return insertTestRegion()
+            .then(() => {
+                return dbRegions.setIconURI(testRegionID, testURI);
+            })
+            .then(() => {
+                return db.getCell(regionTable, columns.ICON_URI,
+                        columns.REGION_ID, testRegionID);
+            })
+            .then((iconURI) => {
+                expect(iconURI).toEqual(testURI);
+                done();
+            })
+            .catch((err) => {
+                done.fail("Unexpected error testing setIconURI: " + err);
+            });
         });
 
         it("should update the correct region row when given a null URI",
                 (done) => {
-            // TODO: create region with testURI
-            // call setIconURI to set the region URI to null
-            // check that the region's stored URI is now null.
-            done();
+            return insertTestRegion()
+            .then(() => {
+                return dbRegions.setIconURI(testRegionID, testURI);
+            })
+            .then(() => {
+                return dbRegions.setIconURI(testRegionID, null);
+            })
+            .then(() => {
+                return db.getCell(regionTable, columns.ICON_URI,
+                        columns.REGION_ID, testRegionID);
+            })
+            .then((iconURI) => {
+                expect(iconURI).toEqual(null);
+                done();
+            })
+            .catch((err) => {
+                done.fail("Unexpected error testing setIconURI: " + err);
+            });
         });
 
         it("should reject with a relevant error when given an empty URI",
                 (done) => {
-            // TODO: create region with no URI
-            // call setIconURI to set the region URI to ""
-            // check that the returned promise rejects with a proper error.
-            done();
+            return insertTestRegion()
+            .then(() => {
+                return dbRegions.setIconURI(testRegionID, "");
+            })
+            .then(() => {
+                done.fail("setIconURI should not resolve if given an empty "
+                        + "string as the URI parameter.");
+            })
+            .catch((err) => {
+                const expectedError = "error: new row for relation "
+                        + "\"regions\" violates check constraint "
+                        + "\"region_nonempty_strings\"";
+                expect(err.toString()).toEqual(expectedError);
+                done();
+            });
         });
     });
 });
