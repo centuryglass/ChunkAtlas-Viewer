@@ -40,9 +40,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 region_id ~ '^[a-z](_?[a-z])*[a-z]$']]></expression>
 		<comment><![CDATA[The region ID must follow ID string naming conventions.]]></comment>
 	</constraint>
-	<constraint name="region_nonempty_display_name" type="ck-constr" table="public.regions">
-			<expression><![CDATA[(display_name = '') IS NOT TRUE]]></expression>
-		<comment><![CDATA[The display name must be a non-empty string.]]></comment>
+	<constraint name="region_nonempty_strings" type="ck-constr" table="public.regions">
+			<expression><![CDATA[(display_name = '') IS NOT TRUE
+AND (icon_uri = '') IS NOT TRUE]]></expression>
+		<comment><![CDATA[The display name and icon uri must not be empty strings.]]></comment>
 	</constraint>
 	<constraint name="region_display_name_unique" type="uq-constr" table="public.regions">
 		<columns names="display_name" ref-type="src-columns"/>
