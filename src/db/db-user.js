@@ -1,45 +1,57 @@
 /**
- * @file db.js
+ * @file db-user.js
  *
- * Handles all direct database access.
+ * Provides convenience functions to simplify database access.
  */
-const { Pool } = require('pg');
+
 const logger = require('../logger.js');
-const pool = new Pool();
 
 const { isDefined, assert } = require("../validate.js");
 
-pool.on('error', (err, client) => {
-    logger.error("Postgres error: " + err);    
-});
+class DBUser {
+    constructor(pool) {
+        this._pool = pool;
+    }
 
-/**
- * Throws an error if a table name or column name contains any invalid 
- * characters.
- *
- * Although it is possible to have table or column names that don't pass this
- * test, database design should follow the convention of only using lowercase
- * letters, numbers, and underscores within table and column names.
- *
- * @param dbVar  A database table or column name, or array of names.
- */
-function testDBVar(dbVar) {
-    const test = (v) => {
-        assert(v.match(/^[a-z\d_]+$/), "Invalid database column or row '"
-            + v + "'");
+    /**
+     * Throws an error if a table name or column name contains any invalid 
+     * characters.
+     *
+     * Although it is possible to have table or column names that don't pass
+     * this test, database design should follow the convention of only using
+     * lowercase letters, numbers, and underscores within table and column
+     * names.
+     *
+     * @param dbVar  A database table or column name, or array of names.
+     */
+    testDBVar(dbVar) {
+        const test = (v) => {
+            assert(v.match(/^[a-z\d_]+$/), "Invalid database column or row '"
+                + v + "'");
+        }
+        if (Array.isArray(dbVar)) {
+            dbVar.forEach((v) => test(v));
+        }
+        else {
+            test(dbVar);
+        }
     }
-    if (Array.isArray(dbVar)) {
-        dbVar.forEach((v) => test(v));
-    }
-    else {
-        test(dbVar);
-    }
-}
 
-module.exports = {
-    query: (text, params, callback) => {
-        return pool.query(text, params, callback);
-    },
+    /**
+     * Performs a database query, returning a Promise that will resolve to a
+     * node-postgres response object, along with a possible error object.
+     *
+     * @param text    An SQL query to run, possibly containing parameter
+     *                references $1, $2, etc.
+     *
+     * @param values  Parameterized values that will be inserted into the SQL
+     *                query.
+     *
+     * @return        A Promise that will resolve when the query is finished.
+     */
+    query(text, values) {
+        return this._pool.query(text, values);
+    }
 
     /**
      * Checks if a database query response returned any data.
@@ -47,11 +59,11 @@ module.exports = {
      * @return  True if at least one row of data was returned, false if the
      *          response is empty, invalid, or undefined.
      */
-    responseReturnedData : (dbResponse) => {
+    responseReturnedData(dbResponse) {
         return isDefined(dbResponse) && isDefined(dbResponse.rows)
                 && (typeof dbResponse.rows.length === "number")
                 && dbResponse.rows.length > 0;
-    },
+    }
 
     /**
      * Asynchronously gets a list of single column entries from a table.
@@ -66,14 +78,14 @@ module.exports = {
      * @return             A Promise that will pass the table column value
      *                     array to its success callback.
      */
-    getColumnValues : (table, column, getDistinct) => {
-        testDBVar([ table, column ]);
+    getColumnValues(table, column, getDistinct) {
+        this.testDBVar([ table, column ]);
         let queryStart = "SELECT ";
         if (getDistinct) { queryStart += "DISTINCT " }
-        return module.exports.query(queryStart + column + " FROM " + table)
+        return this.query(queryStart + column + " FROM " + table)
         .then((dbResponse, err) => {
             const values = [];
-            if (module.exports.responseReturnedData(dbResponse)) {
+            if (this.responseReturnedData(dbResponse)) {
                 dbResponse.rows.forEach((row) => {
                     values.push(row[column]);
                 });
@@ -83,7 +95,7 @@ module.exports = {
                 else { onSuccess(values); }
             });
         });
-    },
+    }
 
     /**
      * Asynchronously gets all rows in a table where a specific value is found.
@@ -98,9 +110,9 @@ module.exports = {
      * @return               A Promise that will pass the table row array to
      *                       its success callback.
      */
-    getMatchingRows : (table, checkedColumn, columnValue) => {
-        testDBVar([ table, checkedColumn ]);
-        return module.exports.query(
+    getMatchingRows(table, checkedColumn, columnValue) {
+        this.testDBVar([ table, checkedColumn ]);
+        return this.query(
                 "SELECT * FROM " + table + " WHERE (" + checkedColumn
                 + " = $1)", [ columnValue ])
         .then((dbResponse, err) => {
@@ -108,7 +120,7 @@ module.exports = {
                 if (err) {
                     onFailure(err);
                 }
-                else if (! module.exports.responseReturnedData(dbResponse)) {
+                else if (! this.responseReturnedData(dbResponse)) {
                     onFailure(new Error("Found no rows in '" + table
                             + "' where '" + checkedColumn + "' = '"
                             + columnValue + "'"));
@@ -118,7 +130,7 @@ module.exports = {
                 }
             });
         });
-    },
+    }
 
     /**
      * Asynchronously gets the single row in a table where a specific value is
@@ -135,10 +147,9 @@ module.exports = {
      * @return               A Promise that will pass the matching table row
      *                       its success callback.
      */
-    getMatchingRow : (table, checkedColumn, columnValue) => {
-        testDBVar([ table, checkedColumn ]);
-        return module.exports.getMatchingRows(table, checkedColumn,
-                columnValue)
+    getMatchingRow(table, checkedColumn, columnValue) {
+        this.testDBVar([ table, checkedColumn ]);
+        return this.getMatchingRows(table, checkedColumn, columnValue)
         .then((matchingRows) => {
             return new Promise((onSuccess, onFailure) => {
                 if (matchingRows.length === 0) {
@@ -157,7 +168,7 @@ module.exports = {
                 }
             });
         });
-    },
+    }
 
     /**
      * Gets a single cell within a specific table, row, and column
@@ -175,14 +186,14 @@ module.exports = {
      * @return               A Promise, passing the cell's value to its
      *                       success callback.
      */
-    getCell : (table, column, rowIDColumn, rowID) => {
-        testDBVar([ table, column, rowIDColumn ]);
-        return module.exports.query("SELECT " + column + " FROM " + table
+    getCell(table, column, rowIDColumn, rowID) {
+        this.testDBVar([ table, column, rowIDColumn ]);
+        return this.query("SELECT " + column + " FROM " + table
                 + " WHERE (" + rowIDColumn + " = $1)", [ rowID ])
         .then((dbResponse, err) => {
             return new Promise((onSuccess, onFailure) => {
                 if (err) { onFailure(err); }
-                else if (module.exports.responseReturnedData(dbResponse)
+                else if (this.responseReturnedData(dbResponse)
                         && dbResponse.rows.length === 1) {
                     onSuccess(dbResponse.rows[0][column]);
                 }
@@ -193,38 +204,7 @@ module.exports = {
                 }
             });
         });
-    },
- 
-    /**
-     * Sets one or more cell values within a specific table, column, and row.
-     *
-     * @param table        The table containing the cell(s) to update.
-     *
-     * @param column       The column containing the cell(s) to update
-     *
-     * @param newValue     The new value to save to the given column in all
-     *                     matching rows.
-     *
-     * @param rowIDColumn  A column used to select the correct row(s).
-     *
-     * @param rowID        A rowIDColumn value held by only the rows that
-     *                     should be assigned the new column value.
-     *
-     * @return             A Promise that may be used to find if and when
-     *                     the new value is successfully applied. If no rows
-     *                     are changed or a database error occurs, the promise
-     *                     will reject.
-     */
-    setColumnValues : (table, column, newValue, rowIDColumn, rowID) => {
-        testDBVar([ table, column, rowIDColumn ]);
-        return module.exports.query("UPDATE " + table + " SET " + column
-               + " = $1 WHERE (" + rowIDColumn + " = $2)", [newValue, rowID ])
-        .then((dbResponse, err) => {
-            if (err) { throw err; }
-            else if (dbResponse.rowCount === 0) {
-                throw new Error("Found no rows in '" + table + "' where '"
-                        + rowIDColumn + "' = '" + rowID + "'");
-            }
-        });
     }
 }
+
+module.exports = DBUser;

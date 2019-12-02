@@ -9,8 +9,9 @@ const path = require("path");
 
 const resourceTypes = require("../resource-types.js");
 const dbStructure = require("../../db/db-structure.js");
-const dbRegions = require("../../db/db-regions.js");
-const dbMapTypes = require("../../db/db-map-types.js");
+const dbRegionsReader = require("../../db/reader/db-regions-reader.js");
+const dbRegionsWriter = require("../../db/writer/db-regions-writer.js");
+const dbMapTypeReader = require("../../db/reader/db-map-type-reader.js");
 
 const RESTResource
         = require("../rest-resource.js");
@@ -62,13 +63,13 @@ class RegionResource extends RESTResource {
         // Creates a Promise to check the database and see if a request's 
         // Region resource path is valid.
         const regionCheckPromise = (request) => {
-            return dbRegions.regionExists(this.getResourceId(request));
+            return dbRegionsReader.regionExists(this.getResourceId(request));
         };
 
         // Creates a Promise to get all distinct map type ids, then add the
         // region count to the response header.
         const typeQueryLoadPromise = (response) => {
-            return dbMapTypes.getMapTypeIds().then((typeIDs) => {
+            return dbMapTypeReader.getMapTypeIds().then((typeIDs) => {
                 response.set(headerKeys.MAP_TYPE_COUNT, typeIDs.length);
                 return typeIDs;
             });
@@ -82,7 +83,7 @@ class RegionResource extends RESTResource {
         this.setHTTPMethodHandler("GET", (request, response) => {
             const content = { regionURIs : [] };
             // Request region properties:
-            dbRegions.getRegionData(this.getResourceId(request))
+            dbRegionsReader.getRegionData(this.getResourceId(request))
             .then((typeData) => {
                 if (! isDefined(typeData)) {
                     logger.warn("Failed to find region resource at "
@@ -130,8 +131,9 @@ class RegionResource extends RESTResource {
         this.setHTTPMethodHandler("POST", (request, response) => {
             const iconURI = request.url + "/icon.png";
             const resourceID = this.getResourceId(request);
+            let sentResponse = false;
             // Check if the icon was set already:
-            dbRegions.isRegionIconSet(resourceID)
+            dbRegionsReader.isRegionIconSet(resourceID)
             .then((iconWasSet) => {
                 // If the region icon already exists, it can only be replaced
                 // by sending a PUT method directly to the icon URI.
@@ -141,14 +143,13 @@ class RegionResource extends RESTResource {
                             + "icon already exists. Returning status 409 "
                             + "Conflict.");
                     response.status(409).end();
-                    return false;
+                    sentResponse = true;
                 }
-                return true;
             })
             // If icon wasn't set, attempt to save the request body as a new
             // region icon:
-            .then((shouldContinue) => {
-                if (! shouldContinue) { return; }
+            .then(() => {
+                if (sentResponse) { return; }
                 const iconPath = path.join(
                         this.getResourceFileDirectory(request), "icon.png");
                 if (! isDefined(request.body)
@@ -156,34 +157,42 @@ class RegionResource extends RESTResource {
                     logger.warn("Received invalid region icon for '" + iconPath
                             + ", responding with 400 Bad Request.");
                     response.status(400).end();
+                    sentResponse = true;
                     return;
                 }
                 if (! saveRequestBodyFile(request, iconPath)) {
                     logger.warn("Failed to save region icon to '" + iconPath
                             + "', responding with 500 Internal Server Error");
                     response.status(500).end();
+                    sentResponse = true;
                     return;
                 }
-                logger.info("Saved new region icon to '" + iconPath + "', "
-                        + "updating database.");
-                // TODO: check that the file is actually a valid image!
-                return dbRegions.setIconURI(regionID, iconURI);
+                if (! sentResponse) {
+                    logger.info("Saved new region icon to '" + iconPath
+                            + "', updating database.");
+                    // TODO: check that the file is actually a valid image!
+                    return dbRegionsWriter.setIconURI(regionID, iconURI);
+                }
             })
-            .then((dbResponse, err) => {
-                if (! isDefined(dbResponse)) {
-                    // Response was sent before the final database update,
-                    // no further action required.
-                    return;
-                }
+            .then(() => {
+                if (sentResponse) { return; }
                 if (err) {
                     logger.error("Error setting region icon: " + err);
                     response.status(500).end();
+                    sentResponse = true;
                     return;
                 }
                 response.set(headerKeys.ICON_LOCATION, iconURI);
                 logger.info("Saved icon addition to database, responding with"
                         + " 204 No Content.");
                 response.status(204).end();
+                sentResponse = true;
+            })
+            .catch((err) => {
+                logger.error("Error setting region icon: " + err);
+                if (! sentResponse) {
+                    response.status(500).end();
+                }
             });
         });
 
@@ -201,7 +210,7 @@ class RegionResource extends RESTResource {
             }
             const regionID = this.getResourceId(request);
             const displayName = request.body[resourceKeys.DISPLAY_NAME];
-            dbRegions.setDisplayName(regionID, displayName)
+            dbRegionsWriter.setDisplayName(regionID, displayName)
             .then((dbResponse, err) => {
                 if (err) {
                     logger.error("Error setting region display name: " + err);

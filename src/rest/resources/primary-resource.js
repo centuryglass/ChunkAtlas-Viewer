@@ -6,8 +6,8 @@
 
 const RESTResource
         = require("../rest-resource.js");
-const dbRegions
-        = require("../../db/db-regions.js");
+const dbRegionsReader
+        = require("../../db/reader/db-regions-reader.js");
 const logger
         = require("../../logger.js");
 const resourceTypes
@@ -42,7 +42,7 @@ class PrimaryResource extends RESTResource {
         // region count to the response header. The list of region names will
         // be passed to the promise's success callback.
         const regionQueryLoadPromise = (response) => {
-            return dbRegions.getRegionIds()
+            return dbRegionsReader.getRegionIds()
             .then((regionIDs) => {
                 response.set(headerKeys.REGION_COUNT, regionIDs.length);
                 return regionIDs;

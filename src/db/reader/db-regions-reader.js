@@ -1,14 +1,11 @@
 /**
- * @file db-regions.js
+ * @file db-regions-reader.js
  *
- * Provides methods for handling access to the ChunkAtlas database's regions
- * table.
+ * Provides methods for reading from the ChunkAtlas database's regions table.
  */
 
-const db = require("./db.js")
-const dbStructure = require("./db-structure.js");
-
-const { isDefined } = require("../validate.js");
+const dbReader = require("./db-reader.js")
+const dbStructure = require("../db-structure.js");
 
 const regionTable = dbStructure.tables.REGIONS;
 const idColumn = dbStructure.regions.REGION_ID;
@@ -21,7 +18,7 @@ module.exports = {
      *          success callback.
      */
     getRegionIds : () => {
-        return db.getColumnValues(regionTable, idColumn);
+        return dbReader.getColumnValues(regionTable, idColumn);
     },
 
     /**
@@ -33,7 +30,7 @@ module.exports = {
      *                  success callback.
      */
     getRegionData : (regionID) => {
-        return db.getMatchingRow(regionTable, idColumn, regionID);
+        return dbReader.getMatchingRow(regionTable, idColumn, regionID);
     },
 
     /**
@@ -45,7 +42,7 @@ module.exports = {
      *                  if the region was found, false if it was not.
      */
     regionExists : (regionID) => {
-        return db.getCell(regionTable, idColumn, idColumn, regionID)
+        return dbReader.getCell(regionTable, idColumn, idColumn, regionID)
         .then((cell) => { return true; })
         .catch(() => { return false; });
     },
@@ -61,7 +58,7 @@ module.exports = {
      *                  database.
      */
     isRegionIconSet : (regionID) => {
-        return db.getCell(regionTable, dbStructure.regions.ICON_URI,
+        return dbReader.getCell(regionTable, dbStructure.regions.ICON_URI,
                 idColumn, regionID)
         .then((cell) => {
             return cell !== null;
@@ -78,37 +75,5 @@ module.exports = {
                 throw err;
             }
         });
-    },
-
-    /**
-     * Sets a specific region's display name.
-     *
-     * @param regionID     The specific region to update.
-     *
-     * @param displayName  The new display name to apply. This name must be a
-     *                     unique string between 1 and 32 characters,
-     *                     inclusive.
-     */
-    setDisplayName : (regionID, displayName) => {
-        return db.setColumnValues(regionTable,
-                dbStructure.regions.DISPLAY_NAME,
-                displayName,
-                idColumn,
-                regionID);
-    },
-
-    /**
-     * Sets a specific region's icon URI.
-     *
-     * @param regionID  The specific region to update.
-     *
-     * @param iconURI   The new icon URI to set.
-     */
-    setIconURI : (regionID, iconURI) => {
-        return db.setColumnValues(regionTable,
-                dbStructure.regions.ICON_URI,
-                iconURI,
-                idColumn,
-                regionID);
     }
 };

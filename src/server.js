@@ -13,7 +13,8 @@ const express = require("express");
 // HTTP message body parsing:
 const bodyParser = require("body-parser");
 // Postgres server access:
-const db = require("./db/db.js");
+const dbReader = require("./db/reader/db-reader.js");
+const dbWriter = require("./db/writer/db-writer.js");
 // Creating const data objects:
 const constUtils = require("./const-util.js");
 // Input validation:
@@ -262,11 +263,11 @@ app.post(Paths.In.UPDATE, (req, res) => {
     });
 
     // Add all map keys to the database, saving region and map types:
-    let updateQuery = db.query(keyInsert, keyInsertValues).then(() => {
+    let updateQuery = dbWriter.query(keyInsert, keyInsertValues).then(() => {
         // For each region and type, add all map tiles to the database:
-        return db.query(tileInsert, tileInsertValues);
+        return dbWriter.query(tileInsert, tileInsertValues);
     }).then(() => { // Get the list of images that need to be loaded:
-        return db.query(SQL.FIND_MISSING_IMG, (err, pendingRes) => {
+        return dbReader.query(SQL.FIND_MISSING_IMG, (err, pendingRes) => {
             if (! validate.isDefined(pendingRes)
                     || ! validate.isDefined(pendingRes.rows)) {
                 res.end();
@@ -304,7 +305,7 @@ app.post(Paths.In.IMAGE_UPLOAD, (req, res) => {
     const keyCount = Object.keys(pendingImages).length;
     if (keyCount == 0) {
         logger.info("All images loaded, committing changes:");
-        db.query(SQL.APPLY_STAGING, (err, dbRes) => {
+        dbWriter.query(SQL.APPLY_STAGING, (err, dbRes) => {
             logger.info("update committed to database.");
         });
     }
@@ -336,7 +337,7 @@ function adjustUploadedImagePaths(dbResult) {
 app.get(Paths.In.KEY_REQUEST, (req, res) => {
     logger.info("Got key request from [" + req.ips.toString()
             + "], querying DB for keys.");
-    db.query(SQL.GET_KEYS, (err, dbRes) => {
+    dbReader.query(SQL.GET_KEYS, (err, dbRes) => {
         if (! validate.isDefined(dbRes) || ! validate.isDefined(dbRes.rows)) {
             logger.info("No keys found, ending response.");
             res.end();
@@ -352,7 +353,7 @@ app.get(Paths.In.KEY_REQUEST, (req, res) => {
 app.get(Paths.In.TILE_REQUEST, (req, res) => {
     logger.info("Got tile request from [" + req.ips.toString()
             + "], querying DB for tiles.");
-    db.query(SQL.GET_TILES, (err, dbRes) => {
+    dbReader.query(SQL.GET_TILES, (err, dbRes) => {
         if (! validate.isDefined(dbRes) || ! validate.isDefined(dbRes.rows)) {
             logger.info("No tiles found, ending response.");
             res.end();
