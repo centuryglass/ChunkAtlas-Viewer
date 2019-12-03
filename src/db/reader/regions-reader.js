@@ -1,5 +1,5 @@
 /**
- * @file db-regions-reader.js
+ * @file regions-reader.js
  *
  * Provides methods for reading from the ChunkAtlas database's regions table.
  */

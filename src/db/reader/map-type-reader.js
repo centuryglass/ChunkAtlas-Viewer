@@ -1,5 +1,5 @@
 /**
- * @file db-map-type-reader.js
+ * @file map-type-reader.js
  *
  * Provides methods for reading from the the ChunkAtlas database's map_type
  * table.

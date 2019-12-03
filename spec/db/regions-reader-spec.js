@@ -6,10 +6,10 @@ describe("DBRegionsReader", function() {
         rejectMissingRegionMsg,
         missingRegionErr,
         insertTestRegion
-    } = require("../helpers/db/db-regions-helper.js");
+    } = require("../helpers/db/regions-helper.js");
 
     const dbWriter = require("../../src/db/writer/db-writer.js");
-    const dbRegions = require("../../src/db/reader/db-regions-reader.js");
+    const dbRegions = require("../../src/db/reader/regions-reader.js");
     const dbStructure = require("../../src/db/db-structure.js");
 
     const { testPromiseResolution, testPromiseRejection }

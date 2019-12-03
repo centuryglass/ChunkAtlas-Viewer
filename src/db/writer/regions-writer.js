@@ -1,5 +1,5 @@
 /**
- * @file db-regions.js
+ * @file regions-writer.js
  *
  * Provides methods for writing to the ChunkAtlas database's regions table.
  */

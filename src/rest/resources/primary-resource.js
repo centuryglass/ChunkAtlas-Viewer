@@ -7,7 +7,7 @@
 const RESTResource
         = require("../rest-resource.js");
 const dbRegionsReader
-        = require("../../db/reader/db-regions-reader.js");
+        = require("../../db/reader/regions-reader.js");
 const logger
         = require("../../logger.js");
 const resourceTypes

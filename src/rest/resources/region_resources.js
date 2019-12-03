@@ -9,9 +9,9 @@ const path = require("path");
 
 const resourceTypes = require("../resource-types.js");
 const dbStructure = require("../../db/db-structure.js");
-const dbRegionsReader = require("../../db/reader/db-regions-reader.js");
-const dbRegionsWriter = require("../../db/writer/db-regions-writer.js");
-const dbMapTypeReader = require("../../db/reader/db-map-type-reader.js");
+const dbRegionsReader = require("../../db/reader/regions-reader.js");
+const dbRegionsWriter = require("../../db/writer/regions-writer.js");
+const dbMapTypeReader = require("../../db/reader/map-type-reader.js");
 
 const RESTResource
         = require("../rest-resource.js");

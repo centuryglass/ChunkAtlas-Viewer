@@ -66,6 +66,81 @@ class DBUser {
     }
 
     /**
+     * Gets all values of a specific column from a database query response.
+     *
+     * @param dbResponse       A response returned from a database query.
+     *
+     * @param requestedColumn  The name of a column within the rows returned
+     *                          by the database response.
+     *
+     * @return                  An array containing all of the requested
+     *                          values within the database response.
+     */
+    getResponseValues(dbResponse, requestedColumn) {
+        const values = [];
+        if (this.responseReturnedData(dbResponse)) {
+            dbResponse.rows.forEach((row) => {
+                values.push(row[requestedColumn]);
+            });
+        }
+        return values;
+    }
+
+    /**
+     * Gets a promise resolving to all database rows found in a query
+     * response.
+     *
+     * @param query  A Promise representing an asyncronous database query.
+     *
+     * @return       A Promise that resolves with all returned rows, or
+     *               rejects if any error occurs.
+     */
+    getQueryResponseRows(query) {
+        return query.then((dbResponse, err) => {
+            return new Promise((onSuccess, onFailure) => {
+                if (err) { onFailure(err); }
+                else if (this.responseReturnedData(dbResponse)) {
+                    onSuccess(dbResponse.rows);
+                }
+                else {
+                    onFailure(new Error("No rows found"));
+                }
+            });
+        });
+    }
+
+    /**
+     * Attempts to get a single cell within a database query response
+     * that returned a single row.
+     *
+     * @param query            A Promise representing an asyncronous database
+     *                         query, expected to resolve with a single table
+     *                         row.
+     *
+     * @param requestedColumn  The name of a column within the row returned
+     *                         by the database response.
+     *
+     * @return                 A Promise, resolving with the column cell's
+     *                         value if the database response contained
+     *                         exactly one row.
+     */
+    getQueryResponseCell(query, requestedColumn) {
+        return query.then((dbResponse, err) => {
+            return new Promise((onSuccess, onFailure) => {
+                if (err) { onFailure(err); }
+                else if (this.responseReturnedData(dbResponse)
+                        && dbResponse.rows.length === 1) {
+                    onSuccess(dbResponse.rows[0][requestedColumn]);
+                }
+                else {
+                    onFailure(new Error("Failed to find single '"
+                            + requestedColumn + "' cell"));
+                }
+            });
+        });
+    }
+
+    /**
      * Asynchronously gets a list of single column entries from a table.
      *
      * @param table        The table to query for data.
@@ -84,12 +159,7 @@ class DBUser {
         if (getDistinct) { queryStart += "DISTINCT " }
         return this.query(queryStart + column + " FROM " + table)
         .then((dbResponse, err) => {
-            const values = [];
-            if (this.responseReturnedData(dbResponse)) {
-                dbResponse.rows.forEach((row) => {
-                    values.push(row[column]);
-                });
-            }
+            const values = this.getResponseValues(dbResponse, column);
             return new Promise((onSuccess, onFailure) => {
                 if (err) { onFailure(err); }
                 else { onSuccess(values); }
@@ -112,23 +182,18 @@ class DBUser {
      */
     getMatchingRows(table, checkedColumn, columnValue) {
         this.testDBVar([ table, checkedColumn ]);
-        return this.query(
+        const query = this.query(
                 "SELECT * FROM " + table + " WHERE (" + checkedColumn
-                + " = $1)", [ columnValue ])
-        .then((dbResponse, err) => {
-            return new Promise((onSuccess, onFailure) => {
-                if (err) {
-                    onFailure(err);
-                }
-                else if (! this.responseReturnedData(dbResponse)) {
-                    onFailure(new Error("Found no rows in '" + table
-                            + "' where '" + checkedColumn + "' = '"
-                            + columnValue + "'"));
-                }
-                else {
-                    onSuccess(dbResponse.rows);
-                }
-            });
+                + " = $1)", [ columnValue ]);
+        return this.getQueryResponseRows(query)
+        .catch((err) => {
+            if (err.toString() === "Error: No rows found") {
+                throw new Error("Found no rows in '" + table + "' where '"
+                        + checkedColumn + "' = '" + columnValue + "'");
+            }
+            else {
+                throw err;
+            }
         });
     }
 
@@ -188,21 +253,19 @@ class DBUser {
      */
     getCell(table, column, rowIDColumn, rowID) {
         this.testDBVar([ table, column, rowIDColumn ]);
-        return this.query("SELECT " + column + " FROM " + table
+        const query = this.query("SELECT " + column + " FROM " + table
                 + " WHERE (" + rowIDColumn + " = $1)", [ rowID ])
-        .then((dbResponse, err) => {
-            return new Promise((onSuccess, onFailure) => {
-                if (err) { onFailure(err); }
-                else if (this.responseReturnedData(dbResponse)
-                        && dbResponse.rows.length === 1) {
-                    onSuccess(dbResponse.rows[0][column]);
-                }
-                else {
-                    onFailure(new Error("Failed to find single '" + column
-                            + "' cell in '" + table + "' where '"
-                            + rowIDColumn + "' = '" + rowID + "'"));
-                }
-            });
+        return this.getQueryResponseCell(query, column)
+        .catch((err) => {
+            if (err.toString() === "Error: Failed to find single '" + column
+                    + "' cell") {
+                throw new Error("Failed to find single '"
+                        + column + "' cell in '" + table + "' where '"
+                        + rowIDColumn + "' = '" + rowID + "'");
+            }
+            else {
+                throw err;
+            }
         });
     }
 }
