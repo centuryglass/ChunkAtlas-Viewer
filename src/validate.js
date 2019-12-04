@@ -36,11 +36,23 @@ module.exports = {
      *
      * @return       Whether the value is a non-null, defined string value.
      */
-    isString: (value) => {
+    isString : (value) => {
         if (value === null || ! module.exports.isDefined(value)) {
             return false;
         }
         return value instanceof String || typeof value === "string";
+    },
+
+    /**
+     * Checks if a value is a non-empty string.
+     *
+     * @param value  The value to check.
+     *
+     * @return       Whether the value is a string with a length greater than
+     *               zero.
+     */
+    isNonEmptyString : (value) => {
+        return module.exports.isString(value) && value !== "";
     },
 
     /**
@@ -100,7 +112,8 @@ module.exports = {
     assertIsClass: (value, classType, messagePrefix) => {
         module.exports.assert(value instanceof classType
                 && module.exports.isDefined(value),
-                messagePrefix + ": \"" + value + "\" is not an object of type "
+                messagePrefix + ": \"" + value
+                + "\" is not an object of type "
                 + classType.constructor.name + ".");
     },
 
@@ -120,4 +133,4 @@ module.exports = {
                 + "\" is not a valid enum value of type " + enumType.name
                 + ".");
     }
-}
+};
