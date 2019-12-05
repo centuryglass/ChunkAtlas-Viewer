@@ -13,6 +13,11 @@
  *
  *  Enums may optionally define a set of properties that apply to each value.
  * Any property applied to one enum value should also be applied to all others.
+ * For each property key, the Enum type object will be assigned a function
+ * parameter using that key. That function will take a single parameter,
+ * one of that Enum type's values, and return the value of that value's 'key'
+ * property. As a result, property keys cannot have the same name as any
+ * existing properties of the Enum type object.
  *
  * - Mandatory properties defined for each Enum type: -
  *
@@ -33,7 +38,7 @@
  *
  *  withProperty(key, value):   A function property that returns the first
  *                              Enum value with a property named 'key' that
- *                              exactly matches "value". Returns undefined if
+ *                              exactly matches 'value'. Returns undefined if
  *                              no match is found.
  */
 
@@ -194,13 +199,29 @@ module.exports = {
             return Number.isInteger(value) && value > 0
                     && value <= enumObject.count;
         });
+        // Set accessor functions for all properties:
+        if (isDefined(propertySet)) {
+            const propertyKeys = Object.keys(propertySet["1"]);
+            propertyKeys.forEach((key) => {
+                assert(! isDefined(enumObject[key]), "Unable to create '"
+                        + name + "' enum type: '" + key
+                        + "' is not a valid parameter name.");
+                const keyAccess = (enumValue) => {
+                    assert(enumObject.isValid(enumValue), "Tried to access "
+                            + "property '" + key + "' from Enum type '" + name
+                            + "' for invalid enum value '" + enumValue + "'.");
+                    return enumObject.properties[enumValue][key];
+                };
+                setConstProperty(enumObject, key, keyAccess);
+            });
+        }
         return enumObject;
     },
 
     /**
-     * Creates an Enum type representing the columns in a database table.
-     * Each represented value will have a 'name' property holding the
-     * exact column name.
+     * Creates an Enum type representing elements in a database.
+     * Each represented value will have a property holding that value's name
+     * in the database.
      *
      * @param name             The name of the database table, used to
      *                         represent the new enum type.
@@ -211,8 +232,13 @@ module.exports = {
      *                         Enum values will have. See the
      *                         validateEnumParam function's Javadoc for the
      *                         required format of this parameter.
+     *
+     * @param elementName      The type of element represented by each Enum
+     *                         value, used as the key for the database name
+     *                         property.  If undefined, "column" will be used.
      */
-    createTableEnum : function(name, tableColumns, extraProperties) {
+    createTableEnum : function(name, tableColumns, extraProperties,
+            elementName) {
         const valueCount = (Array.isArray(tableColumns)
                 ? tableColumns.length : 0);
         const properties = (isDefined(extraProperties)
@@ -220,12 +246,15 @@ module.exports = {
         while (properties.length < valueCount) {
             properties.push([]);
         }
+        if (! isDefined(elementName)) {
+            elementName = "column";
+        }
         const values = [];
         for (let i = 0; i < valueCount; i++) {
             const name = tableColumns[i];
             if (isNonEmptyString(name)) {
                 values.push(name.toUpperCase());
-                properties[i].push([ "name", name ]);
+                properties[i].push([ elementName, name ]);
             }
         }
         return module.exports.createEnum(name, values, properties);
