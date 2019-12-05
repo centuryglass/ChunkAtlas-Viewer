@@ -1,7 +1,7 @@
 describe("DBRegionsWriter", function() {
     const {
-        regionTable,
-        columns,
+        regions,
+        column,
         testRegionID,
         testDisplayName,
         rejectMsg,
@@ -10,22 +10,13 @@ describe("DBRegionsWriter", function() {
         rejectDuplicateValueMsg,
         missingRegionErr,
         insertTestRegion
-    } = require("../helpers/db/regions-helper.js");
+    } = require("../helpers/db/regions-helpers.js");
 
     const dbWriter = require("../../src/db/writer/db-writer.js");
     const dbRegions = require("../../src/db/writer/regions-writer.js");
-    const dbStructure = require("../../src/db/db-structure.js");
 
     const { testPromiseResolution, testPromiseRejection }
             = require("../../src/testing/promise-testing.js");
-
-    // Clear the region table before each test.
-    beforeEach((done) => {
-        return dbWriter.query("DELETE FROM " + regionTable)
-        .then(() => {
-            done();
-        });
-    });
 
     describe("setDisplayName", () => {
         const altTestName    = "Test Region Name";
@@ -39,8 +30,9 @@ describe("DBRegionsWriter", function() {
                 return dbRegions.setDisplayName(testRegionID, altTestName);
             })
             .then(() => {
-                return dbWriter.getCell(regionTable, columns.DISPLAY_NAME,
-                        columns.REGION_ID, testRegionID);
+                return dbWriter.getCell(regions.name,
+                        column(regions.DISPLAY_NAME),
+                        column(regions.REGION_ID), testRegionID);
             })
             .then((displayName) => {
                 expect(displayName).toEqual(altTestName);
@@ -110,8 +102,9 @@ describe("DBRegionsWriter", function() {
                 return dbRegions.setIconURI(testRegionID, testURI);
             })
             .then(() => {
-                return dbWriter.getCell(regionTable, columns.ICON_URI,
-                        columns.REGION_ID, testRegionID);
+                return dbWriter.getCell(regions.name,
+                        column(regions.ICON_URI),
+                        column(regions.REGION_ID), testRegionID);
             })
             .then((iconURI) => {
                 expect(iconURI).toEqual(testURI);
@@ -130,8 +123,9 @@ describe("DBRegionsWriter", function() {
                 return dbRegions.setIconURI(testRegionID, null);
             })
             .then(() => {
-                return dbWriter.getCell(regionTable, columns.ICON_URI,
-                        columns.REGION_ID, testRegionID);
+                return dbWriter.getCell(regions.name,
+                        column(regions.ICON_URI), column(regions.REGION_ID),
+                        testRegionID);
             })
             .then((iconURI) => {
                 expect(iconURI).toEqual(null);

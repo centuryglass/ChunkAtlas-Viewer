@@ -8,7 +8,7 @@ const logger = require("../../logger.js");
 const path = require("path");
 
 const resourceTypes = require("../resource-types.js");
-const dbStructure = require("../../db/db-structure.js");
+const regions = require("../../db/structure/regions.js");
 const dbRegionsReader = require("../../db/reader/regions-reader.js");
 const dbRegionsWriter = require("../../db/writer/regions-writer.js");
 const dbMapTypeReader = require("../../db/reader/map-type-reader.js");
@@ -33,10 +33,10 @@ recursiveFreeze(headerKeys);
 
 // Resource JSON keys:
 const resourceKeys = {
-    REGION_ID     : dbStructure.regions.REGION_ID,
-    DISPLAY_NAME  : dbStructure.regions.DISPLAY_NAME,
-    ICON_URI      : dbStructure.regions.ICON_URI,
-    LAST_UPDATE   : dbStructure.regions.LAST_UPDATE,
+    REGION_ID     : regions.column(regions.REGION_ID),
+    DISPLAY_NAME  : regions.column(regions.DISPLAY_NAME),
+    ICON_URI      : regions.column(regions.ICON_URI),
+    LAST_UPDATE   : regions.column(regions.LAST_UPDATE),
     MAP_TYPE_URIS : "map_type_uris"
 };
 recursiveFreeze(resourceKeys);

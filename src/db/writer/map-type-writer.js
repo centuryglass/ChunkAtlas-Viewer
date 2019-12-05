@@ -6,12 +6,12 @@
  */
 
 const dbWriter = require("./db-writer.js")
-const dbStructure = require("../db-structure.js");
+const mapTypes = require("../structure/map-types.js");
 
 const { isDefined } = require("../../validate.js");
 
-const typeTable = dbStructure.tables.MAP_TYPE;
-const idColumn = dbStructure.map_types.TYPE_ID
+const typeTable = mapTypes.name;
+const idColumn = mapTypes.column(mapTypes.TYPE_ID);
 
 module.exports = {
     /**
@@ -25,7 +25,7 @@ module.exports = {
      *                database.
      */
     typeIconSet : (typeID) => {
-        return dbWriter.getCell(typeTable, dbStructure.map_types.ICON_URI,
+        return dbWriter.getCell(typeTable, mapTypes.column(mapTypes.ICON_URI),
                 idColumn, typeID)
         .then((cell) => {
             return cell !== null;
@@ -41,7 +41,7 @@ module.exports = {
      */
     setDisplayName : (typeID, displayName) => {
         return dbWriter.setColumnValues(typeTable,
-                dbStructure.map_types.DISPLAY_NAME,
+                mapTypes.column(mapTypes.DISPLAY_NAME),
                 displayName,
                 idColumn,
                 typeID);
@@ -56,7 +56,7 @@ module.exports = {
      */
     setIconURI : (typeID, iconURI) => {
         return dbWriter.setColumnValues(typeTable,
-                dbStructure.map_types.ICON_URI,
+                mapTypes.column(mapTypes.ICON_URI),
                 iconURI,
                 idColumn,
                 typeID);

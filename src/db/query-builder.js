@@ -25,7 +25,7 @@ class QueryBuilder {
 
     // Join an array of values into a single, comma-separated string.
     _joinList(list) {
-        assert(Arrays.isArray(list), "Tried to join non-array parameter '"
+        assert(Array.isArray(list), "Tried to join non-array parameter '"
                 + list + "'.");
         let listStr = "";
         list.forEach((listItem) => {
@@ -41,17 +41,19 @@ class QueryBuilder {
      * Checks that a set of column values are valid for this QueryBuilder's
      * table, throwing an error if any invalid columns are found.
      *
-     * @param   An array of potential column values.
+     * @param   A column value, or an array of potential column values.
      */
     _checkColumns(columns) {
-        assert(Array.isArray(columns), "Value '" + columns
-                + "' is not a column array.");
+        assert(isDefined(columns), "Expected column array for query to '"
+                + this._table.name + "' was not defined.");
+        if (! Array.isArray(columns)) {
+            columns = [ columns ];
+        }
         columns.forEach((column) => {
             assert(this._table.isValid(column), "Column '" + column
                     + "' is not a valid column in table '" + this._table.name
                     + "'.");
         });
-        return allValid;
     }
 
     /**
@@ -70,16 +72,18 @@ class QueryBuilder {
      * @param conditions  An SQL condition string, possibly containing
      *                    parameters marked with $1, $2, etc.
      *
-     * @param params      An optional array of parameters that will be inserted
-     *                    into the query.
+     * @param params      An optional parameter or array of parameters that
+     *                    will be inserted into the query.
      */
     setConditions(conditions, params) {
         assert(! isDefined(conditions) || isNonEmptyString(conditions),
                 "Conditions must be a non-empty string.");
         if (isDefined(params)) {
-            assert(Array.isArray(params), "Parameter list must be an array.");
             assert(isDefined(conditions), "Parameters can't be provided when "
                     + "no conditions are set.");
+            if (! Array.isArray(params)) {
+                params = [ params ];
+            }
         }
         this._conditions = conditions;
         this._params = params;
@@ -99,7 +103,12 @@ class QueryBuilder {
      *                 finishes.
      */
     select(pool, columns) {
-        this._checkColumns(columns);
+        if (isDefined(columns)) {
+            try { this._checkColumns(columns); }
+            catch (err) {
+                Error("SELECT failed: " + err.message);
+            }
+        }
         let text = "SELECT ";
         if (this._selectDistinct) { text += "DISTINCT "; }
         if (Array.isArray(columns) && columns.length > 0) {
@@ -138,10 +147,14 @@ class QueryBuilder {
         const keys = Object.keys(columnValues);
         assert(Array.isArray(keys) && keys.length > 0,
                 "ColumnValues must define at least one column : value pair.");
-        this._checkColumns(keys);
+        try { this._checkColumns(columns); }
+        catch (err) {
+            Error("UPDATE failed: " + err.message);
+        }
         const params = (Array.isArray(this._params) ? this._params : []);
         let setColumns = [];
         keys.forEach((key) => {
+            key = Number(key);
             setColumns.push(this._table.column(key) + " = $" + params.length
                     + " ");
             params.push(columnValues[key]);
@@ -172,12 +185,16 @@ class QueryBuilder {
      *                      query finishes.
      */
     insert(pool, columns, values) {
-        this._checkColumns(columns);
+        try { this._checkColumns(columns); }
+        catch (err) {
+            Error("INSERT failed: " + err.message);
+        }
         // TODO: validate 'values' parameter
         let text = "INSERT INTO " + this._table.name + " ("
                 + this._joinList(columns) + ") VALUES ";
         let params = {};
         let paramList = [];
+        let valueStrings = [];
         values.forEach((valueArray) => {
             let paramSymbols = [];
             valueArray.forEach((param) => {
@@ -190,7 +207,7 @@ class QueryBuilder {
             valueStrings.push("(" + this._joinList(paramSymbols) + ")");
         });
         text += this._joinList(valueStrings);
-        return pool.query(text, params);
+        return pool.query(text, paramList);
     }
 }
 

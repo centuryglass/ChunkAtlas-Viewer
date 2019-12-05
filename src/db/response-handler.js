@@ -5,6 +5,7 @@
  */
 
 const ErrorEnum = require("./error-enum.js");
+const DBError = require("./db-error.js");
 const { isDefined, assert } = require("../validate.js");
 
 
@@ -53,7 +54,7 @@ module.exports = {
             return dbResponse.rows;
         }
         else {
-            throw new Error(ErrorEnum.message(ErrorEnum.NO_RESULTS));
+            throw new DBError(ErrorEnum.NO_RESULTS);
         }
     },
 
@@ -94,15 +95,17 @@ module.exports = {
         const cellValues = module.exports.getResponseValues(dbResponse,
                 requestedColumn);
         let err;
+        let detailMessage = regions.column(requestedColumn);
         if (cellValues.length > 1) {
-            err = new Error(ErrorEnum.message(ErrorEnum.EXTRA_RESULTS));
-            err.count = cellValues.length;
+            err = new DBError(ErrorEnum.EXTRA_RESULTS);
+            detailMessage += ": Found " + cellValues.length
+                    + " matching rows.";
         }
         else if (cellValues.length === 0) {
-            err = new Error(ErrorEnum.message(ErrorEnum.NO_RESULTS));
+            err = new DBError(ErrorEnum.NO_RESULTS);
         }
         if (err) {
-            err.column = requestedColumn;
+            err.setDetailMessage(detailMessage);
             throw err;
         }
         return cellValues[0];

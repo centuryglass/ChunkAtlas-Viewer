@@ -30,7 +30,7 @@ const tableList = [
 
 const tableNames = [];
 const tableProperties = [];
-const enumKey = "columns";
+const enumKey = "tableEnum";
 tableList.forEach((tableEnum) => {
     tableNames.push(tableEnum.name);
     tableProperties.push([[ enumKey, tableEnum ]]);
