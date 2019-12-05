@@ -5,10 +5,10 @@
  */
 
 const dbWriter = require("./db-writer.js")
-const dbStructure = require("../db-structure.js");
+const regions = require("../structure/regions.js");
 
-const regionTable = dbStructure.tables.REGIONS;
-const idColumn = dbStructure.regions.REGION_ID;
+const regionTable = regions.name;
+const idColumn = regions.column(regions.REGION_ID);
 
 module.exports = {
     /**
@@ -21,11 +21,9 @@ module.exports = {
      *                     inclusive.
      */
     setDisplayName : (regionID, displayName) => {
-        return dbWriter.setColumnValues(regionTable,
-                dbStructure.regions.DISPLAY_NAME,
-                displayName,
-                idColumn,
-                regionID);
+        return dbWriter.setColumnValues(regions,
+                { [regions.DISPLAY_NAME] : displayName },
+                idColumn + " = $1", [regionID]);
     },
 
     /**
@@ -36,10 +34,8 @@ module.exports = {
      * @param iconURI   The new icon URI to set.
      */
     setIconURI : (regionID, iconURI) => {
-        return dbWriter.setColumnValues(regionTable,
-                dbStructure.regions.ICON_URI,
-                iconURI,
-                idColumn,
-                regionID);
+        return dbWriter.setColumnValues(regions,
+                { [regions.ICON_URI] : iconURI },
+                idColumn + " = $1", [regionID]);
     }
 };

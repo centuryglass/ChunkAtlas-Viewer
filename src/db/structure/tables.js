@@ -30,10 +30,12 @@ const tableList = [
 
 const tableNames = [];
 const tableProperties = [];
-const enumKey = "columns";
+const elementName = "table";
+const enumKey = "tableEnum";
 tableList.forEach((tableEnum) => {
     tableNames.push(tableEnum.name);
     tableProperties.push([[ enumKey, tableEnum ]]);
 });
 
-module.exports = createTableEnum("tables", tableNames, tableProperties);
+module.exports = createTableEnum("Tables", tableNames, tableProperties,
+        elementName);

@@ -278,7 +278,7 @@ app.post(Paths.In.UPDATE, (req, res) => {
                 urls.push(row.image_url);
                 pendingImages[row.image_url] = true;
             });
-            httpCrypto.signResponse(res, JSON.stringify(urls));
+            httpCrypto.signResult(res, JSON.stringify(urls));
             res.json(urls);
         });
     }).catch(e => console.error(e.stack));
@@ -339,7 +339,7 @@ app.get(Paths.In.KEY_REQUEST, (req, res) => {
             + "], querying DB for keys.");
     dbReader.query(SQL.GET_KEYS, (err, dbRes) => {
         if (! validate.isDefined(dbRes) || ! validate.isDefined(dbRes.rows)) {
-            logger.info("No keys found, ending response.");
+            logger.info("No keys found, ending result.");
             res.end();
             return;
         }
@@ -355,7 +355,7 @@ app.get(Paths.In.TILE_REQUEST, (req, res) => {
             + "], querying DB for tiles.");
     dbReader.query(SQL.GET_TILES, (err, dbRes) => {
         if (! validate.isDefined(dbRes) || ! validate.isDefined(dbRes.rows)) {
-            logger.info("No tiles found, ending response.");
+            logger.info("No tiles found, ending result.");
             res.end();
             return;
         }

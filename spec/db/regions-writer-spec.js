@@ -1,7 +1,6 @@
 describe("DBRegionsWriter", function() {
     const {
-        regionTable,
-        columns,
+        column,
         testRegionID,
         testDisplayName,
         rejectMsg,
@@ -9,22 +8,21 @@ describe("DBRegionsWriter", function() {
         rejectEmptyStringMsg,
         rejectDuplicateValueMsg,
         missingRegionErr,
-        insertTestRegion
-    } = require("../helpers/db/regions-helper.js");
+        insertTestRegion,
+        clearTable
+    } = require("../helpers/db/regions-helpers.js");
 
     const dbWriter = require("../../src/db/writer/db-writer.js");
-    const dbRegions = require("../../src/db/writer/regions-writer.js");
-    const dbStructure = require("../../src/db/db-structure.js");
+    const regionsWriter = require("../../src/db/writer/regions-writer.js");
+    const regions = require("../../src/db/structure/regions.js");
 
     const { testPromiseResolution, testPromiseRejection }
-            = require("../../src/testing/promise-testing.js");
+            = require("../support/promise-testing.js");
 
+    const logger = require("../../src/logger.js");
     // Clear the region table before each test.
     beforeEach((done) => {
-        return dbWriter.query("DELETE FROM " + regionTable)
-        .then(() => {
-            done();
-        });
+        clearTable(done);
     });
 
     describe("setDisplayName", () => {
@@ -36,11 +34,12 @@ describe("DBRegionsWriter", function() {
                 (done) => {
             const testPromise = insertTestRegion()
             .then(() => {
-                return dbRegions.setDisplayName(testRegionID, altTestName);
+                return regionsWriter.setDisplayName(testRegionID, altTestName);
             })
             .then(() => {
-                return dbWriter.getCell(regionTable, columns.DISPLAY_NAME,
-                        columns.REGION_ID, testRegionID);
+                return dbWriter.selectCell(regions, regions.DISPLAY_NAME,
+                        regions.column(regions.REGION_ID) + " = $1",
+                        testRegionID);
             })
             .then((displayName) => {
                 expect(displayName).toEqual(altTestName);
@@ -51,7 +50,7 @@ describe("DBRegionsWriter", function() {
 
         it(rejectMissingRegionMsg, (done) => {
             const testPromise
-                    = dbRegions.setDisplayName(testRegionID, testDisplayName);
+                    = regionsWriter.setDisplayName(testRegionID, testDisplayName);
             const description = "setDisplayName " + rejectMissingRegionMsg;
             return testPromiseRejection(testPromise, description,
                     missingRegionErr, done);
@@ -60,7 +59,7 @@ describe("DBRegionsWriter", function() {
         it(rejectEmptyStringMsg, (done) => {
             const testPromise = insertTestRegion()
             .then(() => {
-                return dbRegions.setDisplayName(testRegionID, "");
+                return regionsWriter.setDisplayName(testRegionID, "");
             });
             const description = "setDisplayName " + rejectEmptyStringMsg;
             const expectedErr = "error: new row for relation \"regions\" "
@@ -76,7 +75,7 @@ describe("DBRegionsWriter", function() {
                 return insertTestRegion(altRegionID, altTestName);
             })
             .then(() => {
-                return dbRegions.setDisplayName(altRegionID, testDisplayName);
+                return regionsWriter.setDisplayName(altRegionID, testDisplayName);
             });
             const description = "setDisplayName " + rejectDuplicateValueMsg;
             const expectedErr = "error: duplicate key value violates "
@@ -90,7 +89,7 @@ describe("DBRegionsWriter", function() {
         it(rejectLongNameMsg, (done) => {
             const testPromise = insertTestRegion()
             .then(() => {
-                return dbRegions.setDisplayName(testRegionID, tooLongName);
+                return regionsWriter.setDisplayName(testRegionID, tooLongName);
             });
             const description = "setDisplayName " + rejectLongNameMsg;
             const expectedErr = "error: value too long for type character "
@@ -107,11 +106,11 @@ describe("DBRegionsWriter", function() {
                 (done) => {
             const testPromise = insertTestRegion()
             .then(() => {
-                return dbRegions.setIconURI(testRegionID, testURI);
+                return regionsWriter.setIconURI(testRegionID, testURI);
             })
             .then(() => {
-                return dbWriter.getCell(regionTable, columns.ICON_URI,
-                        columns.REGION_ID, testRegionID);
+                return dbWriter.selectCell(regions, regions.ICON_URI,
+                        regions.REGION_ID, testRegionID);
             })
             .then((iconURI) => {
                 expect(iconURI).toEqual(testURI);
@@ -124,14 +123,14 @@ describe("DBRegionsWriter", function() {
                 (done) => {
             const testPromise = insertTestRegion()
             .then(() => {
-                return dbRegions.setIconURI(testRegionID, testURI);
+                return regionsWriter.setIconURI(testRegionID, testURI);
             })
             .then(() => {
-                return dbRegions.setIconURI(testRegionID, null);
+                return regionsWriter.setIconURI(testRegionID, null);
             })
             .then(() => {
-                return dbWriter.getCell(regionTable, columns.ICON_URI,
-                        columns.REGION_ID, testRegionID);
+                return dbWriter.selectCell(regions, regions.ICON_URI,
+                        regions.REGION_ID, testRegionID);
             })
             .then((iconURI) => {
                 expect(iconURI).toEqual(null);
@@ -143,7 +142,7 @@ describe("DBRegionsWriter", function() {
         it(rejectEmptyStringMsg, (done) => {
             const testPromise = insertTestRegion()
             .then(() => {
-                return dbRegions.setIconURI(testRegionID, "");
+                return regionsWriter.setIconURI(testRegionID, "");
             });
             const description = "setIconURI " + rejectEmptyStringMsg;
             const expectedErr = "error: new row for relation \"regions\" "

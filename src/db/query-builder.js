@@ -4,10 +4,12 @@
  * Constructs basic database queries.
  */
 
-const logger = require('../logger.js');
+const logger = require("../logger.js");
+const { Pool } = require("pg");
 
-const { isDefined, assert, isNonEmptyString } = require("../validate.js");
-const DBTables = require("./structure/tables.js");
+const { isDefined, assert, assertIsClass, isNonEmptyString }
+        = require("../validate.js");
+const Tables = require("./structure/tables.js");
 
 class QueryBuilder {
     /**
@@ -17,41 +19,29 @@ class QueryBuilder {
      *                   access.
      */
     constructor(tableEnum) {
-        assert(isDefined(DBTables.withProperty("tableEnum", tableEnum)),
+        assert(isDefined(Tables.withProperty("tableEnum", tableEnum)),
                 "'" + tableEnum + "' is not a valid database table enum.");
         this._table = tableEnum;
         this._selectDistinct = false;
-    }
-
-    // Join an array of values into a single, comma-separated string.
-    _joinList(list) {
-        assert(Arrays.isArray(list), "Tried to join non-array parameter '"
-                + list + "'.");
-        let listStr = "";
-        list.forEach((listItem) => {
-            if (listStr.length > 0) {
-                listStr += ", ";
-            }
-            listStr += listItem;
-        });
-        return listStr;
     }
 
     /**
      * Checks that a set of column values are valid for this QueryBuilder's
      * table, throwing an error if any invalid columns are found.
      *
-     * @param   An array of potential column values.
+     * @param   A column value, or an array of potential column values.
      */
     _checkColumns(columns) {
-        assert(Array.isArray(columns), "Value '" + columns
-                + "' is not a column array.");
+        assert(isDefined(columns), "Expected column array for query to '"
+                + this._table.name + "' was not defined.");
+        if (! Array.isArray(columns)) {
+            columns = [ columns ];
+        }
         columns.forEach((column) => {
             assert(this._table.isValid(column), "Column '" + column
                     + "' is not a valid column in table '" + this._table.name
                     + "'.");
         });
-        return allValid;
     }
 
     /**
@@ -70,41 +60,50 @@ class QueryBuilder {
      * @param conditions  An SQL condition string, possibly containing
      *                    parameters marked with $1, $2, etc.
      *
-     * @param params      An optional array of parameters that will be inserted
-     *                    into the query.
+     * @param params      An optional parameter or array of parameters that
+     *                    will be inserted into the query.
      */
     setConditions(conditions, params) {
         assert(! isDefined(conditions) || isNonEmptyString(conditions),
-                "Conditions must be a non-empty string.");
+                "Conditions must be a non-empty string or null, found '"
+                + conditions + "'");
+        this._conditions = conditions;
         if (isDefined(params)) {
-            assert(Array.isArray(params), "Parameter list must be an array.");
             assert(isDefined(conditions), "Parameters can't be provided when "
                     + "no conditions are set.");
+            if (! Array.isArray(params)) {
+                params = [ params ];
+            }
+            this._params = params;
         }
-        this._conditions = conditions;
-        this._params = params;
+        else { this._params = []; }
     }
 
     /**
      * Performs a database SELECT query, returning a Promise that will resolve
-     * to a node-postgres response object, along with a possible error object.
+     * to a node-postgres result object, along with a possible error object.
      *
      * @param pool     The database connection pool used to send the query.
      *
      * @param columns  An optional array of column enum values to return. If
      *                 not defined, all table columns will be returned.
      *
-     * @return         A Promise that will resolve with a database response
+     * @return         A Promise that will resolve with a database result
      *                 object and possible error object once the query
      *                 finishes.
      */
     select(pool, columns) {
-        this._checkColumns(columns);
+        //assertIsClass(pool, Pool, "Invalid DB pool param.");
         let text = "SELECT ";
         if (this._selectDistinct) { text += "DISTINCT "; }
-        if (Array.isArray(columns) && columns.length > 0) {
-            this._checkColumns(columns);
-            text += "(" + this._joinList(columns) + ") ";
+        if (isDefined(columns) && Array.isArray(columns)
+                && columns.length > 0) {
+            try { this._checkColumns(columns); }
+            catch (err) {
+                Error("SELECT failed: " + err.message);
+            }
+            const columnNames = columns.map(col => this._table.column(col));
+            text += "(" + columnNames.join(", ") + ") ";
         }
         else {
             text += "* ";
@@ -113,12 +112,14 @@ class QueryBuilder {
         if (isNonEmptyString(this._conditions)) {
             text += " WHERE (" + this._conditions + ")";
         }
+        logger.debug("Sending SELECT query '" + text + "' with params '"
+                + this._params + "'");
         return pool.query(text, this._params);
     }
 
     /**
      * Performs a database UPDATE query, returning a Promise that will resolve
-     * to a node-postgres response object, along with a possible error object.
+     * to a node-postgres result object, along with a possible error object.
      *
      * @param pool          The database connection pool used to send the
      *                      query.
@@ -129,34 +130,40 @@ class QueryBuilder {
      *                      that column.
      *
      * @return              A Promise that will resolve with a database
-     *                      response object and possible error object once the
+     *                      result object and possible error object once the
      *                      query finishes.
      */
     update(pool, columnValues) {
-        //TODO: validate params
+        //assertIsClass(pool, Pool, "Invalid DB pool param.");
         let text = "UPDATE " + this._table.name + " SET ";
         const keys = Object.keys(columnValues);
         assert(Array.isArray(keys) && keys.length > 0,
                 "ColumnValues must define at least one column : value pair.");
-        this._checkColumns(keys);
+        try { this._checkColumns(columns); }
+        catch (err) {
+            Error("UPDATE failed: " + err.message);
+        }
         const params = (Array.isArray(this._params) ? this._params : []);
         let setColumns = [];
         keys.forEach((key) => {
-            setColumns.push(this._table.column(key) + " = $" + params.length
-                    + " ");
+            key = Number(key);
+            setColumns.push(this._table.column(key) + " = $"
+                    + (params.length + 1));
             params.push(columnValues[key]);
 
         });
-        text += this._joinList(setColumns);
+        text += setColumns.join(", ");
         if (isNonEmptyString(this._conditions)) {
             text += " WHERE (" + this._conditions + ")";
         }
+        logger.debug("Sending UPDATE query '" + text + "' with params '"
+                + params + "'");
         return pool.query(text, params);
     }
 
     /**
      * Performs a database INSERT query, returning a Promise that will resolve
-     * to a node-postgres response object, along with a possible error object.
+     * to a node-postgres result object, along with a possible error object.
      *
      * @param pool          The database connection pool used to send the
      *                      query.
@@ -167,17 +174,56 @@ class QueryBuilder {
      *                      is an array of column values, listed in the same
      *                      order as in the columns parameter.
      *
-     * @return              A Promise that will resolve with a database
-     *                      response object and possible error object once the
-     *                      query finishes.
+     * @return              A Promise that will resolve with a database result
+     *                      object and possible error object once the query
+     *                      finishes.
      */
     insert(pool, columns, values) {
-        this._checkColumns(columns);
-        // TODO: validate 'values' parameter
-        let text = "INSERT INTO " + this._table.name + " ("
-                + this._joinList(columns) + ") VALUES ";
+        //assertIsClass(pool, Pool, "Invalid DB pool param.");
+        try { this._checkColumns(columns); }
+        catch (err) {
+            Error("INSERT failed: " + err.message);
+        }
+        // validate 'values' parameter:
+        assert(Array.isArray(values), "Values must be an array of column "
+                + "values, or an array of column value arrays.");
+        let allArrays = true;
+        let noArrays = true;
+        for (let value of values) {
+            if (Array.isArray(value)) {
+                noArrays = false;
+            }
+            else {
+                allArrays = false;
+            }
+        }
+        assert (noArrays !== allArrays,
+                "Found invalid mix of array and non-array values.");
+        if (noArrays) {
+            values = [ values ];
+        }
+        for (let value of values) {
+            assert(Array.isArray(value), "Values must be an array of column "
+                    + "values.");
+            if (isDefined(columns)) {
+                assert(value.length <= columns.length, "'" + columns.length
+                        + "' column names stated, but found '" + value.length
+                        + "' column values.");
+            }
+        }
+        let columnNames = "";
+        if (isDefined(columns)) {
+             columnNames = columns.map(col => this._table.column(col))
+                .join(", ");
+            if (columnNames.length !== 0) {
+                columnNames = " (" + columnNames + ")"
+            };
+        }
+        let text = "INSERT INTO " + this._table.name + columnNames
+                + " VALUES ";
         let params = {};
         let paramList = [];
+        let valueStrings = [];
         values.forEach((valueArray) => {
             let paramSymbols = [];
             valueArray.forEach((param) => {
@@ -187,10 +233,34 @@ class QueryBuilder {
                 }
                 paramSymbols.push(params[param]);
             });
-            valueStrings.push("(" + this._joinList(paramSymbols) + ")");
+            valueStrings.push("(" + paramSymbols.join(", ") + ")");
         });
-        text += this._joinList(valueStrings);
-        return pool.query(text, params);
+        text += valueStrings.join(", ");
+        logger.debug("Sending INSERT query '" + text + "' with params '"
+                + paramList + "'");
+        return pool.query(text, paramList);
+    }
+
+    /**
+     * Performs a database DELETE query, returning a Promise that will resolve
+     * to a node-postgres result object, along with a possible error object.
+     *
+     * @param pool          The database connection pool used to send the
+     *                      query.
+     *
+     * @return              A Promise that will resolve with a database result
+     *                      object and possible error object once the query 
+     *                      finishes.
+     */
+    deleteQuery(pool) {
+        //assertIsClass(pool, Pool, "Invalid DB pool param.");
+        let text = "DELETE FROM " + this._table.name;
+        if (isNonEmptyString(this._conditions)) {
+            text += " WHERE (" + this._conditions + ")";
+        }
+        logger.debug("Sending DELETE query '" + text + "' with params '"
+                + this._params + "'");
+        return pool.query(text, this._params);
     }
 }
 

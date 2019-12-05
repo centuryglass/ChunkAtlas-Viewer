@@ -22,7 +22,7 @@ module.exports = {
             done();
         })
         .catch((err) => {
-            done.fail("Unexpected error: " + err);
+            done.fail("Unexpected error: " + err.message);
         })
     },
 
@@ -36,23 +36,24 @@ module.exports = {
      *                           printed as part of a failure message if the
      *                           promise resolves.
      *
-     * @param expectedErrString  The string version of the error that should
-     *                           be returned when the promise finishes.
+     * @param expectedErrMessage  The message that should be stored in an
+     *                            error thrown when the promise is rejected.
      *
-     * @param done               A testing object provided by Jasmine for
-     *                           signalling that an asynchronous test is 
-     *                           complete.
+     * @param done                A testing object provided by Jasmine for
+     *                            signalling that an asynchronous test is 
+     *                            complete.
      *
-     * @return                   A Promise that will resolve when the test is
-     *                           complete.
+     * @return                    A Promise that will resolve when the test is
+     *                            complete.
      */
     testPromiseRejection
-            : function(promise, description, expectedErrString, done) {
+            : function(promise, description, expectedErrMessage, done) {
         return promise.then(() => {
-                done.fail("Promise should have been rejected: " + description);
+            done.fail("Promise should have been rejected: " + description);
         })
         .catch((err) => {
-            expect(err.toString()).toEqual(expectedErrString);
+            expect(err.message).withContext(JSON.stringify(err, null, 4))
+                    .toEqual(expectedErrMessage);
             done();
         });
     }
