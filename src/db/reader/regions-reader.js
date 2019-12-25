@@ -7,7 +7,6 @@
 const dbReader = require("./db-reader.js")
 const regions = require("../structure/regions.js");
 const ErrorEnum = require("../error-enum.js");
-const DBError = require("../db-error.js");
 const idColumn = regions.column(regions.REGION_ID);
 
 module.exports = {
@@ -22,7 +21,6 @@ module.exports = {
             return dbReader.selectColumnValues(regions, regions.REGION_ID);
         }
         catch (err) {
-            throw new Error("Failed to get region IDs: " + err.message);
         }
     },
 
@@ -35,7 +33,7 @@ module.exports = {
      *                  success callback.
      */
     getRegionData : (regionID) => {
-        return dbReader.selectRow(regions, idColumn + " = $1", [ regionID ])
+        return dbReader.selectRow(regions, idColumn + " = $1", [ regionID ]);
     },
 
     /**
@@ -47,10 +45,10 @@ module.exports = {
      *                  if the region was found, false if it was not.
      */
     regionExists : (regionID) => {
-        return dbReader.selectCell(regions, regions.column(regions.REGION_ID),
-                idColumn + " = $1", [ regionID ])
-        .then((cell) => true)
-        .catch((err) => false);
+        return dbReader.selectCell(regions, regions.REGION_ID,
+                idColumn + " = $1", regionID)
+        .then((cell) => { return true; })
+        .catch(() => { return false; });
     },
 
     /**
@@ -64,10 +62,19 @@ module.exports = {
      *                  database.
      */
     isRegionIconSet : (regionID) => {
-        return dbReader.selectCell(regions, regions.column(regions.ICON_URI),
-                idColumn + " = $1", [ regionID ])
+        return dbReader.selectCell(regions, regions.ICON_URI,
+                idColumn + " = $1", regionID)
         .then((cell) => {
             return cell !== null;
+        })
+        .catch((err) => {
+            if (err.code === ErrorEnum.NO_RESULTS) {
+                throw new Error("Found no rows in '" + regionTable
+                        + "' where '" + idColumn + "' = '" + regionID + "'");
+            }
+            else {
+                throw err;
+            }
         });
     }
 };

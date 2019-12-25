@@ -27,9 +27,9 @@ class DBError extends Error {
      * @param errorEnum  An ErrorEnum value specifying the specific error type.
      */
     constructor(errorEnum) {
-        super(ErrorEnum.message(errorEnum));
         assert(ErrorEnum.isValid(errorEnum), "'" + errorEnum
                 + "' is not a valid database error type.");
+        super(errorEnum.message);
         setConstProperty(this, "code", errorEnum);
     }
 
@@ -42,9 +42,9 @@ class DBError extends Error {
      */
     setDetailMessage(message) {
         if(isDefined(this.detailMessage)) {
-            throw new Error("Tried to set error detail message twice.");
+            Error("Tried to set error detail message twice.");
         }
-        setConstProperty(this, "detailMessage", message);
+        setConstProperty(this, "detailMessage", errorEnum);
     }
 }
 

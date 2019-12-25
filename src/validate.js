@@ -93,6 +93,7 @@ module.exports = {
     assert: (condition, message) => {
         if (! condition) {
             if (! message) { message = "ASSERTION FAILED"; }
+            console.log(message);
             logger.error(message);
             throw new Error(message);
         }
@@ -113,7 +114,7 @@ module.exports = {
                 && module.exports.isDefined(value),
                 messagePrefix + ": \"" + value
                 + "\" is not an object of type "
-                + classType.name + ".");
+                + classType.constructor.name + ".");
     },
 
     /**

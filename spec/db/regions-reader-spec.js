@@ -1,9 +1,3 @@
-/**
- * @file regions-reader-spec.js
- *
- * Tests that src/db/reader/regions-reader.js correctly processes data from
- * the database regions table.
- */
 describe("DBRegionsReader", function() {
     const {
         regions,
@@ -11,33 +5,15 @@ describe("DBRegionsReader", function() {
         testRegionID,
         rejectMissingRegionMsg,
         missingRegionErr,
-<<<<<<< HEAD
-        insertTestRegion,
-        clearTable
-    } = require("../helpers/db/regions-helpers.js");
-
-    const dbWriter = require("../../src/db/writer/db-writer.js");
-    const regionReader = require("../../src/db/reader/regions-reader.js");
-=======
         insertTestRegion
     } = require("../helpers/db/regions-helpers.js");
 
     const dbWriter = require("../../src/db/writer/db-writer.js");
     const dbRegions = require("../../src/db/reader/regions-reader.js");
->>>>>>> ccc61c4d9f556ffa9a4fcb8f6d7b1cd52c161236
 
     const { testPromiseResolution, testPromiseRejection }
-            = require("../support/promise-testing.js");
+            = require("../../src/testing/promise-testing.js");
 
-<<<<<<< HEAD
-    const logger = require("../../src/logger.js");
-    // Clear the region table before each test.
-    beforeEach((done) => {
-        clearTable(done);
-    });
-
-=======
->>>>>>> ccc61c4d9f556ffa9a4fcb8f6d7b1cd52c161236
     describe("getRegionIds", () => {
         const testIDs = [ testRegionID, "overworld", "nether", "the_end" ];
         const testValues = [];
@@ -53,7 +29,7 @@ describe("DBRegionsReader", function() {
                             + " rows, but " + addedRows + " added.");
                     return;
                 }
-                return regionReader.getRegionIds();
+                return dbRegions.getRegionIds();
             })
             .then((regionIDs) => {
                 expect(regionIDs.length).toEqual(testIDs.length);
@@ -65,7 +41,7 @@ describe("DBRegionsReader", function() {
         });
 
         it("should resolve [] when no regions exist", (done) => {
-            const testPromise = regionReader.getRegionIds()
+            const testPromise = dbRegions.getRegionIds()
             .then((regionIDs) => {
                 expect(Array.isArray(regionIDs) && regionIDs.length === 0)
                         .toBe(true);
@@ -79,7 +55,7 @@ describe("DBRegionsReader", function() {
             const displayName = "getRegionData Test";
             const testPromise = insertTestRegion(undefined, displayName)
             .then(() => {
-                return regionReader.getRegionData(testRegionID);
+                return dbRegions.getRegionData(testRegionID);
             })
             .then((region) => {
                 expect(region[column(regions.REGION_ID)])
@@ -93,8 +69,7 @@ describe("DBRegionsReader", function() {
 
         it(rejectMissingRegionMsg, (done) => {
             const description = "getRegionData " + rejectMissingRegionMsg;
-            return testPromiseRejection(
-                    regionReader.getRegionData(testRegionID),
+            return testPromiseRejection(dbRegions.getRegionData(testRegionID),
                     description, missingRegionErr, done);
         });
     });
@@ -102,14 +77,13 @@ describe("DBRegionsReader", function() {
     describe("regionExists", () => {
         it("should resolve to true if the region id is found, false otherwise",
                 (done) => {
-            const testPromise = regionReader.regionExists(testRegionID)
+            const testPromise = dbRegions.regionExists(testRegionID)
             .then((foundRegion) => {
                 expect(foundRegion).toBe(false);
                 return insertTestRegion();
             })
             .then(() => {
-                console.log("ok");
-                return regionReader.regionExists(testRegionID);
+                return dbRegions.regionExists(testRegionID);
             })
             .then((foundRegion) => {
                 expect(foundRegion).toBe(true);
@@ -125,24 +99,18 @@ describe("DBRegionsReader", function() {
                 (done) => {
             const testPromise = insertTestRegion()
             .then(() => {
-                return regionReader.isRegionIconSet(testRegionID);
+                return dbRegions.isRegionIconSet(testRegionID);
             })
             .then((isIconSet) => {
                 expect(isIconSet).toBe(false);
-<<<<<<< HEAD
-                return dbWriter.setColumnValues(regions, {
-                        [regions.ICON_URI]: testIcon },
-                        column(regions.REGION_ID) + " = $1", [testRegionID])
-                        .then(() => regionReader.isRegionIconSet(testRegionID));
-=======
                 return dbWriter.setColumnValues(regions.name,
                         column(regions.ICON_URI), testIcon,
                         column(regions.REGION_ID), testRegionID)
                         .then(() => dbRegions.isRegionIconSet(testRegionID));
->>>>>>> ccc61c4d9f556ffa9a4fcb8f6d7b1cd52c161236
             })
             .then((isIconSet) => {
                 expect(isIconSet).toBe(true);
+                done();
             });
             return testPromiseResolution(testPromise, done);
         });
@@ -150,7 +118,7 @@ describe("DBRegionsReader", function() {
         it(rejectMissingRegionMsg, (done) => {
             const description = "isRegionIconSet " + rejectMissingRegionMsg;
             return testPromiseRejection(
-                    regionReader.isRegionIconSet(testRegionID), description,
+                    dbRegions.isRegionIconSet(testRegionID), description,
                     missingRegionErr, done);
         });
     });
