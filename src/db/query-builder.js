@@ -112,6 +112,8 @@ class QueryBuilder {
         if (isNonEmptyString(this._conditions)) {
             text += " WHERE (" + this._conditions + ")";
         }
+        logger.debug("Sending SELECT query '" + text + "' with params '"
+                + this._params + "'");
         return pool.query(text, this._params);
     }
 
@@ -154,6 +156,8 @@ class QueryBuilder {
         if (isNonEmptyString(this._conditions)) {
             text += " WHERE (" + this._conditions + ")";
         }
+        logger.debug("Sending UPDATE query '" + text + "' with params '"
+                + params + "'");
         return pool.query(text, params);
     }
 

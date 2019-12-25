@@ -1,9 +1,5 @@
 describe("DBRegionsWriter", function() {
     const {
-<<<<<<< HEAD
-=======
-        regions,
->>>>>>> ccc61c4d9f556ffa9a4fcb8f6d7b1cd52c161236
         column,
         testRegionID,
         testDisplayName,
@@ -12,7 +8,6 @@ describe("DBRegionsWriter", function() {
         rejectEmptyStringMsg,
         rejectDuplicateValueMsg,
         missingRegionErr,
-<<<<<<< HEAD
         insertTestRegion,
         clearTable
     } = require("../helpers/db/regions-helpers.js");
@@ -20,26 +15,16 @@ describe("DBRegionsWriter", function() {
     const dbWriter = require("../../src/db/writer/db-writer.js");
     const regionsWriter = require("../../src/db/writer/regions-writer.js");
     const regions = require("../../src/db/structure/regions.js");
-=======
-        insertTestRegion
-    } = require("../helpers/db/regions-helpers.js");
-
-    const dbWriter = require("../../src/db/writer/db-writer.js");
-    const dbRegions = require("../../src/db/writer/regions-writer.js");
->>>>>>> ccc61c4d9f556ffa9a4fcb8f6d7b1cd52c161236
 
     const { testPromiseResolution, testPromiseRejection }
             = require("../support/promise-testing.js");
 
-<<<<<<< HEAD
     const logger = require("../../src/logger.js");
     // Clear the region table before each test.
     beforeEach((done) => {
         clearTable(done);
     });
 
-=======
->>>>>>> ccc61c4d9f556ffa9a4fcb8f6d7b1cd52c161236
     describe("setDisplayName", () => {
         const altTestName    = "Test Region Name";
         const tooLongName = "This name is longer than 32 characters, so "
@@ -52,15 +37,9 @@ describe("DBRegionsWriter", function() {
                 return regionsWriter.setDisplayName(testRegionID, altTestName);
             })
             .then(() => {
-<<<<<<< HEAD
                 return dbWriter.selectCell(regions, regions.DISPLAY_NAME,
                         regions.column(regions.REGION_ID) + " = $1",
                         testRegionID);
-=======
-                return dbWriter.getCell(regions.name,
-                        column(regions.DISPLAY_NAME),
-                        column(regions.REGION_ID), testRegionID);
->>>>>>> ccc61c4d9f556ffa9a4fcb8f6d7b1cd52c161236
             })
             .then((displayName) => {
                 expect(displayName).toEqual(altTestName);
@@ -130,14 +109,8 @@ describe("DBRegionsWriter", function() {
                 return regionsWriter.setIconURI(testRegionID, testURI);
             })
             .then(() => {
-<<<<<<< HEAD
                 return dbWriter.selectCell(regions, regions.ICON_URI,
                         regions.REGION_ID, testRegionID);
-=======
-                return dbWriter.getCell(regions.name,
-                        column(regions.ICON_URI),
-                        column(regions.REGION_ID), testRegionID);
->>>>>>> ccc61c4d9f556ffa9a4fcb8f6d7b1cd52c161236
             })
             .then((iconURI) => {
                 expect(iconURI).toEqual(testURI);
@@ -156,14 +129,8 @@ describe("DBRegionsWriter", function() {
                 return regionsWriter.setIconURI(testRegionID, null);
             })
             .then(() => {
-<<<<<<< HEAD
                 return dbWriter.selectCell(regions, regions.ICON_URI,
                         regions.REGION_ID, testRegionID);
-=======
-                return dbWriter.getCell(regions.name,
-                        column(regions.ICON_URI), column(regions.REGION_ID),
-                        testRegionID);
->>>>>>> ccc61c4d9f556ffa9a4fcb8f6d7b1cd52c161236
             })
             .then((iconURI) => {
                 expect(iconURI).toEqual(null);

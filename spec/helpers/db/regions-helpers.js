@@ -4,27 +4,23 @@
  * Assists in testing modules that access the database 'regions' table.
  */
 
-// Clear the region table before each test.
-beforeEach((done) => {
-    return dbWriter._pool.query("DELETE FROM " + regions.name)
-    .then(() => {
-        done();
-    });
-});
 
 // Set test DB parameters:
-process.env.PGREADER = "db_reader";
-process.env.PGWRITER = "postgres";
-process.env.PGHOST = "localhost"
-process.env.PGDATABASE = "TestMapDB";
-process.env.PGPORT = 5432;
+const testEnv = require("../../support/test-env.js");
+testEnv.init();
 
+// general utility:
+const logger = require("../../../src/logger.js");
+const { assert, isDefined } = require("../../../src/validate.js");
+
+// database modules:
+const QueryBuilder = require("../../../src/db/query-builder.js");
 const dbWriter = require("../../../src/db/writer/db-writer.js");
-
-const rejectMsg = "should reject with a relevant error ";
+const ErrorEnum = require("../../../src/db/error-enum.js");
 const regions = require("../../../src/db/structure/regions.js");
-const { assert } = require("../../../src/validate.js");
 
+// Shared string constants:
+const rejectMsg = "should reject with a relevant error ";
 const testRegionID = "main_test";
 const testDisplayName = "Test Region";
 
@@ -59,8 +55,7 @@ module.exports = {
             + "if it tries to set a value that is already in use.",
 
     // Expected error message strings needed more than once:
-    missingRegionErr : "Found no rows in '" + regions.name + "' where '"
-            + column(regions.REGION_ID) + "' = '" + testRegionID + "'",
+    missingRegionErr : ErrorEnum.message(ErrorEnum.NO_RESULTS),
 
     // Insert the test region into the database:
     // If undefined, default values are used in place of regionID and
@@ -71,5 +66,20 @@ module.exports = {
         return dbWriter.insertRows(regions,
                 [ regions.REGION_ID, regions.DISPLAY_NAME ],
                 [[ regionID, displayName ]]);
+    },
+
+    // Clear the regions table, logging the number of deleted rows.
+    clearTable : (done) => {
+        dbWriter.deleteRows(regions)
+        .then((count) => {
+            logger.debug("Cleared " + count + " regions.");
+            if (isDefined(done)) {
+                done();
+            }
+        })
+        .catch((err) => {
+            logger.info("Failed to clear regions table: " + err.message);
+            done();
+        });
     }
 }
