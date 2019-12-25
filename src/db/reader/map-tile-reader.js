@@ -29,21 +29,14 @@ module.exports = {
      *                  (if provided).
      */
     getTileURIs : (regionID, typeID, size) => {
-        let query = "SELECT (" + column(mapTiles.TILE_URI) + ") FROM "
-                + tileTable + " WHERE (" + column(mapTiles.REGION_ID)
-                + " = $1 AND " + column(mapTiles.TYPE_ID) + " = $2";
-        query += (isDefined(size) ? "AND " + column(mapTiles.SIZE)
+        let condition = column(mapTiles.REGION_ID) + " = $1 AND "
+                + column(mapTiles.TYPE_ID) + " = $2";
+        condition += (isDefined(size) ? "AND " + column(mapTiles.SIZE)
                 + " = $3)" : ")");
         const params = [ regionID, typeID ];
         if (isDefined(size)) { params.push(size); }
-        return dbReader.query((dbResponse, err) => {
-            const tileURIs = dbReader.getResponseValues(dbResponse,
-                    column(mapTiles.TILE_URI));
-            return new Promise((resolve, reject) => {
-                if (err) { reject(err); }
-                else { resolve(tileURIs); }
-            });
-        });
+        return dbReader.selectColumnValues(mapTiles, mapTiles.TILE_URI,
+                condition, params, true);
     },
 
     /**
@@ -56,8 +49,8 @@ module.exports = {
      *                 given URI.
      */
     getTileData : (tileURI) => {
-        return dbReader.getMatchingRow(tileTable, column(mapTiles.TILE_URI),
-                tileURI);
+        return dbReader.selectRow(mapTiles,
+                column(mapTiles.TILE_URI) + " = $1", [ tileURI ]);
     },
 
     /**
@@ -80,17 +73,14 @@ module.exports = {
      *                  URI, or reject if no matching tile is found.
      */
     getTileURI : (regionID, typeID, size, xPos, zPos) => {
-        const query = "SELECT " + columns.TILE_URI + " FROM " + tileTable
-            + " WHERE ("
-            + column(mapTiles.REGION_ID) + " = $1 AND "
+        const condition = + column(mapTiles.REGION_ID) + " = $1 AND "
             + column(mapTiles.TYPE_ID) + " = $2 AND "
             + column(mapTiles.SIZE) +    " = $3 AND "
             + column(mapTiles.BLOCK_X) + " = $4 AND "
             + column(mapTiles.BLOCK_Z) + " = $5)";
         const params = [ regionID, typeID, size, xPos, zPos ];
-        const queryPromise = dbReader.query(query, params);
-        return dbReader.getQueryResponseCell(queryPromise,
-                column(mapTiles.TILE_URI));
+        return dbReader.selectCell(mapTiles, mapTiles.TILE_URI, condition,
+                params);
     },
 
     /**

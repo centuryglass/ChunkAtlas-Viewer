@@ -5,19 +5,20 @@
  * values.
  */
 
-const { Pool } = require('pg');
+const { Pool } = require("pg");
 const { isDefined } = require("../../validate.js");
 const pool = new Pool({
     user: process.env.PGWRITER,
     password: process.env.PGWRITER_PASSWORD
 });
 
-pool.on('error', (err, client) => {
+pool.on("error", (err, client) => {
     logger.error("Postgres error: " + err);    
 });
 
 const DBUser = require("../db-user.js");
 const QueryBuilder = require("../query-builder.js");
+const resultHandler = require("../result-handler.js");
 const writer = new DBUser(pool);
 
 /**
@@ -47,12 +48,12 @@ writer.setColumnValues
     }
     const builder = new QueryBuilder(tableEnum);
     builder.setConditions(condition, params);
-    return builder.update(this._pool, columnValues)
-    .then((dbResponse, err) => {
-        if (err) { throw err; }
-        else if (dbResponse.rowCount === 0) {
+    return resultHandler.handleErrors(builder.update(this._pool, columnValues))
+    .then((result) => {
+        if (result.rowCount === 0) {
             throw new Error("Found no rows in '" + tableEnum.name
-                    + "' where '" + rowIDColumn + "' = '" + rowID + "'");
+                    + "' where '" + condition + "' (params = '" + params
+                    + ")'");
         }
     });
 };
@@ -76,15 +77,43 @@ writer.setColumnValues
  */
 writer.insertRows = function(tableEnum, columns, values) {
     const builder = new QueryBuilder(tableEnum);
-    return builder.insert(this._pool, columns, values)
-    .then((dbResponse, err) => {
-        if (err) { throw err; }
-        else if (dbResponse.rowCount === 0) {
+    return resultHandler.handleErrors(
+            builder.insert(this._pool, columns, values))
+    .then((result) => {
+        if (result === 0) {
             throw new Error("Inserted no rows into table '" + tableEnum.name
                     + "'.");
         }
-        return dbResponse.rowCount;
+        return result.rowCount;
     });
+};
+
+/**
+ * Attempts to delete a set of rows from a database table.
+ *
+ * @param condition     An SQL condition string used to determine which rows
+ *                      should be updated.
+ *
+ * @param params        An optional parameter or array of parameters that will
+ *                      be inserted into the query.
+ *
+ * @return              A Promise that will resolve with the number of deleted
+ *                      columns within the table, or reject if errors
+ *                      occurred.
+ */
+writer.deleteRows = function(tableEnum, conditions, params) {
+    const builder = new QueryBuilder(tableEnum);
+    if (isDefined(conditions)) {
+        if (isDefined(params) && ! Array.isArray(params)) {
+            params = [ params ];
+        }
+        builder.setConditions(conditions, params);
+    }
+    return resultHandler.handleErrors(builder.deleteQuery(this._pool))
+    .then((result) => {
+        return result.rowCount;
+    });
+
 };
 
 module.exports = writer;
