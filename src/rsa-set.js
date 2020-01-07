@@ -62,7 +62,7 @@ class RSASet {
      *                    application's private key.
      */
     sign(messageBuf) {
-        validate.assertIsClass(messageBuf, Buffer,
+        validate.assertInstanceOf(messageBuf, Buffer,
                 "Message was not a buffer!");
         return this._privateKey.sign(messageBuf);
     }
@@ -76,7 +76,7 @@ class RSASet {
      *                    message, concatenated into a single Buffer.
      */
     encryptAndSign(messageBuf) {
-        validate.assertIsClass(messageBuf, Buffer,
+        validate.assertInstanceOf(messageBuf, Buffer,
                 "Message was not a buffer!");
         const encrypted = this._publicKey.encrypt(messageBuf);
         const signature = this.sign(encrypted);
@@ -93,7 +93,7 @@ class RSASet {
      *                    not from the expected sender.
      */
     verifyAndDecrypt(messageBuf) {
-        validate.assertIsClass(messageBuf, Buffer,
+        validate.assertInstanceOf(messageBuf, Buffer,
                 "Message was not a buffer!");
         const signature = messageBuf.slice(0, 256);
         const encrypted = messageBuf.slice(256);
