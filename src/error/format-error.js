@@ -4,9 +4,11 @@
  * Represents an error caused by an improperly formatted string.
  */
 
+const { isDefined } = require("../validate.js");
+
 const messageBeforeErrorStr  = "Invalid string formatting on '";
 const messageBeforeFormatStr = "'. Expected format: '";
-const messageAfterFormatStr  = "'';
+const messageAfterFormatStr  = "'";
 
 class FormatError extends Error {
     /**
@@ -16,10 +18,20 @@ class FormatError extends Error {
      *
      * @param expectedFormat  A string describing the expected format of the
      *                        error string.
+     *
+     * @param messagePrefix   An optional string to add at the start of the
+     *                        error message.
      */
-    constructor(invalidStr, expectedFormat) {
-        super(messageBeforeErrorStr + invalidStr + messageBeforeFormatStr
-                + expectedFormat + messageAfterFormatStr);
+    constructor(invalidStr, expectedFormat, messagePrefix) {
+        if (! isDefined(messagePrefix)) {
+            messagePrefix = "";
+        }
+        else {
+            messagePrefix += ": ";
+        }
+        super(messagePrefix + messageBeforeErrorStr + invalidStr
+                + messageBeforeFormatStr + expectedFormat
+                + messageAfterFormatStr);
     }
 
 }

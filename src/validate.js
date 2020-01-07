@@ -115,7 +115,7 @@ module.exports = {
         this.assert(this.isString(value), messagePrefix + ": Expected a "
                 + "string, found '" + value + "' with type " + typeof value
                 + ".", TypeError);
-    }
+    },
 
     /**
      * Throws a ReferenceError if a value is null or undefined, or a generic
@@ -137,7 +137,7 @@ module.exports = {
             this.assert(value.length > 0, messagePrefix
                 + ": found unexpected empty string.", TypeError);
         }
-    }
+    },
 
     /**
      * Throws a TypeError if a value is not a non-null object of a specific
@@ -204,15 +204,20 @@ module.exports = {
      * @param formatDescription  A string describing the expected format, to
      *                           be printed as part of an error message if the
      *                           string value fails the predicate.
+     *
+     * @param messagePrefix      An optional string to add at the start of the
+     *                           error message if the assertion fails.
      */
     assertCorrectFormat: function(strValue, formatPredicate,
-            formatDescription) {
-        this.assertIsString(value, "Failed to find '" + formatDescription
-                + "' string");
+            formatDescription, messagePrefix) {
+        messagePrefix = (this.isDefined(messagePrefix)
+                ? (messagePrefix + ": ") : "");
+        this.assertIsString(value, messagePrefix + formatDescription
+                + "' string expected.");
         this.assertCorrectType(formatPredicate, "function", "Invalid string"
                 + " format predicate");
         if (! formatPredicate(strValue)) {
-            throw new FormatError(strValue, formatDescription);
+            throw new FormatError(strValue, formatDescription, messagePrefix);
         }
     }
 };
