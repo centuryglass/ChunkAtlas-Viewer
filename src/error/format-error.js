@@ -4,8 +4,6 @@
  * Represents an error caused by an improperly formatted string.
  */
 
-const { isDefined } = require("../validate.js");
-
 const messageBeforeErrorStr  = "Invalid string formatting on '";
 const messageBeforeFormatStr = "'. Expected format: '";
 const messageAfterFormatStr  = "'";
@@ -23,7 +21,7 @@ class FormatError extends Error {
      *                        error message.
      */
     constructor(invalidStr, expectedFormat, messagePrefix) {
-        if (! isDefined(messagePrefix)) {
+        if (! messagePrefix) {
             messagePrefix = "";
         }
         else {
@@ -38,3 +36,4 @@ class FormatError extends Error {
 FormatError.prototype.name = "FormatError";
 
 module.exports = FormatError;
+
