@@ -149,7 +149,7 @@ Validate.assert = function(condition, message, errorClass) {
 Validate.assertIsString = function(value, messagePrefix) {
     this.assert(this.isString(value), handlePrefix(messagePrefix)
             + "Expected a string, found '" + valueStr(value)
-            + "' with type " + typeof value + ".", TypeError);
+            + "' with type '" + typeof value + "'", TypeError);
 }.bind(Validate);
 
 /**
@@ -164,16 +164,16 @@ Validate.assertIsString = function(value, messagePrefix) {
  */
 Validate.assertHasContent = function(value, messagePrefix) {
     this.assert(this.isDefined(value), handlePrefix(messagePrefix)
-            + "found unexpected undefined value.", ReferenceError);
+            + "found unexpected undefined value", ReferenceError);
     this.assert(value !== null, messagePrefix
-            + "found unexpected null value.", ReferenceError);
+            + "found unexpected null value", ReferenceError);
     if (this.isString(value)) {
         this.assert(value.length > 0, handlePrefix(messagePrefix)
-                + "found unexpected empty string.");
+                + "found unexpected empty string");
     }
     if (Array.isArray(value)) {
         this.assert(value.length > 0, handlePrefix(messagePrefix)
-                + "found unexpected empty array.");
+                + "found unexpected empty array");
     }
 }.bind(Validate);
 
@@ -192,7 +192,7 @@ Validate.assertInstanceOf = function(value, classType, messagePrefix) {
     this.assert(this.isDefined(value) && value !== null
             && value instanceof classType, handlePrefix(messagePrefix) + "'"
             + valueStr(value) + "' is not an object of type '"
-            + classType.name + "'.", TypeError);
+            + classType.name + "'", TypeError);
 }.bind(Validate);
 
 /**
@@ -208,7 +208,7 @@ Validate.assertInstanceOf = function(value, classType, messagePrefix) {
 Validate.assertCorrectType = function(value, typeName, messagePrefix) {
     this.assert(typeof value === typeName, handlePrefix(messagePrefix) + "'"
             + valueStr(value) + "' is not a value of type '" + typeName
-            + "'.", TypeError);
+            + "'", TypeError);
 }.bind(Validate);
 
 /**
@@ -224,7 +224,7 @@ Validate.assertCorrectType = function(value, typeName, messagePrefix) {
 Validate.assertIsEnumValue = function(value, enumType, messagePrefix) { 
     this.assert(enumType.isValid(value), handlePrefix(messagePrefix) + "'"
             + valueStr(value) + "' is not a valid enum value of type '"
-            + enumType.name + "'.", TypeError);
+            + enumType.name + "'", TypeError);
 }.bind(Validate);
 
 /**
@@ -248,9 +248,9 @@ Validate.assertIsEnumValue = function(value, enumType, messagePrefix) {
 Validate.assertCorrectFormat = function(strValue, formatPredicate,
         formatDescription, messagePrefix) {
     this.assert(this.isNonEmptyString(formatDescription), "Invalid format "
-            + " description '" + formatDescription + "'", TypeError);
+            + "description '" + formatDescription + "'", TypeError);
     this.assertIsString(strValue, handlePrefix(messagePrefix) + "'"
-            + formatDescription + "' string expected.");
+            + formatDescription + "' string expected");
     this.assertCorrectType(formatPredicate, "function", "Invalid string"
             + " format predicate");
     if (! formatPredicate(strValue)) {
