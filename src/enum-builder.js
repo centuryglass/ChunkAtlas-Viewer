@@ -381,9 +381,9 @@ class EnumBuilder {
      * @throws FormatError  If the value name is not formatted as a CONST_CASE
      *                      string.
      *
-     * @throws TypeError    If valueName is not a string, properties is not
-     *                      an object, or one of the property values is not
-     *                      of the expected type.
+     * @throws TypeError    If valueName is not a string, properties is
+     *                      defined but is not an object, or one of the
+     *                      property values is not of the expected type.
      *                    
      * @throws Error        If the properties parameter doesn't exactly match
      *                      the set of properties defined with addProperty,
