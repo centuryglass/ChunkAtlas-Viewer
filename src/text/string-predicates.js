@@ -31,7 +31,7 @@ module.exports = {
      * @return     Whether str is a string written in CamelCase.
      */
     isUpperCamelCase: function(str) {
-        return matchesRegex(str, /^(:?[A-Z][a-z]*)+[a-z]+$/);
+        return matchesRegex(str, /^(:?[A-Z]+[a-z]+)+$/);
     },
 
     /**
@@ -43,7 +43,7 @@ module.exports = {
      * @return     Whether str is a string written in camelCase.
      */
     isLowerCamelCase: function(str) {
-        return matchesRegex(str, /^(:?[a-z]+)+[a-z]+$/);
+        return matchesRegex(str, /^[a-z]+(:?[A-Z]+[a-z]+)*$/);
     },
 
     /**
