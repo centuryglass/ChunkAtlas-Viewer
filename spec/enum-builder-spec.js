@@ -5,15 +5,11 @@
  */
 
 describe("EnumBuilder", function() {
-    const EnumBuilder = require("../../src/enum/enum-builder.js");
-    const FormatError = require("../../src/error/format-error.js");
-
-    // Create a new enum builder for testing:
-    function createTestBuilder() {
-        return new EnumBuilder("TestEnum");
-    }
+    const EnumBuilder = require("../src/enum-builder.js");
+    const FormatError = require("../src/error/format-error.js");
 
     // Define valid and invalid parameter values for testing:
+    const testClassName = "TestEnum";
     const valid = {
         ENUM_CLASS_NAME: [ "TestEnum", "ValidName", "EnumType", "Va", "NMe" ],
         PROPERTY_NAME:   [ "a", "b", "c", "testProp", "test" ],
@@ -28,8 +24,12 @@ describe("EnumBuilder", function() {
         TYPE_NAME:       [ "Number", "text", "bool", "undef", "invalid" ]
     };
     const invalid = [ 0, false, JSON, undefined, true ];
-    const reservedNames = [ "name", "count", "forEach", "isValid",
-            "withProperty" ];
+    const reservedNames = EnumBuilder.getReservedPropertyNames();
+
+    // Create a new enum builder for testing:
+    function createTestBuilder() {
+        return new EnumBuilder(testClassName);
+    }
     
     // Create and return test enum class using a builder, after first adding 
     // the set of valid test values:
@@ -175,84 +175,6 @@ describe("EnumBuilder", function() {
             expectError(builder, "b", "string", undefined, Error);
             expectSuccess(builder, "c", "object", String);
             expectError(builder, "c", "object", String, Error);
-            builder.addValueNameProperty("d");
-            expectError(builder, "d", "object", String, Error);
-        });
-    });
-
-    describe("addValueNameProperty", function() {
-        // Expect that an addValueNameProperty call works without errors:
-        function expectSuccess(builder, name) {
-            expect(() => builder.addValueNameProperty(name)).not.toThrow();
-        }
-
-        // Expect that an addValueNameProperty call fails with a certain error
-        // type:
-        function expectError(builder, name, errType) {
-            expect(() => builder.addValueNameProperty(name)).toThrowMatching(
-                    (err) => err instanceof errType);
-        }
-
-        it("shouldn't throw an error if a valid property name is used, even "
-                + " after values are added.", function() {
-            expectSuccess(createTestBuilder(), "valueName");
-            const builder = createTestBuilder();
-            for (let value of valid.VALUE_NAME) {
-                builder.addValue(value);
-            }
-            expectSuccess(builder, "valueName");
-        });
-
-        it("should throw a TypeError if the property name is not a string.",
-                function() {
-            for (let name of invalid) {
-                expectError(createTestBuilder(), name, TypeError);
-            }
-        });
-
-        it("should throw a FormatError if the property name is not a "
-                + "camelCase string, starting with a lowercase letter",
-                function() {
-            for (let name of badFormat.PROPERTY_NAME) {
-                expectError(createTestBuilder(), name, FormatError);
-            }
-        });
-
-        it("should throw an Error if the propertyName has already been added "
-                + "as a property.", function() {
-            const builder = createTestBuilder();
-            const name = "propName";
-            builder.addProperty(name, "string");
-            expectError(builder, name, Error);
-        });
-
-        it("should throw an Error if the propertyName is a reserved name.",
-                function() {
-            for (let name of reservedNames) {
-                expectError(createTestBuilder(), name, Error);
-            }
-        });
-
-        it("should throw an Error if addValueNameProperty was already called"
-                + " successfully.", function() {
-            const testRepeatCall = (builder) => {
-                expectSuccess(builder, "nameProp");
-                expectError(builder, "nameProp", Error);
-            };
-            testRepeatCall(createTestBuilder());
-
-            // Check that it will succeed if an earlier call to
-            // addValueNameProperty was not successful:
-            const builder = createTestBuilder();
-            expectError(builder, "INVALID", FormatError);
-            testRepeatCall(builder);
-        });
-
-        it("should throw an Error if the enum class has been built already.",
-                function() {
-            const builder = createTestBuilder();
-            buildTestEnumClass(builder);
-            expectError(builder, "nameProp", Error);
         });
     });
 
@@ -418,20 +340,25 @@ describe("EnumBuilder", function() {
                 expect(() => builder.addValue(value.name, value.props)).not
                         .toThrow();
             }
-            expect(() => builder.addValueNameProperty("nameProp")).not
-                    .toThrow();
 
             let enumClass;
             expect(() => enumClass = builder.build()).not.toThrow();
-            for (let i = 0; i < testValues.length; i++) {
-                const valueData = testValues[i];
-                const value = i + 1;
-                expect(enumClass.nameProp(value)).toEqual(valueData.name);
+            expect(enumClass.className).toEqual(testClassName);
+            expect(enumClass.count).toEqual(testValues.length);
+            let idx = 0;
+            for (let value of enumClass) {
+                const valueData = testValues[idx];
+                expect(value).toBeDefined();
+                expect(value.name).toEqual(valueData.name);
+                expect(value.index).toEqual(idx);
+                expect(value.enumClass).toBe(enumClass);
                 for (let prop of testProps) {
-                    expect(enumClass[prop.name](value))
-                            .toEqual(valueData.props[prop.name]);
+                    expect(value[prop.name]).toEqual(valueData.props
+                            [prop.name]);
                 }
+                idx++;
             }
+            expect(idx).toEqual(testValues.length);
         });
 
         it("should return the same Enum class object if called multiple "

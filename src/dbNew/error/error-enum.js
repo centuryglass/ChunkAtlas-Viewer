@@ -11,8 +11,6 @@ const errors = [];
 const properties = []
 
 const builder = new EnumBuilder("ErrorEnum");
-// Store error value names:
-builder.addValueNameProperty("errorName");
 // Store error message strings:
 builder.addProperty("message", "string");
 // Store a function that checks if error objects match error values:

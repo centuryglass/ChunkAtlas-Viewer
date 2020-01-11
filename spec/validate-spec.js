@@ -6,7 +6,7 @@
 
 describe("Validate", function() {
     const Validate = require("../src/validate.js");
-    const { createEnum } = require("../src/enum/create-enum.js");
+    const EnumBuilder = require("../src/enum-builder.js");
 
     /**
      * Tests a predicate function against a set of values, expecting them to
@@ -260,15 +260,18 @@ describe("Validate", function() {
 
     describe("assertIsEnumValue", function() {
         // create a basic enum class for testing:
-        const TestEnum = createEnum("TestEnum",
-                [ "FIRST", "SECOND", "THIRD" ]);
+        const builder = new EnumBuilder("TestEnum");
+        builder.addValue("FIRST");
+        builder.addValue("SECOND");
+        builder.addValue("THIRD");
+        const TestEnum = builder.build();
 
         it("should not throw for any valid value of the given enum class.",
                 function() {
-            TestEnum.forEach((value) => {
+            for (let value of TestEnum) {
                 expect(() => Validate.assertIsEnumValue(value, TestEnum)).not
                         .toThrow();
-            });
+            }
         });
 
         it("should throw a TypeError for any value not of the given enum "

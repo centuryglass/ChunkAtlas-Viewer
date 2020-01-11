@@ -11,7 +11,6 @@
 const EnumBuilder = require("../../enum/enum-builder.js");
 
 const builder = new EnumBuilder("ResultError");
-builder.addValueNameProperty("errorName");
 builder.addProperty("message", "string")
 
 // Add a new error type to the enum class:
