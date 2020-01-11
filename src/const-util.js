@@ -29,16 +29,26 @@ module.exports = {
      * @param object  An object that should be frozen, preventing its
      *                properties from being added, removed, or changed.
      *
+     * @param frozen  The list of objects that have already been recursively
+     *                frozen, used to prevent endless recursion if objects
+     *                contain references to their parents.
+     *
      * @return        The object parameter.
      */
-    recursiveFreeze: (object) => {
+    recursiveFreeze: (object, frozen) => {
         if (object === null || typeof object !== "object") {
             return object;
         }
-        const keys = Object.keys(object);
-        keys.forEach((key) => {
-            module.exports.recursiveFreeze(object[key]);
-        });
+        if (! Array.isArray(frozen)) {
+            frozen = [];
+        }
+        else if (frozen.indexOf(object) !== -1) {
+            return object;
+        }
+        frozen.push(object);
+        for (let key of Object.keys(object)) {
+            module.exports.recursiveFreeze(object[key], frozen);
+        }
         return Object.freeze(object);
     }
 }
