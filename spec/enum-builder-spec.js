@@ -178,6 +178,77 @@ describe("EnumBuilder", function() {
         });
     });
 
+    describe("addEnumClassProperty", function() {
+        // Expect that an addEnumClassProperty call works without errors:
+        function expectSuccess(builder, name, value) {
+            expect(() => builder.addEnumClassProperty(name, value)).not
+                    .toThrow();
+        }
+
+        // Expect that an addEnumClassProperty call fails with a certain error
+        // type:
+        function expectError(builder, name, value, errType) {
+            expect(() => builder.addEnumClassProperty(name, value))
+                    .toThrowMatching((err) => err instanceof errType);
+        }
+
+        it("should add new properties with valid names without errors.",
+                function() {
+            const builder = createTestBuilder();
+            for (let name of valid.PROPERTY_NAME) {
+                expectSuccess(builder, name, 0);
+            }
+        });
+
+
+        it("should throw a TypeError if the propertyName is not a string.",
+                function() {
+            for (let name of invalid) {
+                expectError(createTestBuilder(), name, 0, TypeError);
+            }
+        });
+
+        it("should throw a FormatError if propertyName isn't formatted in "
+                + "camelCase, starting with a lowercase letter.", function() {
+            for (let name of badFormat.PROPERTY_NAME) {
+                expectError(createTestBuilder(), name, 0, FormatError);
+            }
+        });
+        
+        it("should throw an Error if propertyName is a reserved name.",
+                function() {
+            for (let name of reservedNames) {
+                expectError(createTestBuilder(), name, 0, Error);
+            }
+        });
+
+        it("should throw an Error if propertyName was already added as an "
+                + "enum class or value property.", function() {
+            const builder = createTestBuilder();
+            const getValuePropName = (baseName) => baseName + "Value";
+            for (let name of valid.PROPERTY_NAME) {
+                builder.addEnumClassProperty(name, "initialValue");
+                builder.addProperty(getValuePropName(name), "number");
+            }
+            for (let name of valid.PROPERTY_NAME) {
+                expectError(builder, name, 0, Error);
+                expectError(builder, getValuePropName(name), 0, Error);
+            }
+        });
+
+        it("should throw an Error if the enum class has already been built.",
+                function() {
+            const builder = createTestBuilder();
+            for (let value of valid.VALUE_NAME) {
+                builder.addValue(value);
+            }
+            builder.build();
+            for (let name of valid.PROPERTY_NAME) {
+                expectError(builder, name, 0, Error);
+            }
+        });
+    });
+
     describe("addValue", function() {
         // Expect that an addValue call works without errors:
         function expectSuccess(builder, value, props) {

@@ -20,7 +20,13 @@
  * // Class name must be a CamelCase string starting with a capital letter.
  * const builder = new EnumBuilder("WeekDayEnum");
  *
- * // ## Define required properties: ##
+ * // ## Define fixed enum class properties: ##
+ * //  Property names must be CamelCase strings starting with lowercase
+ * // letters.
+ * builder.addEnumClassProperty("displayName", "Weekdays");
+ * builder.addEnumClassProperty("description", "Days of the week");
+ *
+ * // ## Define required value properties: ##
  * //  Property names must be CamelCase strings starting with lowercase
  * // letters. Property types may include any string that can be returned by
  * // the 'typeof' operator, except for "undefined".
@@ -91,14 +97,16 @@
  * // Accessing enum class information:
  * const dayTypeName = WeekDayEnum.className;
  * const numDays =     WeekDayEnum.count;
+ * console.log(WeekDayEnum.displayName); // prints "Weekday"
+ * console.log(WeekDayEnum.description); // prints "Days of the week"
  *
  * // Accessing values:
  * let day = WeekDayEnum.MONDAY; 
  *
  * // Accessing value properties:
- * console.log(day.shortForm);                  // prints "MON"
- * console.log(day.displayName);                // prints "Monday"
- * console.log(day.ratings.length + " ratings") // prints "3 ratings"
+ * console.log(day.shortForm);                   // prints "MON"
+ * console.log(day.displayName);                 // prints "Monday"
+ * console.log(day.ratings.length + " ratings"); // prints "3 ratings"
  *
  * // Enum classes are also iterable.
  * // Print each day's display name in order:
@@ -180,9 +188,11 @@ const classPropNames = {
     WITH_PROPERTY: "withProperty",
 };
 Object.freeze(classPropNames);
-// The names defined in classPropNames cannot be used as enum values. However,
-// no further steps are required to prevent this from happening, as none of
-// these names should be in CONST_CASE, and enum values must be in CONST_CASE.
+// These strings cannot be used as custom class property names, as they would
+// conflict with default property names:
+const reservedClassPropNames = Object.keys(classPropNames).map((key) =>
+        classPropNames[key]);
+Object.freeze(reservedClassPropNames);
 
 // Define mandatory enum value property names:
 const valuePropNames = {
@@ -192,11 +202,25 @@ const valuePropNames = {
 };
 Object.freeze(valuePropNames);
 
-// These strings cannot be used as property names, as they would conflict with
-// mandatory enum value properties:
-const reservedPropertyNames = Object.keys(valuePropNames).map((key) =>
+// These strings cannot be used as custom value property names, as they would
+// conflict with default enum value property names:
+const reservedValuePropNames = Object.keys(valuePropNames).map((key) =>
         valuePropNames[key]);
+Object.freeze(reservedValuePropNames);
+
+// Technically there's no conflict in allowing values to use names taken by
+// default class properties, or in allowing classes to add properties that
+// use the same names as default value properties, but the benefits of
+// allowing it are outweighed by the potential for confusion. Because of
+// this, class properties and value properties will share the same list
+// of reserved property names.
+const reservedPropertyNames = reservedClassPropNames.concat(reservedValuePropNames);
 Object.freeze(reservedPropertyNames);
+
+// Using reserved property names as value names would also cause conflicts,
+// and is not allowed. However, no further steps are required to prevent this
+// from happening, as property names cannot be in CONST_CASE, and enum values
+// must be in CONST_CASE.
 
 class EnumBuilder {
     /**
@@ -213,8 +237,12 @@ class EnumBuilder {
     {
         assertCorrectFormat(name, isUpperCamelCase, "CamelCase",
                 "Invalid Enum class name");
-        this._name = name;
         this._properties = {};
+        this._classProperties = {
+            [classPropNames.CLASS_NAME]:  name,
+            [classPropNames.VALUE_COUNT]: 0,
+            [classPropNames.VALUES]:      []
+        };
         this._values = [];
     }
 
@@ -228,18 +256,24 @@ class EnumBuilder {
         return reservedPropertyNames;
     }
 
+    // Convenience method for accessing the className:
+    _getClassName() {
+        return this._classProperties[classPropNames.CLASS_NAME];
+    }
+
     // Test that a new property is valid, throwing an appropriate error if it
     // is not.
     _checkProperty(propertyName, typeName, classType) {
+        const errorPrefix = "Enum class '" + this._getClassName()
+                + "' property '" + propertyName + "': "
         assertCorrectFormat(propertyName, isLowerCamelCase, "camelCase",
-                "Invalid enum property name");
-        assert(reservedPropertyNames.indexOf(propertyName) === -1,
-                "Attempted to add property with reserved name '"
-                + propertyName + "'");
-        assertCorrectFormat(typeName, isTypeString, "typename",
-                "Invalid enum property typeName");
-        assert(typeName !== "undefined", "Attempted to add an enum property "
-                + "with illegal typeName 'undefined'");
+                errorPrefix);
+        assert(reservedPropertyNames.indexOf(propertyName) === -1, errorPrefix
+                + "Attempted to assign reserved name.");
+        assertCorrectFormat(typeName, isTypeString, "typename", errorPrefix
+                + "Invalid enum property typeName");
+        assert(typeName !== "undefined", errorPrefix + "Attempted to use "
+                + "illegal typeName 'undefined'");
         if (typeName === "object") {
             assert(typeof classType === "function"
                     && isDefined(classType.prototype),
@@ -250,12 +284,16 @@ class EnumBuilder {
                     + "that expects value type '" + typeName + "'", TypeError);
         }
         assert(! isDefined(this._properties[propertyName]), "'" + propertyName
-                    + "' property has already been defined.");
+                    + "' property has already been defined as a value "
+                    + "property.");
+        assert(! isDefined(this._classProperties[propertyName]), "'"
+                    + propertyName + "' property has already been defined as "
+                    + "an enum class property.");
     }
 
 
     /**
-     * Adds a new property that should be defined for all values of the enum
+     * Adds a new property that should be defined for each value of the enum
      * class. Properties can only be added before adding enum values with
      * addValue.
      *
@@ -301,6 +339,35 @@ class EnumBuilder {
     }
 
     /**
+     * Adds a new property that will be associated with the enum class.
+     *
+     * @param propertyName  The name of the new property. This must be a
+     *                      camelCase string starting with a lowercase letter,
+     *                      that is not on the reserved property name list or
+     *                      already defined as a custom enum class property.
+     *
+     * @param value         The value to store in the enum class under the
+     *                      given property key.
+     *
+     * @throw TypeError     If propertyName is not a string.
+     *
+     * @throw FormatError   If propertyName is not in camelCase, starting with
+     *                      a lowercase letter.
+     *
+     * @throw Error         If propertyName is reserved, if it is already in
+     *                      use, or if the enum class has already been built.
+     */
+    addEnumClassProperty(propertyName, value) {
+        assert(! isDefined(this._enumClass),
+                "Properties cannot be added after building the enum class.");
+        const typeName = typeof value;
+        let classType;
+        if (typeName === "object") { classType = Object; }
+        this._checkProperty(propertyName, typeName, classType);
+        this._classProperties[propertyName] = value;
+    }
+
+    /**
      * Adds a new value to the list of values the enum class will define.
      *
      * @param valueName     The name of the new value, a CONST_CASE string
@@ -327,7 +394,7 @@ class EnumBuilder {
      */
     addValue(valueName, properties) {
         const errorMsgPrefix = "New value '" + valueName
-                + "' for enum class '" + this._name + "' "
+                + "' for enum class '" + this._getClassName() + "' "
         assert(! isDefined(this._enumClass), errorMsgPrefix + "cannot be "
                 + "added, the enum class has already been built.");
         assertCorrectFormat(valueName, isConstFormat, "CONST_CASE",
@@ -367,6 +434,7 @@ class EnumBuilder {
             newValue[key] = value;
         }
         this._values.push(newValue);
+        this._classProperties[classPropNames.VALUE_COUNT]++;
     }
 
     /**
@@ -381,16 +449,18 @@ class EnumBuilder {
      */
     build() {
         assert(this._values.length > 0, "Attempted to build enum class '"
-                + this._name + " with no values.");
+                + this._getClassName() + " with no values.");
         if (isDefined(this._enumClass)) {
             return this._enumClass;
         }
         // Create initial enum class object:
         const enumClass = {
-            [classPropNames.CLASS_NAME]:  this._name,
-            [classPropNames.VALUE_COUNT]: this._values.length,
             [classPropNames.VALUES]: []
         };
+        // Add class properties:
+        for (let [ key, value ] of Object.entries(this._classProperties)) {
+            enumClass[key] = value;
+        }
         // Add all enum values:
         for (let value of this._values) {
             value[valuePropNames.ENUM_CLASS] = enumClass;
