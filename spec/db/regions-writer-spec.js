@@ -1,4 +1,4 @@
-describe("DBRegionsWriter", function() {
+xdescribe("DBRegionsWriter", function() {
     const {
         regionTable,
         columns,

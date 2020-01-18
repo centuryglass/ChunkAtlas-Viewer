@@ -1,4 +1,4 @@
-describe("DBRegionsReader", function() {
+xdescribe("DBRegionsReader", function() {
     const {
         regionTable,
         columns,
