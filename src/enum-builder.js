@@ -468,41 +468,47 @@ class EnumBuilder {
             enumClass[classPropNames.VALUES].push(value);
         }
         // Define enum class methods:
-        enumClass[classPropNames.FOR_EACH] = (action) => {
-            for (let value of enumClass[classPropNames.VALUES]) {
+        enumClass[classPropNames.FOR_EACH] = function(action) {
+            for (let value of this[classPropNames.VALUES]) {
                 action(value);
             }
-        };
-        enumClass[classPropNames.IS_VALID] = (value) => {
-            return enumClass[classPropNames.VALUES].indexOf(value) !== -1;
-        };
-        enumClass[classPropNames.WITH_PROPERTY] = (propName, propValue) => {
-            const errorPrefix = enumClass[classPropNames.CLASS_NAME]
+        }.bind(enumClass);
+
+        enumClass[classPropNames.IS_VALID] = function(value) {
+            return this[classPropNames.VALUES].indexOf(value) !== -1;
+        }.bind(enumClass);
+
+        enumClass[classPropNames.WITH_PROPERTY] = function(propName, propValue) {
+            const errorPrefix = this[classPropNames.CLASS_NAME]
                     + "." + classPropNames.WITH_PROPERTY + ": ";
             assert(isDefined(propName) && propName.length > 0, errorPrefix
                     + "property name was undefined or empty.", TypeError);
             assert (isDefined(propValue), errorPrefix + " requested property "
                     + "value was undefined.", ReferenceError);
-            for (let value of enumClass[classPropNames.VALUES]) {
+            for (let value of this[classPropNames.VALUES]) {
                 if (value[propName] === propValue) {
                     return value;
                 }
             }
             return;
-        };
-        enumClass[classPropNames.WITH_INDEX] = (index) => {
-            const errorPrefix = enumClass[classPropNames.CLASS_NAME]
+        }.bind(enumClass);
+
+        enumClass[classPropNames.WITH_INDEX] = function(index) {
+            const errorPrefix = this[classPropNames.CLASS_NAME]
                     + "." + classPropNames.WITH_INDEX + ": ";
             assert(Number.isInteger(index), errorPrefix
                     + "index was not an integer", TypeError);
-            assert(index >= 0 && index < enumClass[classPropNames.VALUE_COUNT],
-                    errorPrefix + "index was out of bounds", RangeError);
-            return enumClass[classPropNames.VALUES][index];
-        };
+            assert(index >= 0 && index < this[classPropNames.VALUE_COUNT],
+                    errorPrefix + "index '" + index + "' was out of bounds, "
+                    + "range is 0 to "
+                    + (this[classPropNames.VALUE_COUNT] - 1), RangeError);
+            return this[classPropNames.VALUES][index];
+        }.bind(enumClass);
+
         // Make enum class values iterable:
         enumClass[Symbol.iterator] = function() {
-            return enumClass[classPropNames.VALUES][Symbol.iterator]();
-        };
+            return this[classPropNames.VALUES][Symbol.iterator]();
+        }.bind(enumClass);
         recursiveFreeze(enumClass);
         this._enumClass = enumClass;
         return this._enumClass;
