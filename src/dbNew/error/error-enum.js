@@ -5,7 +5,7 @@
  * database.
  */
 
-const EnumBuilder = require("../enum/enum-builder.js");
+const EnumBuilder = require("../../enum-builder.js");
 
 const errors = [];
 const properties = []

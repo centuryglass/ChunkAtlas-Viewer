@@ -8,7 +8,7 @@
  * result.
  */
 
-const EnumBuilder = require("../../enum/enum-builder.js");
+const EnumBuilder = require("../../enum-builder.js");
 
 const builder = new EnumBuilder("ResultError");
 builder.addProperty("message", "string")
