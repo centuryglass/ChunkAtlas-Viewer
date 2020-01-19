@@ -3,6 +3,8 @@
  *
  * Represents different error types that can occur when connecting to a
  * database.
+ *
+ * @see https://www.postgresql.org/docs/9.4/errcodes-appendix.html
  */
 
 const EnumBuilder = require("../../enum-builder.js");
@@ -34,13 +36,13 @@ function addError(type, message, predicate) {
 }
 
 addError("INVALID_SQL", "Invalid SQL query.",
-        (err) => err.routine === "scanner_yyerror");
+        (err) => err.code == "42601");
 addError("MISSING_PRIVILEGE", "Missing database access privileges.",
-        (err) => err.routine === "aclcheck_error");
+        (err) => err.code === "42501");
 addError("INVALID_TABLE", "Attempted to access a table that does not exist.",
-        (err) => err.routine === "parserOpenTable");
+        (err) => err.code === "42P01");
 addError("INVALID_COLUMN", "Attempted to access a column that does not exist.",
-        (err) => err.routine === "errorMissingColumn");
+        (err) => err.code === "42703");
 addError("INVALID_ID", "Attempted to set a malformed ID string",
         (err) => err.routine === "ExecConstraints"
         && err.constraint.includes("_valid_id"));
@@ -48,14 +50,14 @@ addError("INVALID_FOREIGN_KEY", "Invalid foreign key referenced.",
         (err) => err.routine === "ri_ReportViolation"
         && err.constraint.includes("_fk"));
 addError("DUPLICATE_ENTRY", "Tried to insert a duplicate value.",
-        (err) => err.routine === "_bt_check_unique");
+        (err) => err.code === "42601");
 addError("EMPTY_STRING", "Tried to insert an invalid empty string.",
         (err) => err.routine === "ExecConstraints"
         && err.constraint.includes("_nonempty"));
-addError("OTHER_CONSTRAINT", "Encountered some other failed constraint.",
-        (err) => err.routine === "ExecConstraints");
 addError("STR_TOO_LONG", "Attempted to add a string exceeding the max length.",
         (err) => err.code === "22001");
+addError("OTHER_CONSTRAINT", "Encountered some other failed constraint.",
+        (err) => err.routine === "ExecConstraints");
 addError("UNKNOWN_ERROR", "An unknown database error occurred.",
         (err) => true);
 

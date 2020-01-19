@@ -13,17 +13,38 @@ module.exports = {
         },
         {
             "name": "error",
-            "length": 103,
+            "length": 91,
             "severity": "ERROR",
-            "code": "42703",
-            "position": "8",
-            "file": "parse_relation.c",
-            "line": "3349",
-            "routine": "errorMissingColumn",
-            "query": "SELECT asdf"
+            "code": "42601",
+            "position": "14",
+            "file": "scan.l",
+            "line": "1138",
+            "routine": "scanner_yyerror",
+            "query": "SELECT * FROM"
         }
     ],
-    "MISSING_PRIVILEGE": [],
+    "MISSING_PRIVILEGE": [
+        {
+            "name": "error",
+            "length": 93,
+            "severity": "ERROR",
+            "code": "42501",
+            "file": "dbcommands.c",
+            "line": "310",
+            "routine": "createdb",
+            "query": "CREATE DATABASE ILLEGAL"
+        },
+        {
+            "name": "error",
+            "length": 97,
+            "severity": "ERROR",
+            "code": "42501",
+            "file": "aclchk.c",
+            "line": "3487",
+            "routine": "aclcheck_error",
+            "query": "DELETE FROM map_tiles"
+        }
+    ],
     "INVALID_TABLE": [
         {
             "name": "error",
@@ -75,10 +96,10 @@ module.exports = {
     "INVALID_ID": [
         {
             "name": "error",
-            "length": 241,
+            "length": 240,
             "severity": "ERROR",
             "code": "23514",
-            "detail": "Failing row contains (INVALID, 1, null, 2020-01-18 11:21:54.035362).",
+            "detail": "Failing row contains (INVALID, 1, null, 2020-01-19 17:55:18.14029).",
             "schema": "public",
             "table": "regions",
             "constraint": "region_valid_id",
@@ -92,7 +113,7 @@ module.exports = {
             "length": 255,
             "severity": "ERROR",
             "code": "23514",
-            "detail": "Failing row contains (INVALID, d, /uri.png, 2020-01-18 11:21:54.035895).",
+            "detail": "Failing row contains (INVALID, d, /uri.png, 2020-01-19 17:55:18.140721).",
             "schema": "public",
             "table": "map_types",
             "constraint": "map_types_valid_id",
@@ -103,10 +124,10 @@ module.exports = {
         },
         {
             "name": "error",
-            "length": 304,
+            "length": 305,
             "severity": "ERROR",
             "code": "23514",
-            "detail": "Failing row contains (INVALID, displayName, /uri.png, 2020-01-18 11:21:54.03618).",
+            "detail": "Failing row contains (INVALID, displayName, /uri.png, 2020-01-19 17:55:18.140964).",
             "schema": "public",
             "table": "location_categories",
             "constraint": "location_categories_valid_id",
@@ -116,38 +137,94 @@ module.exports = {
             "query": "INSERT INTO location_categories VALUES ('INVALID', 'displayName', '/uri.png')"
         }
     ],
-    "INVALID_FOREIGN_KEY": [
+    "INVALID_FOREIGN_KEY": [],
+    "DUPLICATE_ENTRY": [
         {
             "name": "error",
-            "length": 247,
+            "length": 90,
             "severity": "ERROR",
-            "code": "23505",
-            "detail": "Key (region_id, type_id, description)=(missing_region, missing_type, d) already exists.",
-            "schema": "public",
-            "table": "key_items",
-            "constraint": "key_items_pk",
-            "file": "nbtinsert.c",
-            "line": "563",
-            "routine": "_bt_check_unique",
-            "query": "INSERT INTO key_items (region_id, type_id, description, color) VALUES ('missing_region', 'missing_type', 'd', 'FFFFFF')"
+            "code": "42601",
+            "position": "31",
+            "file": "scan.l",
+            "line": "1146",
+            "routine": "scanner_yyerror",
+            "query": "INSERT INTO tile_sizes VALUES 5, 5, 5"
         },
         {
             "name": "error",
-            "length": 266,
+            "length": 90,
             "severity": "ERROR",
-            "code": "23505",
-            "detail": "Key (region_id, type_id, size, block_x, block_z)=(missing_region, missing_type, 512, 0, 0) already exists.",
-            "schema": "public",
-            "table": "map_tiles",
-            "constraint": "map_tiles_pk",
-            "file": "nbtinsert.c",
-            "line": "563",
-            "routine": "_bt_check_unique",
-            "query": "INSERT INTO map_tiles VALUES ('missing_region', 'missing_type', 512, 0, 0, '/uri.png')"
+            "code": "42601",
+            "position": "80",
+            "file": "scan.l",
+            "line": "1146",
+            "routine": "scanner_yyerror",
+            "query": "INSERT INTO regions (region_id, display_name) VALUES ('first', 'Display Name') ('second', 'Display Name')"
+        },
+        {
+            "name": "error",
+            "length": 90,
+            "severity": "ERROR",
+            "code": "42601",
+            "position": "81",
+            "file": "scan.l",
+            "line": "1146",
+            "routine": "scanner_yyerror",
+            "query": "INSERT INTO map_types (type_id, display_name) VALUES ('repeat', 'Display Name') ('repeat', 'Other Name')"
         }
     ],
-    "DUPLICATE_ENTRY": [],
-    "EMPTY_STRING": [],
+    "EMPTY_STRING": [
+        {
+            "name": "error",
+            "length": 261,
+            "severity": "ERROR",
+            "code": "23514",
+            "detail": "Failing row contains (empty_region, , null, 2020-01-19 17:55:18.141615).",
+            "schema": "public",
+            "table": "regions",
+            "constraint": "region_nonempty_strings",
+            "file": "execMain.c",
+            "line": "2018",
+            "routine": "ExecConstraints",
+            "query": "INSERT INTO regions (region_id, display_name) VALUES ('empty_region', '')"
+        },
+        {
+            "name": "error",
+            "length": 279,
+            "severity": "ERROR",
+            "code": "23514",
+            "detail": "Failing row contains (empty_type, , null, 2020-01-19 17:55:18.141821).",
+            "schema": "public",
+            "table": "map_types",
+            "constraint": "map_types_nonempty_display_name",
+            "file": "execMain.c",
+            "line": "2018",
+            "routine": "ExecConstraints",
+            "query": "INSERT INTO map_types (type_id, display_name) VALUES ('empty_type', '')"
+        }
+    ],
+    "STR_TOO_LONG": [
+        {
+            "name": "error",
+            "length": 98,
+            "severity": "ERROR",
+            "code": "22001",
+            "file": "varchar.c",
+            "line": "633",
+            "routine": "varchar",
+            "query": "INSERT INTO regions (region_id, display_name) VALUES ('id','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')"
+        },
+        {
+            "name": "error",
+            "length": 98,
+            "severity": "ERROR",
+            "code": "22001",
+            "file": "varchar.c",
+            "line": "633",
+            "routine": "varchar",
+            "query": "INSERT INTO map_types (type_id, display_name, icon_uri) VALUES ('another_test_type', 'Test again', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')"
+        }
+    ],
     "OTHER_CONSTRAINT": [
         {
             "name": "error",
@@ -173,6 +250,5 @@ module.exports = {
             "query": "INSERT INTO map_types VALUES ('type', 'Type', 'desc', 'now', 'ffffff')"
         }
     ],
-    "STR_TOO_LONG": [],
     "UNKNOWN_ERROR": []
 };
