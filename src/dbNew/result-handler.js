@@ -1,0 +1,188 @@
+/**
+ * @file result-handler.js
+ *
+ * Extracts useful data from database results.
+ */
+
+const QueryErrorEnum = require("./error/query-error-enum.js");
+const QueryError = require("./error/query-error.js");
+const ResultErrorEnum = require("./error/result-error-enum.js");
+const ResultError = require("./error/result-error.js");
+const Tables = require("./structure/tables.js");
+const { isDefined, assert } = require("../validate.js");
+
+module.exports = {
+    /**
+     * Validates that a value is a database result object.
+     *
+     * @param result     A possible result object.
+     *
+     * @throw TypeError  If the result is not an actual database result
+     *                   object.
+     */
+    _checkResult : function(result) {
+        if((typeof result !== "object") || (result === null)
+                || (result.constructor.name !== "Result")) {
+            throw new ResultError(ResultErrorEnum.INVALID_RESULT);
+        }
+    }.bind(module.exports),
+
+
+    /**
+     * Checks that a provided database table enum type and a corresponding
+     * table column enum value are valid.
+     *
+     * @param tableEnum  A value that should be a database table enum type.
+     *
+     * @param column     A value that should be a valid table column enum 
+     *                   value for the given table enum.
+     *
+     * @throw TypeError  If tableEnum is not a database table enum class, or
+     *                   column is not a value defined by tableEnum.
+     */
+    _checkTableAndColumn : function(tableEnum, column) {
+        assert(isDefined(Tables.withProperty("tableEnum", tableEnum)),
+                "Invalid tableEnum parameter '" + tableEnum + "' given.",
+                TypeError);
+        assert(tableEnum.isValid(column), "'" + column + "' is not a valid "
+                + "enum value of type '" + tableEnum.name + "'", TypeError);
+    }.bind(module.exports),
+
+    /**
+     * Throws any errors returned by the database, possibly standardizing them.
+     *
+     * @param query      A database query Promise.
+     *
+     * @return           Another Promise that will resolve with the database
+     *                   query result if no errors occurred, or reject with an
+     *                   appropriate QueryError.
+     *
+     * @throw TypeError  If the query parameter is not a valid Promise object.
+     */
+    handleErrors : function(query) {
+        assert(typeof query === "object" && isDefined(query.then),
+                "Query must be a Promise or Promise-like object.", TypeError);
+        return query.catch((err) => {
+            for (let errType of QueryErrorEnum) {
+                if (errType.predicate(err)) {
+                    if (errType === QueryErrorEnum.UNKNOWN_ERROR) {
+                        console.log("Unhandled error:");
+                        console.dir(err);
+                    }
+                    throw new QueryError(errType)
+                }
+            }
+            throw new QueryError(ErrorEnum.UNKNOWN_ERROR);
+        });
+    }.bind(module.exports),
+
+    /**
+     * Checks if a database query result returned any data.
+     *
+     * @param Result      The result object to check.
+     *
+     * @return            True if at least one row of data was returned, false
+     *                    if the result is empty.
+     *
+     * @throws TypeError  If the result parameter is not a valid database
+     *                    result object.
+     */
+    returnedData : function(result) {
+        this._checkResult(result);
+        return isDefined(result) && isDefined(result.rows)
+                && (typeof result.rows.length === "number")
+                && result.rows.length > 0;
+    }.bind(module.exports),
+
+    /**
+     * Gets all rows returned in a database query result.
+     *
+     * @param result    The result object to check.
+     *
+     * @return            All returned rows, or an empty array if no results
+     *                    were returned.
+     *
+     * @throws TypeError  If the result is not an actual database result
+     *                    object.
+     */
+    getResultRows : function(result) {
+        this._checkResult(result);
+        if (this.returnedData(result)) {
+            return result.rows;
+        }
+        else {
+            return [];
+        }
+    }.bind(module.exports),
+
+    /**
+     * Gets all values of a specific column from a database query result.
+     *
+     * @param result         A result returned from a database query.
+     *
+     * @param tableEnum        The queried table's column enum.
+     *
+     * @param requestedColumn  A column enum value within the rows returned by
+     *                         the database result.
+     *
+     * @return                 An array containing all of the requested column
+     *                         values within the database result.
+     *
+     * @throw TypeError        If any of the parameters are not of the correct
+     *                         type.
+     */
+    getColumnValues : function(result, tableEnum, requestedColumn) {
+        this._checkResult(result);
+        this._checkTableAndColumn(tableEnum, requestedColumn);
+        
+        const values = [];
+        if (this.returnedData(result)) {
+            const column = requestedColumn.columnName;
+            result.rows.forEach((row) => {
+                if (! isDefined(row[column])) {
+                    console.log("Invalid column " + column);
+                }
+                values.push(row[column]);
+            });
+        }
+        return values;
+    },
+
+    /**
+     * Attempts to get a single cell within a database query result that
+     * returned a single row.
+     *
+     * @param result           A result returned from a database query,
+     *                         expected to return only one row.
+     *
+     * @param tableEnum        The queried table's column enum.
+     *
+     * @param requestedColumn  The name of a column within the row returned
+     *                         by the database result.
+     *
+     * @return                 The requested column value.
+     *
+     * @throw TypeError        If any of the parameters do not have the
+     *                         expected type.
+     *
+     * @throws ResultError     If no rows were returned, or multiple rows were
+     *                         returned.
+     */
+    getCell : function(result, tableEnum, requestedColumn) {
+        this._checkResult(result);
+        this._checkTableAndColumn(tableEnum, requestedColumn);
+        const cellValues = this.getColumnValues(result, tableEnum,
+                requestedColumn);
+        const errorEnd = " matching rows for column '" 
+                + requestedColumn.columnName + "'";
+        if (cellValues.length > 1) {
+            throw new ResultError(ResultErrorEnum.EXTRA_RESULTS,
+                    "Found " + cellValues.length + errorEnd);
+        }
+        else if (cellValues.length === 0) {
+            throw new DBQueryError(ErrorEnum.NO_RESULTS, "Found no "
+                    + errorEnd);
+        }
+        return cellValues[0];
+    }
+};
