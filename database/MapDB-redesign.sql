@@ -25,8 +25,9 @@ CREATE TABLE public.regions (
 	last_update timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT region_pk PRIMARY KEY (region_id),
 	CONSTRAINT region_valid_id CHECK (--check_id_format(region_id::VARCHAR(16))
-region_id SIMILAR TO '^[a-z](_?[a-z])*[a-z]$'),
-	CONSTRAINT region_nonempty_display_name CHECK ((display_name = '') IS NOT TRUE),
+region_id ~ '^[a-z](_?[a-z])*[a-z]$'),
+	CONSTRAINT region_nonempty_strings CHECK ((display_name = '') IS NOT TRUE
+AND (icon_uri = '') IS NOT TRUE),
 	CONSTRAINT region_display_name_unique UNIQUE (display_name)
 
 );
@@ -43,7 +44,7 @@ COMMENT ON COLUMN public.regions.last_update IS 'The last time a map tile or loc
 -- ddl-end --
 COMMENT ON CONSTRAINT region_valid_id ON public.regions  IS 'The region ID must follow ID string naming conventions.';
 -- ddl-end --
-COMMENT ON CONSTRAINT region_nonempty_display_name ON public.regions  IS 'The display name must be a non-empty string.';
+COMMENT ON CONSTRAINT region_nonempty_strings ON public.regions  IS 'The display name and icon uri must not be empty strings.';
 -- ddl-end --
 COMMENT ON CONSTRAINT region_display_name_unique ON public.regions  IS 'Region display names must be unique.';
 -- ddl-end --
@@ -59,7 +60,7 @@ CREATE TABLE public.map_types (
 	last_update timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT map_types_type_id_pk PRIMARY KEY (type_id),
 	CONSTRAINT map_types_valid_id CHECK (--check_id_format(type_id::VARCHAR(16))
-type_id SIMILAR TO '^[a-z](_?[a-z])*[a-z]$'),
+type_id ~ '^[a-z](_?[a-z])*[a-z]$'),
 	CONSTRAINT map_types_display_name_unique UNIQUE (display_name),
 	CONSTRAINT map_types_nonempty_display_name CHECK ((display_name='') IS NOT TRUE)
 
@@ -115,8 +116,8 @@ CREATE TABLE public.map_tiles (
 	CONSTRAINT map_tiles_pk PRIMARY KEY (region_id,type_id,size,block_x,block_z),
 	CONSTRAINT map_tiles_valid_ids CHECK (--check_id_format(region_id::VARCHAR(16))
 -- AND check_id_format(type_id::VARCHAR(16))
-region_id SIMILAR TO '^[a-z](_?[a-z])*[a-z]$'
-AND type_id SIMILAR TO '^[a-z](_?[a-z])*[a-z]$'),
+region_id ~ '^[a-z](_?[a-z])*[a-z]$'
+AND type_id ~ '^[a-z](_?[a-z])*[a-z]$'),
 	CONSTRAINT map_tiles_valid_size CHECK (size > 0),
 	CONSTRAINT map_tiles_uri_nonempty CHECK ((tile_uri = '') IS NOT TRUE)
 
@@ -149,9 +150,9 @@ COMMENT ON CONSTRAINT map_tiles_uri_nonempty ON public.map_tiles  IS 'Map tiles 
 ALTER TABLE public.map_tiles OWNER TO postgres;
 -- ddl-end --
 
--- object: public.regions_add_or_update | type: FUNCTION --
--- DROP FUNCTION IF EXISTS public.regions_add_or_update() CASCADE;
-CREATE FUNCTION public.regions_add_or_update ()
+-- object: public.map_tiles_insert_trigger | type: FUNCTION --
+-- DROP FUNCTION IF EXISTS public.map_tiles_insert_trigger() CASCADE;
+CREATE FUNCTION public.map_tiles_insert_trigger ()
 	RETURNS trigger
 	LANGUAGE plpgsql
 	VOLATILE 
@@ -160,102 +161,47 @@ CREATE FUNCTION public.regions_add_or_update ()
 	COST 1
 	AS $$
 BEGIN
-	INSERT INTO regions (region_id, display_name, last_update)
-	VALUES (NEW.region_id, NEW.region_id, NEW.last_update);
-	RETURN NEW;
-EXCEPTION WHEN unique_violation THEN
-	-- value already present, just update timestamp.
-	UPDATE regions
-	SET last_update = NEW.last_update;
-	RETURN NEW;
-END;
-$$;
--- ddl-end --
-ALTER FUNCTION public.regions_add_or_update() OWNER TO postgres;
--- ddl-end --
-COMMENT ON FUNCTION public.regions_add_or_update() IS 'If not already present in the regions table, add a new region_id, setting its initial display_name to match the region_id.';
--- ddl-end --
-
--- object: map_tiles_update_regions | type: TRIGGER --
--- DROP TRIGGER IF EXISTS map_tiles_update_regions ON public.map_tiles CASCADE;
-CREATE TRIGGER map_tiles_update_regions
-	BEFORE INSERT 
-	ON public.map_tiles
-	FOR EACH ROW
-	EXECUTE PROCEDURE public.regions_add_or_update();
--- ddl-end --
-COMMENT ON TRIGGER map_tiles_update_regions ON public.map_tiles IS 'Ensures that the region_id is added to the region table if it isn''t already there, and changes its update timestamp.';
--- ddl-end --
-
--- object: public.map_types_add_or_update | type: FUNCTION --
--- DROP FUNCTION IF EXISTS public.map_types_add_or_update() CASCADE;
-CREATE FUNCTION public.map_types_add_or_update ()
-	RETURNS trigger
-	LANGUAGE plpgsql
-	VOLATILE 
-	CALLED ON NULL INPUT
-	SECURITY INVOKER
-	COST 1
-	AS $$
-BEGIN
-	INSERT INTO map_types (type_id, display_name, last_update)
-	VALUES (NEW.type_id, NEW.type_id, NEW.last_update);
-	RETURN NEW;
-EXCEPTION WHEN unique_violation THEN
-	-- value already present, just update timestamp.
-	UPDATE map_types
-	SET last_update = NEW.last_update;
+	BEGIN
+		INSERT INTO regions (region_id, display_name, last_update)
+		VALUES (NEW.region_id, NEW.region_id, NEW.last_update);
+	EXCEPTION WHEN unique_violation THEN
+		-- value already present, just update timestamp.
+		UPDATE regions
+		SET last_update = NEW.last_update
+		WHERE (region_id = NEW.region_id);
+	END;
+	BEGIN
+		INSERT INTO map_types (type_id, display_name, last_update)
+		VALUES (NEW.type_id, NEW.type_id, NEW.last_update);
+	EXCEPTION WHEN unique_violation THEN
+		-- value already present, just update timestamp.
+		UPDATE map_types
+		SET last_update = NEW.last_update
+		WHERE (type_id = NEW.type_id);
+	END;
+	BEGIN
+		INSERT INTO tile_sizes VALUES (NEW.size);
+	EXCEPTION WHEN unique_violation THEN
+		-- value already present, do nothing.
+	END;
 	RETURN NEW;
 END;
 $$;
 -- ddl-end --
-ALTER FUNCTION public.map_types_add_or_update() OWNER TO postgres;
+ALTER FUNCTION public.map_tiles_insert_trigger() OWNER TO postgres;
 -- ddl-end --
-COMMENT ON FUNCTION public.map_types_add_or_update() IS 'Adds a new map type to map_types if a type_id is not found, setting display_name to match type_id.';
--- ddl-end --
-
--- object: public.tile_sizes_add_if_missing | type: FUNCTION --
--- DROP FUNCTION IF EXISTS public.tile_sizes_add_if_missing() CASCADE;
-CREATE FUNCTION public.tile_sizes_add_if_missing ()
-	RETURNS trigger
-	LANGUAGE plpgsql
-	VOLATILE 
-	CALLED ON NULL INPUT
-	SECURITY INVOKER
-	COST 1
-	AS $$
-BEGIN
-	INSERT INTO tile_sizes VALUES (NEW.size);
-	RETURN NEW;
-EXCEPTION WHEN unique_violation THEN
-	-- value already present, do nothing.
-	RETURN NEW;
-END;
-$$;
--- ddl-end --
-ALTER FUNCTION public.tile_sizes_add_if_missing() OWNER TO postgres;
+COMMENT ON FUNCTION public.map_tiles_insert_trigger() IS 'Ensures that the last_update time is updated in the regions and map_types tables when a new map_tiles row is inserted, adding the tile''s region_id to regions and type_id to map_types if necessary.';
 -- ddl-end --
 
--- object: map_tiles_update_types | type: TRIGGER --
--- DROP TRIGGER IF EXISTS map_tiles_update_types ON public.map_tiles CASCADE;
-CREATE TRIGGER map_tiles_update_types
-	BEFORE INSERT 
+-- object: map_tiles_trigger_update_fk | type: TRIGGER --
+-- DROP TRIGGER IF EXISTS map_tiles_trigger_update_fk ON public.map_tiles CASCADE;
+CREATE TRIGGER map_tiles_trigger_update_fk
+	BEFORE INSERT OR UPDATE
 	ON public.map_tiles
 	FOR EACH ROW
-	EXECUTE PROCEDURE public.map_types_add_or_update();
+	EXECUTE PROCEDURE public.map_tiles_insert_trigger();
 -- ddl-end --
-COMMENT ON TRIGGER map_tiles_update_types ON public.map_tiles IS 'Ensures that the type_id is added to the map_type table if it isn''t already there, and changes its update timestamp.';
--- ddl-end --
-
--- object: map_tiles_update_sizes | type: TRIGGER --
--- DROP TRIGGER IF EXISTS map_tiles_update_sizes ON public.map_tiles CASCADE;
-CREATE TRIGGER map_tiles_update_sizes
-	BEFORE INSERT 
-	ON public.map_tiles
-	FOR EACH ROW
-	EXECUTE PROCEDURE public.tile_sizes_add_if_missing();
--- ddl-end --
-COMMENT ON TRIGGER map_tiles_update_sizes ON public.map_tiles IS 'Ensures that the size is added to the tile_sizes table if it isn''t already there.';
+COMMENT ON TRIGGER map_tiles_trigger_update_fk ON public.map_tiles IS 'Ensures that the region_id, type_id, and size of a new map tile row are registered in the appropriate tables and that associated timestamps are updated.';
 -- ddl-end --
 
 -- object: public.locations | type: TABLE --
@@ -272,10 +218,10 @@ CREATE TABLE public.locations (
 	CONSTRAINT locations_pk PRIMARY KEY (region_id,category_id,block_x,block_z),
 	CONSTRAINT locations_valid_ids CHECK (--check_id_format(region_id::VARCHAR(16))
 --AND check_id_format(category_id::VARCHAR(16))
-region_id SIMILAR TO '^[a-z](_?[a-z])*[a-z]$'
-AND category_id SIMILAR TO '^[a-z](_?[a-z])*[a-z]$'),
+region_id ~ '^[a-z](_?[a-z])*[a-z]$'
+AND category_id ~ '^[a-z](_?[a-z])*[a-z]$'),
 	CONSTRAINT locations_valid_color CHECK (--color IS NULL OR check_color(color)
-color IS NULL OR color  SIMILAR TO '^[0-9a-f]{6}$')
+color IS NULL OR color ~ '^[0-9a-fA-F]{6}$')
 
 );
 -- ddl-end --
@@ -317,7 +263,7 @@ CREATE TABLE public.location_categories (
 	CONSTRAINT location_categories_display_name_unique UNIQUE (display_name),
 	CONSTRAINT location_categories_display_name_nonempty CHECK ((display_name = '') IS NOT TRUE),
 	CONSTRAINT location_categories_valid_id CHECK (--check_id_format(category_id::VARCHAR(16))
-category_id SIMILAR TO '^[a-z](_?[a-z])*[a-z]$')
+category_id ~ '^[a-z](_?[a-z])*[a-z]$')
 
 );
 -- ddl-end --
@@ -340,9 +286,9 @@ COMMENT ON CONSTRAINT location_categories_valid_id ON public.location_categories
 ALTER TABLE public.location_categories OWNER TO postgres;
 -- ddl-end --
 
--- object: public.location_categories_add_or_update | type: FUNCTION --
--- DROP FUNCTION IF EXISTS public.location_categories_add_or_update() CASCADE;
-CREATE FUNCTION public.location_categories_add_or_update ()
+-- object: public.location_insert_trigger | type: FUNCTION --
+-- DROP FUNCTION IF EXISTS public.location_insert_trigger() CASCADE;
+CREATE FUNCTION public.location_insert_trigger ()
 	RETURNS trigger
 	LANGUAGE plpgsql
 	VOLATILE 
@@ -351,20 +297,42 @@ CREATE FUNCTION public.location_categories_add_or_update ()
 	COST 1
 	AS $$
 BEGIN
-	INSERT INTO location_categories (category_id, display_name, last_update)
-	VALUES (NEW.category_id, NEW.category_id, NEW.last_update);
-	RETURN NEW;
-EXCEPTION WHEN unique_violation THEN
-	-- value already present, just update timestamp.
-	UPDATE location_categories
-	SET last_update = NEW.last_update;
+	BEGIN
+		INSERT INTO location_categories (category_id, display_name, last_update)
+		VALUES (NEW.category_id, NEW.category_id, NEW.last_update);
+	EXCEPTION WHEN unique_violation THEN
+		-- value already present, just update timestamp.
+		UPDATE location_categories
+		SET last_update = NEW.last_update
+		WHERE (category_id = NEW.category_id);
+	END;
+	BEGIN
+		INSERT INTO regions (region_id, display_name, last_update)
+		VALUES (NEW.region_id, NEW.region_id, NEW.last_update);
+	EXCEPTION WHEN unique_violation THEN
+		-- value already present, just update timestamp.
+		UPDATE regions
+		SET last_update = NEW.last_update
+		WHERE (region_id = NEW.region_id);
+	END;
 	RETURN NEW;
 END;
 $$;
 -- ddl-end --
-ALTER FUNCTION public.location_categories_add_or_update() OWNER TO postgres;
+ALTER FUNCTION public.location_insert_trigger() OWNER TO postgres;
 -- ddl-end --
-COMMENT ON FUNCTION public.location_categories_add_or_update() IS 'Adds a new location category, setting display_name to category_id, or updates the timestamp if the category already exists.';
+COMMENT ON FUNCTION public.location_insert_trigger() IS 'When a new row is inserted into the locations table, the appropriate last_update values in the regions and location_categories table should be updated. If necessary, this will add new rows to these tables for the location row''s region_id and category_id.';
+-- ddl-end --
+
+-- object: locations_trigger_update_fk | type: TRIGGER --
+-- DROP TRIGGER IF EXISTS locations_trigger_update_fk ON public.locations CASCADE;
+CREATE TRIGGER locations_trigger_update_fk
+	BEFORE INSERT OR UPDATE
+	ON public.locations
+	FOR EACH ROW
+	EXECUTE PROCEDURE public.location_insert_trigger();
+-- ddl-end --
+COMMENT ON TRIGGER locations_trigger_update_fk ON public.locations IS 'Ensures that the region_id and category_id are added to the regions and location_categories tables if not already present, and sets their last_update times to the inserted location row''s last_update time.';
 -- ddl-end --
 
 -- object: public.key_items | type: TABLE --
@@ -379,8 +347,7 @@ CREATE TABLE public.key_items (
 	CONSTRAINT key_items_pk PRIMARY KEY (region_id,type_id,description),
 	CONSTRAINT key_items_description_nonempty CHECK ((description = '') IS NOT TRUE),
 	CONSTRAINT key_items_color_or_icon_uri_valid CHECK ((color IS NOT NULL OR icon_uri IS NOT NULL)
---AND (color IS NULL OR check_color(color))
-AND (color IS NULL OR color  SIMILAR TO '^[0-9a-f]{6}$')
+AND (color IS NULL OR color ~'^[0-9a-fA-F]{6}$')
 AND (icon_uri IS  NULL OR (icon_uri = '') IS NOT TRUE))
 
 );
@@ -408,111 +375,56 @@ COMMENT ON CONSTRAINT key_items_color_or_icon_uri_valid ON public.key_items  IS 
 ALTER TABLE public.key_items OWNER TO postgres;
 -- ddl-end --
 
--- object: public.check_id_format | type: FUNCTION --
--- DROP FUNCTION IF EXISTS public.check_id_format(IN varchar(16)) CASCADE;
-CREATE FUNCTION public.check_id_format (IN id_string varchar(16))
-	RETURNS bool
-	LANGUAGE sql
+-- object: public.key_items_insert_trigger | type: FUNCTION --
+-- DROP FUNCTION IF EXISTS public.key_items_insert_trigger() CASCADE;
+CREATE FUNCTION public.key_items_insert_trigger ()
+	RETURNS trigger
+	LANGUAGE plpgsql
 	VOLATILE 
 	CALLED ON NULL INPUT
 	SECURITY INVOKER
 	COST 1
 	AS $$
-RETURN id_string SIMILAR TO '^[a-z](_?[a-z])*[a-z]$';
+BEGIN
+	BEGIN
+		IF NEW.region_id IS NULL THEN
+			RAISE EXCEPTION 'NEW is null! level = %', TG_LEVEL;
+		END IF;
+		INSERT INTO regions (region_id, display_name, last_update)
+		VALUES (NEW.region_id, NEW.region_id, NEW.last_update);
+	EXCEPTION WHEN unique_violation THEN
+		-- value already present, just update timestamp.
+		UPDATE regions
+		SET last_update = NEW.last_update
+		WHERE (region_id = NEW.region_id);
+	END;
+	BEGIN
+		INSERT INTO map_types (type_id, display_name, last_update)
+		VALUES (NEW.type_id, NEW.type_id, NEW.last_update);
+	EXCEPTION WHEN unique_violation THEN
+		-- value already present, just update timestamp.
+		UPDATE map_types
+		SET last_update = NEW.last_update
+		WHERE (type_id = NEW.type_id);
+	END;
+	RETURN NEW;
+END;
 $$;
 -- ddl-end --
-ALTER FUNCTION public.check_id_format(IN varchar(16)) OWNER TO postgres;
+ALTER FUNCTION public.key_items_insert_trigger() OWNER TO postgres;
 -- ddl-end --
-COMMENT ON FUNCTION public.check_id_format(IN varchar(16)) IS 'Checks that an ID string meets expected formatting rules.
-ID Constraints:
-- ID strings must contain 2-16 characters.
-- ID strings may only contain lowercase letters and underscores.
-- Underscores are not repeated.
-- ID strings must begin and end with lowercase letters.';
+COMMENT ON FUNCTION public.key_items_insert_trigger() IS 'Whenever a new row is added to key_items, ensure that the row''s region_id and type_id exist in the appropriate tables, and that their timestamps are updated.';
 -- ddl-end --
 
--- object: locations_update_regions | type: TRIGGER --
--- DROP TRIGGER IF EXISTS locations_update_regions ON public.locations CASCADE;
-CREATE TRIGGER locations_update_regions
-	BEFORE INSERT 
-	ON public.locations
-	FOR EACH STATEMENT
-	EXECUTE PROCEDURE public.regions_add_or_update();
+-- object: key_items_trigger_update_fk | type: TRIGGER --
+-- DROP TRIGGER IF EXISTS key_items_trigger_update_fk ON public.key_items CASCADE;
+CREATE TRIGGER key_items_trigger_update_fk
+	BEFORE INSERT OR UPDATE
+	ON public.key_items
+	FOR EACH ROW
+	EXECUTE PROCEDURE public.key_items_insert_trigger();
 -- ddl-end --
-COMMENT ON TRIGGER locations_update_regions ON public.locations IS 'Ensures that the region_id is added to the region table if it isn''t already there, and changes its update timestamp.';
--- ddl-end --
-
--- object: locations_update_location_categories | type: TRIGGER --
--- DROP TRIGGER IF EXISTS locations_update_location_categories ON public.locations CASCADE;
-CREATE TRIGGER locations_update_location_categories
-	BEFORE INSERT 
-	ON public.locations
-	FOR EACH STATEMENT
-	EXECUTE PROCEDURE public.location_categories_add_or_update();
--- ddl-end --
-COMMENT ON TRIGGER locations_update_location_categories ON public.locations IS 'Ensures that category_id is added to the location_categories table if it isn''t already there, and changes its update timestamp.';
--- ddl-end --
-
--- object: public.check_color | type: FUNCTION --
--- DROP FUNCTION IF EXISTS public.check_color(IN char(6)) CASCADE;
-CREATE FUNCTION public.check_color (IN color char(6))
-	RETURNS bool
-	LANGUAGE sql
-	IMMUTABLE 
-	CALLED ON NULL INPUT
-	SECURITY INVOKER
-	COST 1
-	AS $$
-IF (color ~ '^[0-9a-f]{6}$') THEN
-	RETURN TRUE;
-END IF;
-RETURN FALSE;
-$$;
--- ddl-end --
-ALTER FUNCTION public.check_color(IN char(6)) OWNER TO postgres;
--- ddl-end --
-COMMENT ON FUNCTION public.check_color(IN char(6)) IS 'Ensures that a string is a valid hex color.';
--- ddl-end --
-
--- object: public.key_items_staging | type: TABLE --
--- DROP TABLE IF EXISTS public.key_items_staging CASCADE;
-CREATE TABLE public.key_items_staging (
-	region_id varchar(16) NOT NULL,
-	type_id varchar(16) NOT NULL,
-	description varchar(256) NOT NULL,
-	last_update timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	color char(6),
-	icon_uri varchar(512),
-	CONSTRAINT key_items_staging_pk PRIMARY KEY (region_id,type_id,description),
-	CONSTRAINT key_items_staging_description_nonempty CHECK ((description = '') IS NOT TRUE),
-	CONSTRAINT key_items_staging_color_or_icon_uri_valid CHECK ((color IS NOT NULL OR icon_uri IS NOT NULL)
---AND (color IS NULL OR check_color(color))
-AND (color IS NULL OR color  SIMILAR TO '^[0-9a-f]{6}$')
-AND (icon_uri IS  NULL OR (icon_uri = '') IS NOT TRUE))
-
-);
--- ddl-end --
-COMMENT ON TABLE public.key_items_staging IS 'Holds a new set of updated key items while waiting for update data to load, so that all related map updates may be applied atomically.';
--- ddl-end --
-COMMENT ON COLUMN public.key_items_staging.region_id IS 'The map region described by a key item.';
--- ddl-end --
-COMMENT ON COLUMN public.key_items_staging.type_id IS 'The map data type described by a key item.';
--- ddl-end --
-COMMENT ON COLUMN public.key_items_staging.description IS 'Explains to the user what the key item''s color or icon represents.';
--- ddl-end --
-COMMENT ON COLUMN public.key_items_staging.last_update IS 'The last time the key item was updated.';
--- ddl-end --
-COMMENT ON COLUMN public.key_items_staging.color IS 'A map color explained by the key item, represented as a six-digit color string. This value may only be null if the icon URI is not null.';
--- ddl-end --
-COMMENT ON COLUMN public.key_items_staging.icon_uri IS 'The image URI of a map icon or symbol explained by the key item.  This value may only be null if the icon color is not null.';
--- ddl-end --
-COMMENT ON CONSTRAINT key_items_staging_pk ON public.key_items_staging  IS 'Key items within a shared region and map type must have unique descriptions.';
--- ddl-end --
-COMMENT ON CONSTRAINT key_items_staging_description_nonempty ON public.key_items_staging  IS 'Key items cannot have empty description strings.';
--- ddl-end --
-COMMENT ON CONSTRAINT key_items_staging_color_or_icon_uri_valid ON public.key_items_staging  IS 'Either the color or icon_uri must be non-null and non-empty, and colors must be valid color strings.';
--- ddl-end --
-ALTER TABLE public.key_items_staging OWNER TO postgres;
+COMMENT ON TRIGGER key_items_trigger_update_fk ON public.key_items IS 'Ensure that the region_id and type_id of new key items are present in the appropriate tables with updated timestamps.';
 -- ddl-end --
 
 -- object: public.map_tiles_staging | type: TABLE --
@@ -528,8 +440,8 @@ CREATE TABLE public.map_tiles_staging (
 	CONSTRAINT map_tiles_staging_pk PRIMARY KEY (region_id,type_id,size,block_x,block_z),
 	CONSTRAINT map_tiles_staging_valid_ids CHECK (--check_id_format(region_id::VARCHAR(16)) AND
 --check_id_format(type_id::VARCHAR(16))
-region_id SIMILAR TO '^[a-z](_?[a-z])*[a-z]$'
-AND type_id SIMILAR TO '^[a-z](_?[a-z])*[a-z]$'),
+region_id ~ '^[a-z](_?[a-z])*[a-z]$'
+AND type_id ~ '^[a-z](_?[a-z])*[a-z]$'),
 	CONSTRAINT map_tiles_staging_valid_size CHECK (size > 0),
 	CONSTRAINT map_tiles_staging_uri_nonempty CHECK ((tile_uri = '') IS NOT TRUE)
 
@@ -562,64 +474,207 @@ COMMENT ON CONSTRAINT map_tiles_staging_uri_nonempty ON public.map_tiles_staging
 ALTER TABLE public.map_tiles_staging OWNER TO postgres;
 -- ddl-end --
 
--- object: map_tiles_update_regions | type: TRIGGER --
--- DROP TRIGGER IF EXISTS map_tiles_update_regions ON public.map_tiles_staging CASCADE;
-CREATE TRIGGER map_tiles_update_regions
-	BEFORE INSERT 
-	ON public.map_tiles_staging
-	FOR EACH ROW
-	EXECUTE PROCEDURE public.regions_add_or_update();
--- ddl-end --
-COMMENT ON TRIGGER map_tiles_update_regions ON public.map_tiles_staging IS 'Ensures that the region_id is added to the region table if it isn''t already there, and changes its update timestamp.';
--- ddl-end --
-
--- object: map_tiles_update_types | type: TRIGGER --
--- DROP TRIGGER IF EXISTS map_tiles_update_types ON public.map_tiles_staging CASCADE;
-CREATE TRIGGER map_tiles_update_types
-	BEFORE INSERT 
-	ON public.map_tiles_staging
-	FOR EACH ROW
-	EXECUTE PROCEDURE public.map_types_add_or_update();
--- ddl-end --
-COMMENT ON TRIGGER map_tiles_update_types ON public.map_tiles_staging IS 'Ensures that the type_id is added to the map_type table if it isn''t already there, and changes its update timestamp.';
--- ddl-end --
-
--- object: map_tiles_update_sizes | type: TRIGGER --
--- DROP TRIGGER IF EXISTS map_tiles_update_sizes ON public.map_tiles_staging CASCADE;
-CREATE TRIGGER map_tiles_update_sizes
-	BEFORE INSERT 
-	ON public.map_tiles_staging
-	FOR EACH ROW
-	EXECUTE PROCEDURE public.tile_sizes_add_if_missing();
--- ddl-end --
-COMMENT ON TRIGGER map_tiles_update_sizes ON public.map_tiles_staging IS 'Ensures that the size is added to the tile_sizes table if it isn''t already there.';
--- ddl-end --
-
--- object: public.apply_staging | type: FUNCTION --
--- DROP FUNCTION IF EXISTS public.apply_staging() CASCADE;
-CREATE FUNCTION public.apply_staging ()
-	RETURNS void
+-- object: public.map_tiles_staging_insert_trigger | type: FUNCTION --
+-- DROP FUNCTION IF EXISTS public.map_tiles_staging_insert_trigger() CASCADE;
+CREATE FUNCTION public.map_tiles_staging_insert_trigger ()
+	RETURNS trigger
 	LANGUAGE plpgsql
 	VOLATILE 
 	CALLED ON NULL INPUT
 	SECURITY INVOKER
 	COST 1
 	AS $$
-BEGIN TRANSACTION;
+BEGIN
+	BEGIN
+		INSERT INTO regions (region_id, display_name, last_update)
+		VALUES (NEW.region_id, NEW.region_id, NEW.last_update);
+	EXCEPTION WHEN unique_violation THEN
+		-- value already present, don't update the timestamp yet.
+	END;
+	BEGIN
+		INSERT INTO map_types (type_id, display_name, last_update)
+		VALUES (NEW.type_id, NEW.type_id, NEW.last_update);
+	EXCEPTION WHEN unique_violation THEN
+		-- value already present, don't update the timestamp yet.
+	END;
+	BEGIN
+		INSERT INTO tile_sizes VALUES (NEW.size);
+	EXCEPTION WHEN unique_violation THEN
+		-- value already present, do nothing.
+	END;
+	RETURN NEW;
+END;
+$$;
+-- ddl-end --
+ALTER FUNCTION public.map_tiles_staging_insert_trigger() OWNER TO postgres;
+-- ddl-end --
+COMMENT ON FUNCTION public.map_tiles_staging_insert_trigger() IS 'Ensures that the region_id and type_id of new map tile rows exist in the regions and map_types tables, creating them if necessary.';
+-- ddl-end --
+
+-- object: map_tiles_staging_trigger_update_fk | type: TRIGGER --
+-- DROP TRIGGER IF EXISTS map_tiles_staging_trigger_update_fk ON public.map_tiles_staging CASCADE;
+CREATE TRIGGER map_tiles_staging_trigger_update_fk
+	BEFORE INSERT OR UPDATE
+	ON public.map_tiles_staging
+	FOR EACH ROW
+	EXECUTE PROCEDURE public.map_tiles_staging_insert_trigger();
+-- ddl-end --
+COMMENT ON TRIGGER map_tiles_staging_trigger_update_fk ON public.map_tiles_staging IS 'Ensures that the region_id, type_id, and size of a new map tile row are registered in the appropriate tables and that associated timestamps are updated.';
+-- ddl-end --
+
+-- object: public.key_items_staging | type: TABLE --
+-- DROP TABLE IF EXISTS public.key_items_staging CASCADE;
+CREATE TABLE public.key_items_staging (
+	region_id varchar(16) NOT NULL,
+	type_id varchar(16) NOT NULL,
+	description varchar(256) NOT NULL,
+	last_update timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	color char(6),
+	icon_uri varchar(512),
+	CONSTRAINT key_items_staging_pk PRIMARY KEY (region_id,type_id,description),
+	CONSTRAINT key_items_staging_description_nonempty CHECK ((description = '') IS NOT TRUE),
+	CONSTRAINT key_items_staging_color_or_icon_uri_valid CHECK ((color IS NOT NULL OR icon_uri IS NOT NULL)
+--AND (color IS NULL OR check_color(color))
+AND (color IS NULL OR color~ '^[0-9a-f]{6}$')
+AND (icon_uri IS  NULL OR (icon_uri = '') IS NOT TRUE))
+
+);
+-- ddl-end --
+COMMENT ON TABLE public.key_items_staging IS 'Holds a new set of updated key items while waiting for update data to load, so that all related map updates may be applied atomically.';
+-- ddl-end --
+COMMENT ON COLUMN public.key_items_staging.region_id IS 'The map region described by a key item.';
+-- ddl-end --
+COMMENT ON COLUMN public.key_items_staging.type_id IS 'The map data type described by a key item.';
+-- ddl-end --
+COMMENT ON COLUMN public.key_items_staging.description IS 'Explains to the user what the key item''s color or icon represents.';
+-- ddl-end --
+COMMENT ON COLUMN public.key_items_staging.last_update IS 'The last time the key item was updated.';
+-- ddl-end --
+COMMENT ON COLUMN public.key_items_staging.color IS 'A map color explained by the key item, represented as a six-digit color string. This value may only be null if the icon URI is not null.';
+-- ddl-end --
+COMMENT ON COLUMN public.key_items_staging.icon_uri IS 'The image URI of a map icon or symbol explained by the key item.  This value may only be null if the icon color is not null.';
+-- ddl-end --
+COMMENT ON CONSTRAINT key_items_staging_pk ON public.key_items_staging  IS 'Key items within a shared region and map type must have unique descriptions.';
+-- ddl-end --
+COMMENT ON CONSTRAINT key_items_staging_description_nonempty ON public.key_items_staging  IS 'Key items cannot have empty description strings.';
+-- ddl-end --
+COMMENT ON CONSTRAINT key_items_staging_color_or_icon_uri_valid ON public.key_items_staging  IS 'Either the color or icon_uri must be non-null and non-empty, and colors must be valid color strings.';
+-- ddl-end --
+ALTER TABLE public.key_items_staging OWNER TO postgres;
+-- ddl-end --
+
+-- object: public.key_items_staging_insert_trigger | type: FUNCTION --
+-- DROP FUNCTION IF EXISTS public.key_items_staging_insert_trigger() CASCADE;
+CREATE FUNCTION public.key_items_staging_insert_trigger ()
+	RETURNS trigger
+	LANGUAGE plpgsql
+	VOLATILE 
+	CALLED ON NULL INPUT
+	SECURITY INVOKER
+	COST 1
+	AS $$
+BEGIN
+	BEGIN
+	IF NEW.region_id IS NULL THEN
+		RAISE EXCEPTION 'NEW is null! level = %', TG_LEVEL;
+	END IF;
+		INSERT INTO regions (region_id, display_name, last_update)
+		VALUES (NEW.region_id, NEW.region_id, NEW.last_update);
+	EXCEPTION WHEN unique_violation THEN
+		-- value already present, don't update timestamp.
+	END;
+	BEGIN
+		INSERT INTO map_types (type_id, display_name, last_update)
+		VALUES (NEW.type_id, NEW.type_id, NEW.last_update);
+	EXCEPTION WHEN unique_violation THEN
+		-- value already present, don't update timestamp.
+	END;
+	RETURN NEW;
+END;
+$$;
+-- ddl-end --
+ALTER FUNCTION public.key_items_staging_insert_trigger() OWNER TO postgres;
+-- ddl-end --
+COMMENT ON FUNCTION public.key_items_staging_insert_trigger() IS 'Whenever a new row is added to key_items, ensure that the row''s region_id and type_id exist in the appropriate tables.';
+-- ddl-end --
+
+-- object: key_items_staging_trigger_update_fk | type: TRIGGER --
+-- DROP TRIGGER IF EXISTS key_items_staging_trigger_update_fk ON public.key_items_staging CASCADE;
+CREATE TRIGGER key_items_staging_trigger_update_fk
+	BEFORE INSERT OR UPDATE
+	ON public.key_items_staging
+	FOR EACH ROW
+	EXECUTE PROCEDURE public.key_items_staging_insert_trigger();
+-- ddl-end --
+COMMENT ON TRIGGER key_items_staging_trigger_update_fk ON public.key_items_staging IS 'Ensure that the region_id and type_id of new key items are present in the appropriate tables with updated timestamps.';
+-- ddl-end --
+
+-- object: public.apply_staging | type: FUNCTION --
+-- DROP FUNCTION IF EXISTS public.apply_staging() CASCADE;
+CREATE FUNCTION public.apply_staging ()
+	RETURNS void
+	LANGUAGE sql
+	VOLATILE 
+	CALLED ON NULL INPUT
+	SECURITY INVOKER
+	COST 1
+	AS $$
 TRUNCATE key_items;
 INSERT INTO key_items (region_id, type_id, description, last_update, color, icon_uri)
 	SELECT region_id, type_id, description, last_update, color, icon_uri
-	FROM staging_key_items;
-TRUNCATE staging_key_items;
+	FROM key_items_staging;
+TRUNCATE key_items_staging;
 TRUNCATE map_tiles;
 INSERT INTO map_tiles (region_id, type_id, size, block_x, block_z, tile_uri, last_update)
 	SELECT region_id, type_id, size, block_x, block_z, tile_uri, last_update
-	FROM staging_map_tiles;
-TRUNCATE staging_map_tiles;
-END TRANSACTION;
+	FROM map_tiles_staging;
+TRUNCATE map_tiles_staging;
 $$;
 -- ddl-end --
 ALTER FUNCTION public.apply_staging() OWNER TO postgres;
+-- ddl-end --
+
+-- object: public.check_color | type: FUNCTION --
+-- DROP FUNCTION IF EXISTS public.check_color(IN text) CASCADE;
+CREATE FUNCTION public.check_color (IN color text)
+	RETURNS boolean
+	LANGUAGE plpgsql
+	IMMUTABLE 
+	CALLED ON NULL INPUT
+	SECURITY INVOKER
+	COST 1
+	AS $$
+BEGIN
+	RETURN color ~ '^[0-9a-fA-F]{6}$';
+END;
+$$;
+-- ddl-end --
+ALTER FUNCTION public.check_color(IN text) OWNER TO postgres;
+-- ddl-end --
+COMMENT ON FUNCTION public.check_color(IN text) IS 'Ensures that a string is a valid hex color.';
+-- ddl-end --
+
+-- object: public.check_id_format | type: FUNCTION --
+-- DROP FUNCTION IF EXISTS public.check_id_format(IN varchar(16)) CASCADE;
+CREATE FUNCTION public.check_id_format (IN id_string varchar(16))
+	RETURNS bool
+	LANGUAGE sql
+	VOLATILE 
+	CALLED ON NULL INPUT
+	SECURITY INVOKER
+	COST 1
+	AS $$
+RETURN id_string SIMILAR TO '^[a-z](_?[a-z])*[a-z]$';
+$$;
+-- ddl-end --
+ALTER FUNCTION public.check_id_format(IN varchar(16)) OWNER TO postgres;
+-- ddl-end --
+COMMENT ON FUNCTION public.check_id_format(IN varchar(16)) IS 'Checks that an ID string meets expected formatting rules.
+ID Constraints:
+- ID strings must contain 2-16 characters.
+- ID strings may only contain lowercase letters and underscores.
+- Underscores are not repeated.
+- ID strings must begin and end with lowercase letters.';
 -- ddl-end --
 
 -- object: map_tiles_type_id_fk | type: CONSTRAINT --
