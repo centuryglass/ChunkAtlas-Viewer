@@ -1,7 +1,7 @@
 /**
  * @file result-error.js
  *
- *  Represents a case where the database returned a valid result, but that
+ * Represents a case where the database returned a valid result, but that
  * result's data didn't meet expectations.
  */
 
@@ -12,11 +12,11 @@ const { setConstProperty } = require("../../const-util.js");
 const ERROR_TYPE_KEY = "errorType";
 
 /**
- *  An Error subclass used to represent cases where a database query succeeded,
+ * An Error subclass used to represent cases where a database query succeeded,
  * but the returned data did not meet expectations.
  *
  * In addition to the regular Error data members and methods, ResultError
- * provides the following:
+ * provides the following properties:
  *
  * errorType:  A ResultErrorEnum value describing the error.
  */
@@ -44,4 +44,4 @@ class ResultError extends Error {
     }
 }
 
-module.exports = DBError;
+module.exports = ResultError;
