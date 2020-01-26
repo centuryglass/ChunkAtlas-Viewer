@@ -18,7 +18,7 @@ const ERROR_TYPE_KEY = "errorType";
  *
  * ErrorType:  A QueryErrorEnum value describing the error.
  */
-class DBQueryError extends Error {
+class QueryError extends Error {
     /**
      * Constructs a QueryError from a QueryErrorEnum value, using the value to
      * select an appropriate error message.
@@ -42,4 +42,4 @@ class DBQueryError extends Error {
     }
 }
 
-module.exports = DBError;
+module.exports = QueryError;
