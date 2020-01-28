@@ -49,16 +49,22 @@ class Result
         const params = [state, queryType, table, columnSetType, conditionType];
         const paramTypes = [TableStateEnum, QueryEnum, Tables, ColumnSetEnum,
                 ConditionEnum];
-        for (let i = 0; i < params.length; i++) {
-            assert(paramTypes[i].isValid(params[i]), "Invalid "
-                    + paramTypes[i].name + " value '" + params[i] + "'");
-        }
         let resultDataObject = resultData;
-        for (let param of params) {
-            resultDataObject = resultDataObject[param.name];
+        for (let i = 0; i < params.length; i++) {
+            const param = params[i];
+            const paramType = paramTypes[i]
+            assert(paramType.isValid(param), "Invalid "
+                    + paramType.className + " value '" + param + "'");
+            if (isDefined(param.tableName)) {
+                resultDataObject = resultDataObject[param.tableName];
+            }
+            else {
+                resultDataObject = resultDataObject[param.name];
+            }
             assert(isDefined(resultDataObject), "Missing '"
-                    + param.enumClass.name + "' value, params = "
-                    + params.map((p) => "[" + p.enumClass.name + "="
+                    + paramType.className + "." + param.name
+                    + "' value, params = "
+                    + params.map((p) => "[" + p.enumClass.className + "="
                     + p.name + "]").join(", "));
         }
         const resultKeys = Object.keys(resultDataObject);
