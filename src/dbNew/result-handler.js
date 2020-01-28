@@ -11,7 +11,7 @@ const ResultError = require("./error/result-error.js");
 const Tables = require("./structure/tables.js");
 const { isDefined, assert } = require("../validate.js");
 
-module.exports = {
+const ResultHandler = {
     /**
      * Validates that a value is a database result object.
      *
@@ -25,7 +25,7 @@ module.exports = {
                 || (result.constructor.name !== "Result")) {
             throw new ResultError(ResultErrorEnum.INVALID_RESULT);
         }
-    }.bind(module.exports),
+    },
 
 
     /**
@@ -46,7 +46,7 @@ module.exports = {
                 TypeError);
         assert(tableEnum.isValid(column), "'" + column + "' is not a valid "
                 + "enum value of type '" + tableEnum.name + "'", TypeError);
-    }.bind(module.exports),
+    },
 
     /**
      * Throws any errors returned by the database, possibly standardizing them.
@@ -74,7 +74,7 @@ module.exports = {
             }
             throw new QueryError(ErrorEnum.UNKNOWN_ERROR);
         });
-    }.bind(module.exports),
+    },
 
     /**
      * Checks if a database query result returned any data.
@@ -92,7 +92,7 @@ module.exports = {
         return isDefined(result) && isDefined(result.rows)
                 && (typeof result.rows.length === "number")
                 && result.rows.length > 0;
-    }.bind(module.exports),
+    },
 
     /**
      * Gets all rows returned in a database query result.
@@ -113,7 +113,7 @@ module.exports = {
         else {
             return [];
         }
-    }.bind(module.exports),
+    },
 
     /**
      * Gets all values of a specific column from a database query result.
@@ -186,3 +186,5 @@ module.exports = {
         return cellValues[0];
     }
 };
+Object.freeze(ResultHandler);
+module.exports = ResultHandler;

@@ -173,7 +173,7 @@ describe("ResultHandler", function() {
 
     describe("getColumnValues", function() {
         it("should resolve with appropriate table column values.",
-                function(done) {
+                function() {
             for (let table of Tables) {
                 const tableRows = DBRows[table.tableName];
                 const dbState       = TableStateEnum.MULTI_ROW;
@@ -203,16 +203,22 @@ describe("ResultHandler", function() {
 
         it("should resolve with an empty array if no values were found.",
                 function(done) {
-            const testPromise = selectPromise().then((result) => {
-                const ids = ResultHandler.getColumnValues(result, Regions,
-                        Regions.REGION_ID);
-                const names = ResultHandler.getColumnValues(result, Regions,
-                        Regions.DISPLAY_NAME);
-                expect(ids.length).toEqual(0);
-                expect(names.length).toEqual(0);
-                done();
-            });
-            testPromiseResolution(testPromise, done);
+            for (let table of Tables) {
+                const tableRows = DBRows[table.tableName];
+                const dbState       = TableStateEnum.MULTI_ROW;
+                const query         = QueryEnum.SELECT;
+                const columnSetType = ColumnSetEnum.DEFAULT;
+                const conditionType = ConditionEnum.EXCLUDE_ALL;
+                const result = new MockResult(dbState, query, table,
+                        columnSetType, conditionType);
+                for (let column of table.tableEnum) {
+                    let columns;
+                    expect(columns = ResultHandler.getColumnValues(result,
+                            table.tableEnum, column)).not.toThrow();
+                    expect(Array.isArray(columns)).toBeTrue();
+                    expect(columns.length).toBe(0);
+                }
+            }
         });
 
         it("should reject with an INVALID_RESULT ResultError if the result "
@@ -228,7 +234,7 @@ describe("ResultHandler", function() {
         });
     });
 
-    describe("getCell", function() {
+    xdescribe("getCell", function() {
         const namePrefix = "Test ";
         const idPrefix = "test_";
 
