@@ -30,6 +30,7 @@ describe("ResultHandler", function() {
     const ConditionEnum = require("../support/condition-enum.js");
     const MockResult = require("../support/mock/result.js");
     const MockErrors = require("../support/data/db-errors.js");
+    const DBRows = require("../support/data/db-rows.js");
 
 
     // Checks that an error has an appropriate error class and error type.
@@ -82,7 +83,10 @@ describe("ResultHandler", function() {
         });
 
         it("should reject any invalid query parameter", function() {
-            pending("Test not implemented.");
+            const notQueries = [ "Query", [], 1, new Promise() ];
+            for (let notQuery of notQueries) {
+                expect(ResultHandler.handleErrors(notQuery)).toThrow();
+            }
         });
     });
 
@@ -111,6 +115,7 @@ describe("ResultHandler", function() {
                 expect(ResultHandler.returnedData(result)).withContext(result)
                         .toBeFalse();
             }
+        });
 
         it("Should throw an INVALID_RESULT ResultError if given an invalid "
                 + "result object.", function() {
@@ -169,32 +174,31 @@ describe("ResultHandler", function() {
     describe("getColumnValues", function() {
         it("should resolve with appropriate table column values.",
                 function(done) {
-            const testIDs = ["one", "two", "three"];
-            const testNames = testIDs.map((id) => "Region "
-                    + id.toUpperCase());
-            let testPromise = new Promise((res) => res());
-            for (let i = 0; i < testIDs.length; i++) {
-                testPromise = testPromise.then(() => insertTestRegion(
-                            testIDs[i], testNames[i]));
-            }
-            testPromise = testPromise.then(() => {
-                return selectPromise();
-            })
-            .then((result) => {
-                const ids = ResultHandler.getColumnValues(result, Regions,
-                        Regions.REGION_ID);
-                const names = ResultHandler.getColumnValues(result, Regions,
-                        Regions.DISPLAY_NAME);
-                expect(ids.length).toEqual(testIDs.length);
-                expect(names.length).toEqual(testNames.length);
-                for (let i = 0; i < ids.length; i++) {
-                    expect(ids[i]).toEqual(testIDs[i]);
-                    expect(names[i]).toEqual(testNames[i]);
+            for (let table of Tables) {
+                const tableRows = DBRows[table.tableName];
+                const dbState       = TableStateEnum.MULTI_ROW;
+                const query         = QueryEnum.SELECT;
+                const columnSetType = ColumnSetEnum.DEFAULT;
+                const conditionType = ConditionEnum.EXCLUDE_NONE;
+                const result = new MockResult(dbState, query, table,
+                        columnSetType, conditionType);
+                for (let column of table.tableEnum) {
+                    const colValueMap = {};
+                    for (let row of tableRows) {
+                        colValueMap[row[column.index]] = false;
+                    }
+                    let columns;
+                    expect(columns = ResultHandler.getColumnValues(result,
+                            table.tableEnum, column)).not.toThrow();
+                    for (let columnValue of columns) {
+                        expect(colValueMap[columnValue]).not.toBeUndefined();
+                        colValueMap[columnValue] = true;
+                    }
+                    for (let key of Object.keys(colValueMap)) {
+                        expect(colValueMap[key]).toBeTrue();
+                    }
                 }
-                done();
-            });
-            testPromiseResolution(testPromise, done);
-
+            }
         });
 
         it("should resolve with an empty array if no values were found.",

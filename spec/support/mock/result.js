@@ -43,14 +43,22 @@ class Result
      *                       query, as a ConditionEnum value.
      */
     constructor(state, queryType, table, columnSetType, conditionType) {
+        assert(TableStateEnum.isValid(state), "Invalid table state '"
+                + state + "'");
         // organize parameter data:
         const params = [state, queryType, table, columnSetType, conditionType];
+        const paramTypes = [TableStateEnum, QueryEnum, Tables, ColumnSetEnum,
+                ConditionEnum];
+        for (let i = 0; i < params.length; i++) {
+            assert(paramTypes[i].isValid(params[i]), "Invalid "
+                    + paramTypes[i].name + " value '" + params[i] + "'");
+        }
         let resultDataObject = resultData;
         for (let param of params) {
             resultDataObject = resultDataObject[param.name];
-            assert(isDefined(resultDataObject), "Missing "
-                    + param.enumClass.name + " value, params = "
-                    + resultParamData.map((p) => "[" + p.enumClass.name + "="
+            assert(isDefined(resultDataObject), "Missing '"
+                    + param.enumClass.name + "' value, params = "
+                    + params.map((p) => "[" + p.enumClass.name + "="
                     + p.name + "]").join(", "));
         }
         const resultKeys = Object.keys(resultDataObject);
