@@ -121,8 +121,8 @@ describe("ResultHandler", function() {
             for (let result of invalidResults) {
                 expect(() => ResultHandler.returnedData(result))
                 .toThrowMatching((err) => {
-                    return checkError(err, QueryError,
-                            QueryErrorEnum.INVALID_RESULTS);
+                    return checkError(err, ResultError,
+                            ResultErrorEnum.INVALID_RESULT);
                 });
             }
         });
