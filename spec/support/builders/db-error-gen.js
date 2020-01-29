@@ -144,9 +144,9 @@ let lastPromise = writePool.connect()
         [QueryErrorEnum.OTHER_CONSTRAINT.name]: {
             client: writeClient,
             queries: [
-                "INSERT INTO regions VALUES ('region', 'Region', null, -1)",
-                "INSERT INTO map_types VALUES ('type', 'Type', 'desc', 'now',"
-                    + " 'ffffff')"
+                "INSERT INTO tile_sizes VALUES (-1)",
+                "INSERT INTO key_items (region_id, type_id, description, "
+                        + "color) VALUES ('reg', 'typ', 'Test', 'fffffg')"
             ]
         },
         // Catch-all for unanticipated error types:
