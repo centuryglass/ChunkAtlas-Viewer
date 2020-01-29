@@ -14,6 +14,7 @@ const { assert, isDefined } = require("../../../src/validate.js");
 const saveJsonModule = require("./json-module-saver.js");
 const QueryErrorEnum = require("../../../src/dbNew/error/query-error-enum.js");
 const Tables = require("../../../src/dbNew/structure/tables.js");
+const TableStateEnum = require("../table-state-enum.js");
 
 
 const outPath = "../data/db-errors.js";
@@ -36,6 +37,7 @@ let lastPromise = writePool.connect()
 .catch((err) => {
     throw new Error("Error loading clients: " + err);
 })
+.then(() => TableStateEnum.EMPTY.initDatabase(writeClient))
 .then(() => {
     // ## Queries that should generate various error types: ##
     errorQueries = {
@@ -103,12 +105,12 @@ let lastPromise = writePool.connect()
         [QueryErrorEnum.DUPLICATE_ENTRY.name]: {
             client: writeClient,
             queries: [
-                "INSERT INTO tile_sizes VALUES 5, 5, 5",
+                "INSERT INTO tile_sizes VALUES (5), (5), (5)",
                 "INSERT INTO regions (region_id, display_name) VALUES "
-                        + "('first', 'Display Name') "
+                        + "('first', 'Display Name'), "
                         + "('second', 'Display Name')",
                 "INSERT INTO map_types (type_id, display_name) VALUES "
-                        + "('repeat', 'Display Name') "
+                        + "('repeat', 'Display Name'), "
                         + "('repeat', 'Other Name')"
             ]
         },

@@ -50,7 +50,7 @@ addError("INVALID_FOREIGN_KEY", "Invalid foreign key referenced.",
         (err) => err.routine === "ri_ReportViolation"
         && err.constraint.includes("_fk"));
 addError("DUPLICATE_ENTRY", "Tried to insert a duplicate value.",
-        (err) => err.code === "42601");
+        (err) => err.code === "23505");
 addError("EMPTY_STRING", "Tried to insert an invalid empty string.",
         (err) => err.routine === "ExecConstraints"
         && err.constraint.includes("_nonempty"));
