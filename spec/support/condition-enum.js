@@ -80,7 +80,8 @@ builder.addValue("SELECT_ONE", {
             case Tables.KEY_ITEMS:
             case Tables.KEY_ITEMS_STAGING:
                 return condStr("region_id = 'nether' AND type_id = "
-                        + "'recent_activity'");
+                        + "'recent_activity' AND description = "
+                        + "'First key item'");
             case Tables.MAP_TILES:
             case Tables.MAP_TILES_STAGING:
                 return condStr("region_id = 'nether' AND type_id = "

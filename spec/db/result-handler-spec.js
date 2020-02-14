@@ -99,7 +99,7 @@ describe("ResultHandler", function() {
                 const result = new MockResult(dbState, query, table,
                         columnSetType, conditionType);
                 expect(ResultHandler.returnedData(result))
-                        .withContext().toBeTrue();
+                        .withContext(result).toBeTrue();
             }
         });
 
@@ -129,7 +129,7 @@ describe("ResultHandler", function() {
     });
 
     describe("getResultRows", function() {
-        it("should return a set of row values if possible.", function(done) {
+        it("should return a set of row values if possible.", function() {
             for (let table of Tables) {
                 const dbState       = TableStateEnum.MULTI_ROW;
                 const query         = QueryEnum.SELECT;
@@ -139,7 +139,14 @@ describe("ResultHandler", function() {
                         columnSetType, conditionType);
                 const rows = ResultHandler.getResultRows(result);
                 expect(rows).toBeInstanceOf(Array);
-                expect(rows.length).toEqual(1);
+                let rowString = rows.map((row) => "[" + JSON.stringify(row)
+                        + "]").join(", ");
+                if (rows.length != 1) {
+                    console.log("Bad result:")
+                    console.dir(result);
+                    console.log("BAD_RESULT_END");
+                }
+                expect(rows.length).withContext(table.tableName).toEqual(1);
             }
         });
 
@@ -201,7 +208,7 @@ describe("ResultHandler", function() {
         });
 
         it("should resolve with an empty array if no values were found.",
-                function(done) {
+                function() {
             for (let table of Tables) {
                 const tableRows = DBRows[table.tableName];
                 const dbState       = TableStateEnum.MULTI_ROW;
@@ -234,7 +241,7 @@ describe("ResultHandler", function() {
 
     xdescribe("getCell", function() {
         it("should return the requested cell if it was found.",
-                function(done) {
+                function() {
             for (let table of Tables) {
                 const tableRows = DBRows[table.tableName];
                 const dbState       = TableStateEnum.MULTI_ROW;

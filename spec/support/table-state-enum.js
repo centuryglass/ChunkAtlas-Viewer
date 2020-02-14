@@ -67,9 +67,9 @@ function insertRows(tableName, rows, client) {
     return client.query(queryText, paramObject.params);
 }
 
-// Initialize test database rows in this order to prevent errors. Tables
-// omitted from this list will be initialized automatically.
+// Initialize test database rows in this order to prevent errors.
 const tableInsertOrder = [
+    "location_categories",
     "regions",
     "map_types",
     "tile_sizes",
@@ -96,12 +96,12 @@ builder.addValue("EMPTY", {
 builder.addValue("SINGLE_ROW", {
     [builderProperty]: function(client) {
         let lastPromise = clearTables(client);
-        tableInsertOrder.forEach((tableName) => {
+        for (let tableName of tableInsertOrder) {
             lastPromise = lastPromise.then(() => {
                 return insertRow(tableName, testRows[tableName][0],
                         client);
             });
-        });
+        }
         return lastPromise.catch((err) => {
             console.log("Failed to set up single-row tables: " + err);
             throw err;
@@ -112,11 +112,11 @@ builder.addValue("SINGLE_ROW", {
 builder.addValue("MULTI_ROW", {
     [builderProperty]: function(client) {
         let lastPromise = clearTables(client);
-        tableInsertOrder.forEach((tableName) => {
+        for (let tableName of tableInsertOrder) {
             lastPromise = lastPromise.then(() => {
                 return insertRows(tableName, testRows[tableName], client);
             });
-        });
+        }
         return lastPromise.catch((err) => {
             console.log("Failed to set up multi-row tables: " + err);
             throw err;
