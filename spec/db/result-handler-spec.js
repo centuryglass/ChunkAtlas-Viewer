@@ -141,16 +141,11 @@ describe("ResultHandler", function() {
                 expect(rows).toBeInstanceOf(Array);
                 let rowString = rows.map((row) => "[" + JSON.stringify(row)
                         + "]").join(", ");
-                if (rows.length != 1) {
-                    console.log("Bad result:")
-                    console.dir(result);
-                    console.log("BAD_RESULT_END");
-                }
                 expect(rows.length).withContext(table.tableName).toEqual(1);
             }
         });
 
-        it("should throw a NO_RESULTS ResultError if no rows were found.",
+        it("should return an empty array if no rows were found.",
                 function() {
             for (let table of Tables) {
                 const dbState       = TableStateEnum.MULTI_ROW;
@@ -159,9 +154,9 @@ describe("ResultHandler", function() {
                 const conditionType = ConditionEnum.EXCLUDE_ALL;
                 const result = new MockResult(dbState, query, table,
                         columnSetType, conditionType);
-                expect(() => ResultHandler.getResultRows(result))
-                        .toThrowMatching((err) => err instanceof ResultError
-                        && err.errorType === ResultErrorEnum.NO_RESULTS);
+                const rows = ResultHandler.getResultRows(result);
+                expect(rows).toBeInstanceOf(Array);
+                expect(rows.length).toEqual(0);
             }
         });
 
@@ -171,7 +166,7 @@ describe("ResultHandler", function() {
                 expect(() => ResultHandler.getResultRows(result))
                 .toThrowMatching((err) => {
                     return checkError(err, ResultError,
-                            ResultErrorEnum.INVALID_RESULTS);
+                            ResultErrorEnum.INVALID_RESULT);
                 });
             }
         });

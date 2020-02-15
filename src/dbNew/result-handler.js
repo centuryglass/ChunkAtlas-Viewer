@@ -97,7 +97,7 @@ const ResultHandler = {
     /**
      * Gets all rows returned in a database query result.
      *
-     * @param result    The result object to check.
+     * @param result      The result object to check.
      *
      * @return            All returned rows, or an empty array if no results
      *                    were returned.
