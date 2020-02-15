@@ -151,7 +151,7 @@ const ResultHandler = {
                     "Found " + cellValues.length + errorEnd);
         }
         else if (cellValues.length === 0) {
-            throw new DBQueryError(ErrorEnum.NO_RESULTS, "Found no "
+            throw new ResultError(ResultErrorEnum.NO_RESULTS, "Found no "
                     + errorEnd);
         }
         return cellValues[0];

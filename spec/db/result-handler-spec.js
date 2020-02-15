@@ -7,7 +7,8 @@
 
 describe("ResultHandler", function() {
     const logger = require("../../src/logger.js");
-    const { isDefined, isString } = require("../../src/validate.js");
+    const { isDefined, isString, assertIsEnumValue, assertCorrectType }
+            = require("../../src/validate.js");
     const { testPromiseResolution, testPromiseRejection }
             = require("../support/promise-testing.js");
     const testEnv = require("../support/test-env.js");
@@ -37,6 +38,20 @@ describe("ResultHandler", function() {
     function checkError(error, errorClass, errorType) {
         return (error instanceof errorClass)
                 && (error.errorType === errorType);
+    }
+
+    // Performs an action on the results of SELECT queries for each table.
+    function foreachResult(conditionType, resultAction) {
+        assertIsEnumValue(conditionType, ConditionEnum);
+        assertCorrectType(resultAction, "function", "Invalid resultAction");
+        for (let table of Tables) {
+            const dbState       = TableStateEnum.MULTI_ROW;
+            const query         = QueryEnum.SELECT;
+            const columnSetType = ColumnSetEnum.DEFAULT;
+            const result = new MockResult(dbState, query, table,
+                    columnSetType, conditionType);
+            resultAction(result, table);
+        }
     }
 
     // Invalid result objects to use for tests:
@@ -91,83 +106,53 @@ describe("ResultHandler", function() {
 
     describe("returnedData", function() {
         it("should return true if a result returned rows.", function() {
-            for (let table of Tables) {
-                const dbState       = TableStateEnum.MULTI_ROW;
-                const query         = QueryEnum.SELECT;
-                const columnSetType = ColumnSetEnum.DEFAULT;
-                const conditionType = ConditionEnum.EXCLUDE_NONE;
-                const result = new MockResult(dbState, query, table,
-                        columnSetType, conditionType);
-                expect(ResultHandler.returnedData(result))
-                        .withContext(result).toBeTrue();
-            }
+            foreachResult(ConditionEnum.EXCLUDE_NONE, (result) => {
+                expect(ResultHandler.returnedData(result)).withContext(result)
+                        .toBeTrue();
+            });
         });
 
         it("Should return false if a result returned no rows.", function() {
-            for (let table of Tables) {
-                const dbState       = TableStateEnum.MULTI_ROW;
-                const query         = QueryEnum.SELECT;
-                const columnSetType = ColumnSetEnum.DEFAULT;
-                const conditionType = ConditionEnum.EXCLUDE_ALL;
-                const result = new MockResult(dbState, query, table,
-                        columnSetType, conditionType);
+            foreachResult(ConditionEnum.EXCLUDE_ALL, (result) => {
                 expect(ResultHandler.returnedData(result)).withContext(result)
                         .toBeFalse();
-            }
+            });
         });
 
         it("Should throw an INVALID_RESULT ResultError if given an invalid "
                 + "result object.", function() {
             for (let result of invalidResults) {
                 expect(() => ResultHandler.returnedData(result))
-                .toThrowMatching((err) => {
-                    return checkError(err, ResultError,
-                            ResultErrorEnum.INVALID_RESULT);
-                });
+                .toThrowMatching((err) => checkError(err, ResultError,
+                            ResultErrorEnum.INVALID_RESULT));
             }
         });
     });
 
     describe("getResultRows", function() {
         it("should return a set of row values if possible.", function() {
-            for (let table of Tables) {
-                const dbState       = TableStateEnum.MULTI_ROW;
-                const query         = QueryEnum.SELECT;
-                const columnSetType = ColumnSetEnum.DEFAULT;
-                const conditionType = ConditionEnum.SELECT_ONE;
-                const result = new MockResult(dbState, query, table,
-                        columnSetType, conditionType);
+            foreachResult(ConditionEnum.SELECT_ONE, (result) => {
                 const rows = ResultHandler.getResultRows(result);
                 expect(rows).toBeInstanceOf(Array);
-                let rowString = rows.map((row) => "[" + JSON.stringify(row)
-                        + "]").join(", ");
-                expect(rows.length).withContext(table.tableName).toEqual(1);
-            }
+                expect(rows.length).toEqual(1);
+            });
         });
 
         it("should return an empty array if no rows were found.",
                 function() {
-            for (let table of Tables) {
-                const dbState       = TableStateEnum.MULTI_ROW;
-                const query         = QueryEnum.SELECT;
-                const columnSetType = ColumnSetEnum.DEFAULT;
-                const conditionType = ConditionEnum.EXCLUDE_ALL;
-                const result = new MockResult(dbState, query, table,
-                        columnSetType, conditionType);
+            foreachResult(ConditionEnum.EXCLUDE_ALL, (result) => {
                 const rows = ResultHandler.getResultRows(result);
                 expect(rows).toBeInstanceOf(Array);
                 expect(rows.length).toEqual(0);
-            }
+            });
         });
 
         it("should reject with an INVALID_RESULT ResultError if the result "
                 + "parameter was invalid.", function() {
             for (let result of invalidResults) {
                 expect(() => ResultHandler.getResultRows(result))
-                .toThrowMatching((err) => {
-                    return checkError(err, ResultError,
-                            ResultErrorEnum.INVALID_RESULT);
-                });
+                .toThrowMatching((err) => checkError(err, ResultError,
+                            ResultErrorEnum.INVALID_RESULT));
             }
         });
     });
@@ -175,13 +160,7 @@ describe("ResultHandler", function() {
     describe("getColumnValues", function() {
         it("should resolve with appropriate table column values.",
                 function() {
-            for (let table of Tables) {
-                const dbState       = TableStateEnum.MULTI_ROW;
-                const query         = QueryEnum.SELECT;
-                const columnSetType = ColumnSetEnum.DEFAULT;
-                const conditionType = ConditionEnum.EXCLUDE_NONE;
-                const result = new MockResult(dbState, query, table,
-                        columnSetType, conditionType);
+            foreachResult(ConditionEnum.EXCLUDE_NONE, (result, table) => {
                 const tableRows = result.rows;
                 for (let column of table.tableEnum) {
                     const colValueMap = {};
@@ -190,13 +169,10 @@ describe("ResultHandler", function() {
                     }
                     let columnValues;
                     expect(() => columnValues = ResultHandler.getColumnValues(
-                            result, column)).not.toThrow();
+                            result, column)).
+                    not.toThrow();
                     expect(columnValues.length).toEqual(tableRows.length);
                     for (let columnValue of columnValues) {
-                        if (! isDefined(colValueMap[columnValue])) {
-                            console.dir(result);
-                            console.dir(colValueMap);
-                        }
                         expect(colValueMap[columnValue]).not.toBeUndefined();
                         colValueMap[columnValue] = true;
                     }
@@ -204,101 +180,75 @@ describe("ResultHandler", function() {
                         expect(colValueMap[key]).toBeTrue();
                     }
                 }
-            }
+            });
         });
 
         it("should resolve with an empty array if no values were found.",
                 function() {
-            for (let table of Tables) {
-                const tableRows = DBRows[table.tableName];
-                const dbState       = TableStateEnum.MULTI_ROW;
-                const query         = QueryEnum.SELECT;
-                const columnSetType = ColumnSetEnum.DEFAULT;
-                const conditionType = ConditionEnum.EXCLUDE_ALL;
-                const result = new MockResult(dbState, query, table,
-                        columnSetType, conditionType);
+            foreachResult(ConditionEnum.EXCLUDE_ALL, (result, table) => {
                 for (let column of table.tableEnum) {
                     let columns;
                     expect(() => columns = ResultHandler.getColumnValues(
-                            result, table.tableEnum, column)).not.toThrow();
+                            result, table.tableEnum, column))
+                    .not.toThrow();
                     expect(Array.isArray(columns)).toBeTrue();
                     expect(columns.length).toBe(0);
                 }
-            }
+            });
         });
 
         it("should reject with an INVALID_RESULT ResultError if the result "
                 + "parameter was invalid.", function() {
             for (let result of invalidResults) {
                 expect(() => ResultHandler.getColumnValues(result, 1))
-                        .toThrowMatching((err) => {
-                    return checkError(err, ResultError,
-                            ResultErrorEnum.INVALID_RESULT);
-                });
+                .toThrowMatching((err) => checkError(err, ResultError,
+                            ResultErrorEnum.INVALID_RESULT));
             }
         });
     });
 
-    xdescribe("getCell", function() {
-        it("should return the requested cell if it was found.",
-                function() {
-            for (let table of Tables) {
-                const tableRows = DBRows[table.tableName];
-                const dbState       = TableStateEnum.MULTI_ROW;
-                const query         = QueryEnum.SELECT;
-                const columnSetType = ColumnSetEnum.DEFAULT;
-                const conditionType = ConditionEnum.SELECT_ONE;
-                const result = new MockResult(dbState, query, table,
-                        columnSetType, conditionType);
+    describe("getCell", function() {
+        it("should return the requested cell if it was found.", function() {
+            foreachResult(ConditionEnum.SELECT_ONE, (result, table) => {
                 for (let column of table.tableEnum) {
-                    let columns;
-                    expect(columns = ResultHandler.getColumnValues(result,
-                            table.tableEnum, column)).not.toThrow();
-                    expect(Array.isArray(columns)).toBeTrue();
-                    expect(columns.length).toBe(0);
+                    let cell;
+                    expect(() => cell = ResultHandler.getCell(result, column))
+                    .not.toThrow();
+
+                    expect(cell).withContext(result)
+                    .toEqual(result.rows[0][column.columnName]);
                 }
-            }
+            });
         });
 
         it("should reject with a EXTRA_RESULTS ResultError if multiple cells"
-                + " were found.", function(done) {
-            insertTestRows().then(() => cellSelectPromise())
-            .then((result) => {
-                ResultHandler.getCell(result, Regions, Regions.REGION_ID);
-                done.fail("An error should have been thrown after "
-                        + "getCell found multiple cells.");
-            })
-            .catch((err) => {
-                expect(checkError(err, ResultError,
-                        ResultErrorEnum.EXTRA_RESULTS)).toBeTrue();
-                done();
+                + " were found.", function() {
+            foreachResult(ConditionEnum.EXCLUDE_NONE, (result, table) => {
+                for (let column of table.tableEnum) {
+                    expect(() => ResultHandler.getCell(result, column))
+                    .toThrowMatching((err) => checkError(err, ResultError,
+                                ResultErrorEnum.EXTRA_RESULTS));
+                }
             });
         });
 
         it("should reject with a NO_RESULTS ResultError if no cells were "
-                + "found.", function(done) {
-            cellSelectPromise()
-            .then((result) => {
-                ResultHandler.getCell(result, Regions, Regions.REGION_ID);
-                done.fail("An error should have been thrown after "
-                        + "getCell found no cells.");
-            })
-            .catch((err) => {
-                expect(checkError(err, ResultError,
-                            ResultErrorEnum.NO_RESULTS)).toBeTrue();
-                done();
+                + "found.", function() {
+            foreachResult(ConditionEnum.EXCLUDE_ALL, (result, table) => {
+                for (let column of table.tableEnum) {
+                    expect(() => ResultHandler.getCell(result, column))
+                    .toThrowMatching((err) => checkError(err,
+                            ResultError, ResultErrorEnum.NO_RESULTS));
+                }
             });
         });
 
         it("should reject with an INVALID_RESULT ResultError if the result"
                 + " parameter was invalid.", function() {
             for (let result of invalidResults) {
-                expect(() => {
-                    ResultHandler.getColumnValues(result, 1);
-                }).toThrowMatching((err) => {
-                    return checkError(err, ResultError,
-                            ResultErrorEnum.INVALID_RESULT);
-                });
+                expect(() => ResultHandler.getColumnValues(result, 1))
+                .toThrowMatching((err) => checkError(err, ResultError,
+                            ResultErrorEnum.INVALID_RESULT));
             }
         });
     });
