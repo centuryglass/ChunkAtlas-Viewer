@@ -27,27 +27,6 @@ const ResultHandler = {
         }
     },
 
-
-    /**
-     * Checks that a provided database table enum type and a corresponding
-     * table column enum value are valid.
-     *
-     * @param tableEnum  A value that should be a database table enum type.
-     *
-     * @param column     A value that should be a valid table column enum 
-     *                   value for the given table enum.
-     *
-     * @throw TypeError  If tableEnum is not a database table enum class, or
-     *                   column is not a value defined by tableEnum.
-     */
-    _checkTableAndColumn : function(tableEnum, column) {
-        assert(isDefined(Tables.withProperty("tableEnum", tableEnum)),
-                "Invalid tableEnum parameter '" + tableEnum + "' given.",
-                TypeError);
-        assert(tableEnum.isValid(column), "'" + column + "' is not a valid "
-                + "enum value of type '" + tableEnum.name + "'", TypeError);
-    },
-
     /**
      * Throws any errors returned by the database, possibly standardizing them.
      *
@@ -118,9 +97,7 @@ const ResultHandler = {
     /**
      * Gets all values of a specific column from a database query result.
      *
-     * @param result         A result returned from a database query.
-     *
-     * @param tableEnum        The queried table's column enum.
+     * @param result           A result returned from a database query.
      *
      * @param requestedColumn  A column enum value within the rows returned by
      *                         the database result.
@@ -131,10 +108,8 @@ const ResultHandler = {
      * @throw TypeError        If any of the parameters are not of the correct
      *                         type.
      */
-    getColumnValues : function(result, tableEnum, requestedColumn) {
+    getColumnValues : function(result, requestedColumn) {
         this._checkResult(result);
-        this._checkTableAndColumn(tableEnum, requestedColumn);
-        
         const values = [];
         if (this.returnedData(result)) {
             const column = requestedColumn.columnName;
@@ -155,10 +130,8 @@ const ResultHandler = {
      * @param result           A result returned from a database query,
      *                         expected to return only one row.
      *
-     * @param tableEnum        The queried table's column enum.
-     *
-     * @param requestedColumn  The name of a column within the row returned
-     *                         by the database result.
+     * @param requestedColumn  A column enum value within the row returned by
+     *                         the database result.
      *
      * @return                 The requested column value.
      *
@@ -168,11 +141,9 @@ const ResultHandler = {
      * @throws ResultError     If no rows were returned, or multiple rows were
      *                         returned.
      */
-    getCell : function(result, tableEnum, requestedColumn) {
+    getCell : function(result, requestedColumn) {
         this._checkResult(result);
-        this._checkTableAndColumn(tableEnum, requestedColumn);
-        const cellValues = this.getColumnValues(result, tableEnum,
-                requestedColumn);
+        const cellValues = this.getColumnValues(result, requestedColumn);
         const errorEnd = " matching rows for column '" 
                 + requestedColumn.columnName + "'";
         if (cellValues.length > 1) {

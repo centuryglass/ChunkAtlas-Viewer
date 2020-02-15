@@ -176,22 +176,27 @@ describe("ResultHandler", function() {
         it("should resolve with appropriate table column values.",
                 function() {
             for (let table of Tables) {
-                const tableRows = DBRows[table.tableName];
                 const dbState       = TableStateEnum.MULTI_ROW;
                 const query         = QueryEnum.SELECT;
                 const columnSetType = ColumnSetEnum.DEFAULT;
                 const conditionType = ConditionEnum.EXCLUDE_NONE;
                 const result = new MockResult(dbState, query, table,
                         columnSetType, conditionType);
+                const tableRows = result.rows;
                 for (let column of table.tableEnum) {
                     const colValueMap = {};
                     for (let row of tableRows) {
-                        colValueMap[row[column.index]] = false;
+                        colValueMap[row[column.columnName]] = false;
                     }
-                    let columns;
-                    expect(() => columns = ResultHandler.getColumnValues(
+                    let columnValues;
+                    expect(() => columnValues = ResultHandler.getColumnValues(
                             result, column)).not.toThrow();
-                    for (let columnValue of columns) {
+                    expect(columnValues.length).toEqual(tableRows.length);
+                    for (let columnValue of columnValues) {
+                        if (! isDefined(colValueMap[columnValue])) {
+                            console.dir(result);
+                            console.dir(colValueMap);
+                        }
                         expect(colValueMap[columnValue]).not.toBeUndefined();
                         colValueMap[columnValue] = true;
                     }
