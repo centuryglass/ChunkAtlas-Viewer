@@ -9,7 +9,7 @@
  */
 
 // Use all tables in tests:
-const tables = require("../../../src/dbNew/structure/tables.js");
+const Tables = require("../../../src/dbNew/structure/tables.js");
 const { assert, isDefined } = require("../../../src/validate.js");
 const { writeFileSync } = require("fs");
 const QueryEnum = require("../query-enum.js");
@@ -179,7 +179,7 @@ function getGenericTestQuery(tableEnum, columns, conditionColumns, numParams) {
     if (isDefined(conditionColumns)) {
         testQuery.conditionParams = testQuery.queryParams.slice();
     }
-    testQuery.tableEnum = tableEnum.name;
+    testQuery.table = tableEnum.tableName;
     return testQuery;
 }
 
@@ -257,7 +257,7 @@ const testQueries = {};
 
 // Create tests for all valid combinations of query type, database table,
 // column set, and parameterized value count.
-tables.forEach((t) => {
+Tables.forEach((t) => {
     const tableEnum = t.tableEnum
     const standardCount = Math.pow(columnSets.length, 2);
     const deleteCount = columnSets.length;

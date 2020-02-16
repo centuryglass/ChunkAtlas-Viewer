@@ -482,9 +482,11 @@ class EnumBuilder {
             const errorPrefix = this[classPropNames.CLASS_NAME]
                     + "." + classPropNames.WITH_PROPERTY + ": ";
             assert(isDefined(propName) && propName.length > 0, errorPrefix
-                    + "property name was undefined or empty.", TypeError);
-            assert (isDefined(propValue), errorPrefix + " requested property "
-                    + "value was undefined.", ReferenceError);
+                    + "Property name was undefined or empty.", TypeError);
+            assert (isDefined(propValue), errorPrefix + "Attempted to search "
+                    + "for property '" + propName + "' with an undefined "
+                    + "value; property values cannot be undefined.",
+                    ReferenceError);
             for (let value of this[classPropNames.VALUES]) {
                 if (value[propName] === propValue) {
                     return value;
