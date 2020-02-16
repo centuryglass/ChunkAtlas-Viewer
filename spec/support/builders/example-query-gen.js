@@ -212,7 +212,7 @@ const queryBuilders = {
         const orderedColumns = columns.slice().sort();
         for (let i = 0; i < orderedColumns.length; i++) {
             testQuery.queryParams.push(testQuery.columnValues
-                    [orderedColumns[i]]);
+                    [orderedColumns[i].columnName]);
         }
         return testQuery;
     },
