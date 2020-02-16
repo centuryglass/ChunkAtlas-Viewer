@@ -135,7 +135,7 @@ function getAssignments(columns) {
     }
     const assignments = {};
     for (let i = 0; i < columns.length; i++) {
-        assignments[columns[i]] = testConditions[i].param;
+        assignments[columns[i].columnName] = testConditions[i].param;
     }
     return assignments;
 }

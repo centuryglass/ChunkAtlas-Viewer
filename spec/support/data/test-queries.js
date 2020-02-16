@@ -5900,478 +5900,526 @@ module.exports = {
             "columns": [ "size" ]
         }
     ],
-    "UPDATE": [ { "query": "UPDATE key_items_staging SET region_id = $1", "condition": null, "queryParams": [ "str" ],
+    "UPDATE": [ { "query": "UPDATE key_items_staging SET region_id = $1", "condition": null, "queryParams": [ null ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $1 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $2 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $1 WHERE (description < 5 AND type_id IS_NOT TRUE)",
             "condition": "description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $2 WHERE (description < 5 AND type_id IS_NOT TRUE)",
             "condition": "description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $3 WHERE (description < 5 AND type_id IS_NOT $2)",
             "condition": "description < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $1 WHERE (region_id = 'str' AND description < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = 'str' AND description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $2 WHERE (region_id = $1 AND description < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = $1 AND description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $3 WHERE (region_id = $1 AND description < 5 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND description < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $4 WHERE (region_id = $1 AND description < $3 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND description < $3 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, "str" ],
+            "queryParams": [ "str", true, 5, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $1 WHERE (region_id = 'str' AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = 'str' AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $2 WHERE (region_id = $1 AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $3 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $4 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", true, 5, "str" ],
+            "queryParams": [ "str", true, 5, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $5 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS NULL",
-            "queryParams": [ "str", true, 5, 0, "str" ],
+            "queryParams": [ "str", true, 5, 0, null ],
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $6 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS $5)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS $5",
-            "queryParams": [ "str", true, 5, 0, null, "str" ],
+            "queryParams": [ "str", true, 5, 0, null, null ],
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $1, type_id = $2",
             "condition": null,
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $1, type_id = $2 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $2, type_id = $3 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $1, type_id = $2 WHERE (description < 5 AND type_id IS_NOT TRUE)",
             "condition": "description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $2, type_id = $3 WHERE (description < 5 AND type_id IS_NOT TRUE)",
             "condition": "description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $3, type_id = $4 WHERE (description < 5 AND type_id IS_NOT $2)",
             "condition": "description < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $1, type_id = $2 WHERE (region_id = 'str' AND description < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = 'str' AND description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $2, type_id = $3 WHERE (region_id = $1 AND description < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = $1 AND description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $3, type_id = $4 WHERE (region_id = $1 AND description < 5 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND description < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $4, type_id = $5 WHERE (region_id = $1 AND description < $3 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND description < $3 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, true, true ],
+            "queryParams": [ "str", true, 5, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $1, type_id = $2 WHERE (region_id = 'str' AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = 'str' AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $2, type_id = $3 WHERE (region_id = $1 AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $3, type_id = $4 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $4, type_id = $5 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", true, 5, true, true ],
+            "queryParams": [ "str", true, 5, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $5, type_id = $6 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS NULL",
-            "queryParams": [ "str", true, 5, 0, true, true ],
+            "queryParams": [ "str", true, 5, 0, null, null ],
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET description = $6, type_id = $7 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS $5)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS $5",
-            "queryParams": [ "str", true, 5, 0, null, true, true ],
+            "queryParams": [ "str", true, 5, 0, null, null, null ],
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $1, description = $2, type_id = $3",
             "condition": null,
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $1, description = $2, type_id = $3 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $2, description = $3, type_id = $4 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $1, description = $2, type_id = $3 WHERE (description < 5 AND type_id IS_NOT TRUE)",
             "condition": "description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $2, description = $3, type_id = $4 WHERE (description < 5 AND type_id IS_NOT TRUE)",
             "condition": "description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $3, description = $4, type_id = $5 WHERE (description < 5 AND type_id IS_NOT $2)",
             "condition": "description < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $1, description = $2, type_id = $3 WHERE (region_id = 'str' AND description < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = 'str' AND description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $2, description = $3, type_id = $4 WHERE (region_id = $1 AND description < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = $1 AND description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $3, description = $4, type_id = $5 WHERE (region_id = $1 AND description < 5 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND description < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $4, description = $5, type_id = $6 WHERE (region_id = $1 AND description < $3 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND description < $3 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, null, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $1, description = $2, type_id = $3 WHERE (region_id = 'str' AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = 'str' AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $2, description = $3, type_id = $4 WHERE (region_id = $1 AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $3, description = $4, type_id = $5 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $4, description = $5, type_id = $6 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", true, 5, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, null, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $5, description = $6, type_id = $7 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS NULL",
-            "queryParams": [ "str", true, 5, 0, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, 0, null, null, null ],
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items_staging SET region_id = $6, description = $7, type_id = $8 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS $5)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS $5",
-            "queryParams": [ "str", true, 5, 0, null, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, 0, null, null, null, null ],
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
@@ -6380,7 +6428,11 @@ module.exports = {
             "queryParams": [ null, null, null, null, null ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -6390,7 +6442,11 @@ module.exports = {
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -6400,7 +6456,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -6410,7 +6470,11 @@ module.exports = {
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -6420,7 +6484,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -6430,7 +6498,11 @@ module.exports = {
             "conditionParams": [ "str", true ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -6440,7 +6512,11 @@ module.exports = {
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -6450,7 +6526,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -6460,7 +6540,11 @@ module.exports = {
             "conditionParams": [ "str", true ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -6470,7 +6554,11 @@ module.exports = {
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -6480,7 +6568,11 @@ module.exports = {
             "conditionParams": [],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -6490,7 +6582,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -6500,7 +6596,11 @@ module.exports = {
             "conditionParams": [ "str", true ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -6510,7 +6610,11 @@ module.exports = {
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -6520,7 +6624,11 @@ module.exports = {
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -6530,484 +6638,536 @@ module.exports = {
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "key_items_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $1",
             "condition": null,
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $1 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $2 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $1 WHERE (description < 5 AND type_id IS_NOT TRUE)",
             "condition": "description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $2 WHERE (description < 5 AND type_id IS_NOT TRUE)",
             "condition": "description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $3 WHERE (description < 5 AND type_id IS_NOT $2)",
             "condition": "description < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $1 WHERE (region_id = 'str' AND description < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = 'str' AND description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $2 WHERE (region_id = $1 AND description < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = $1 AND description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $3 WHERE (region_id = $1 AND description < 5 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND description < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $4 WHERE (region_id = $1 AND description < $3 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND description < $3 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, "str" ],
+            "queryParams": [ "str", true, 5, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $1 WHERE (region_id = 'str' AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = 'str' AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $2 WHERE (region_id = $1 AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $3 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $4 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", true, 5, "str" ],
+            "queryParams": [ "str", true, 5, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $5 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS NULL",
-            "queryParams": [ "str", true, 5, 0, "str" ],
+            "queryParams": [ "str", true, 5, 0, null ],
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $6 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS $5)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS $5",
-            "queryParams": [ "str", true, 5, 0, null, "str" ],
+            "queryParams": [ "str", true, 5, 0, null, null ],
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE key_items SET description = $1, type_id = $2",
             "condition": null,
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET description = $1, type_id = $2 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET description = $2, type_id = $3 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET description = $1, type_id = $2 WHERE (description < 5 AND type_id IS_NOT TRUE)",
             "condition": "description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET description = $2, type_id = $3 WHERE (description < 5 AND type_id IS_NOT TRUE)",
             "condition": "description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET description = $3, type_id = $4 WHERE (description < 5 AND type_id IS_NOT $2)",
             "condition": "description < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET description = $1, type_id = $2 WHERE (region_id = 'str' AND description < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = 'str' AND description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET description = $2, type_id = $3 WHERE (region_id = $1 AND description < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = $1 AND description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET description = $3, type_id = $4 WHERE (region_id = $1 AND description < 5 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND description < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET description = $4, type_id = $5 WHERE (region_id = $1 AND description < $3 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND description < $3 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, true, true ],
+            "queryParams": [ "str", true, 5, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET description = $1, type_id = $2 WHERE (region_id = 'str' AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = 'str' AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET description = $2, type_id = $3 WHERE (region_id = $1 AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET description = $3, type_id = $4 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET description = $4, type_id = $5 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", true, 5, true, true ],
+            "queryParams": [ "str", true, 5, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET description = $5, type_id = $6 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS NULL",
-            "queryParams": [ "str", true, 5, 0, true, true ],
+            "queryParams": [ "str", true, 5, 0, null, null ],
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET description = $6, type_id = $7 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS $5)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS $5",
-            "queryParams": [ "str", true, 5, 0, null, true, true ],
+            "queryParams": [ "str", true, 5, 0, null, null, null ],
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": true
+                "description": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $1, description = $2, type_id = $3",
             "condition": null,
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $1, description = $2, type_id = $3 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $2, description = $3, type_id = $4 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $1, description = $2, type_id = $3 WHERE (description < 5 AND type_id IS_NOT TRUE)",
             "condition": "description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $2, description = $3, type_id = $4 WHERE (description < 5 AND type_id IS_NOT TRUE)",
             "condition": "description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $3, description = $4, type_id = $5 WHERE (description < 5 AND type_id IS_NOT $2)",
             "condition": "description < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $1, description = $2, type_id = $3 WHERE (region_id = 'str' AND description < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = 'str' AND description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $2, description = $3, type_id = $4 WHERE (region_id = $1 AND description < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = $1 AND description < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $3, description = $4, type_id = $5 WHERE (region_id = $1 AND description < 5 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND description < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $4, description = $5, type_id = $6 WHERE (region_id = $1 AND description < $3 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND description < $3 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, null, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $1, description = $2, type_id = $3 WHERE (region_id = 'str' AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = 'str' AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $2, description = $3, type_id = $4 WHERE (region_id = $1 AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT TRUE AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $3, description = $4, type_id = $5 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < 5 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < 5 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $4, description = $5, type_id = $6 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= 0 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= 0 AND color IS NULL",
-            "queryParams": [ "str", true, 5, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, null, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $5, description = $6, type_id = $7 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS NULL",
-            "queryParams": [ "str", true, 5, 0, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, 0, null, null, null ],
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE key_items SET region_id = $6, description = $7, type_id = $8 WHERE (region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS $5)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND description < $3 AND last_update >= $4 AND color IS $5",
-            "queryParams": [ "str", true, 5, 0, null, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, 0, null, null, null, null ],
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "description": true,
+                "type_id": 5
             }
         },
         {
@@ -7016,7 +7176,11 @@ module.exports = {
             "queryParams": [ null, null, null, null, null ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -7026,7 +7190,11 @@ module.exports = {
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -7036,7 +7204,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -7046,7 +7218,11 @@ module.exports = {
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -7056,7 +7232,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -7066,7 +7246,11 @@ module.exports = {
             "conditionParams": [ "str", true ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -7076,7 +7260,11 @@ module.exports = {
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -7086,7 +7274,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -7096,7 +7288,11 @@ module.exports = {
             "conditionParams": [ "str", true ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -7106,7 +7302,11 @@ module.exports = {
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -7116,7 +7316,11 @@ module.exports = {
             "conditionParams": [],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -7126,7 +7330,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -7136,7 +7344,11 @@ module.exports = {
             "conditionParams": [ "str", true ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -7146,7 +7358,11 @@ module.exports = {
             "conditionParams": [ "str", true, 5 ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -7156,7 +7372,11 @@ module.exports = {
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
@@ -7166,781 +7386,863 @@ module.exports = {
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "key_items",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "description": 5,
+                "last_update": 0,
+                "color": null
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $1",
             "condition": null,
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": "str"
+                "category_id": "str"
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $1 WHERE (category_id = 'str')",
             "condition": "category_id = 'str'",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": "str"
+                "category_id": "str"
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $2 WHERE (category_id = $1)",
             "condition": "category_id = $1",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": "str"
+                "category_id": "str"
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $1 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": "str"
+                "category_id": "str"
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $2 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": "str"
+                "category_id": "str"
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $3 WHERE (icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": "str"
+                "category_id": "str"
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $1 WHERE (category_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "category_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": "str"
+                "category_id": "str"
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $2 WHERE (category_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "category_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": "str"
+                "category_id": "str"
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $3 WHERE (category_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "category_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": "str"
+                "category_id": "str"
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $4 WHERE (category_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2)",
             "condition": "category_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, 5, "str" ],
+            "queryParams": [ "str", true, 5, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": "str"
+                "category_id": "str"
             }
         },
         {
             "query": "UPDATE location_categories SET icon_uri = $1, display_name = $2",
             "condition": null,
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE location_categories SET icon_uri = $1, display_name = $2 WHERE (category_id = 'str')",
             "condition": "category_id = 'str'",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE location_categories SET icon_uri = $2, display_name = $3 WHERE (category_id = $1)",
             "condition": "category_id = $1",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE location_categories SET icon_uri = $1, display_name = $2 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE location_categories SET icon_uri = $2, display_name = $3 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE location_categories SET icon_uri = $3, display_name = $4 WHERE (icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE location_categories SET icon_uri = $1, display_name = $2 WHERE (category_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "category_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE location_categories SET icon_uri = $2, display_name = $3 WHERE (category_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "category_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE location_categories SET icon_uri = $3, display_name = $4 WHERE (category_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "category_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE location_categories SET icon_uri = $4, display_name = $5 WHERE (category_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2)",
             "condition": "category_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, 5, true, true ],
+            "queryParams": [ "str", true, 5, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $1, icon_uri = $2, display_name = $3",
             "condition": null,
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": 5
+                "category_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $1, icon_uri = $2, display_name = $3 WHERE (category_id = 'str')",
             "condition": "category_id = 'str'",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": 5
+                "category_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $2, icon_uri = $3, display_name = $4 WHERE (category_id = $1)",
             "condition": "category_id = $1",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": 5
+                "category_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $1, icon_uri = $2, display_name = $3 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": 5
+                "category_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $2, icon_uri = $3, display_name = $4 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": 5
+                "category_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $3, icon_uri = $4, display_name = $5 WHERE (icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": 5
+                "category_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $1, icon_uri = $2, display_name = $3 WHERE (category_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "category_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": 5
+                "category_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $2, icon_uri = $3, display_name = $4 WHERE (category_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "category_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": 5
+                "category_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $3, icon_uri = $4, display_name = $5 WHERE (category_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "category_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": 5
+                "category_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE location_categories SET category_id = $4, icon_uri = $5, display_name = $6 WHERE (category_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2)",
             "condition": "category_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, null, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "location_categories",
             "columnValues": {
-                "[object Object]": 5
+                "category_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $1",
             "condition": null,
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET region_id = $1 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET region_id = $2 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET region_id = $1 WHERE (block_x < 5 AND category_id IS_NOT TRUE)",
             "condition": "block_x < 5 AND category_id IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET region_id = $2 WHERE (block_x < 5 AND category_id IS_NOT TRUE)",
             "condition": "block_x < 5 AND category_id IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET region_id = $3 WHERE (block_x < 5 AND category_id IS_NOT $2)",
             "condition": "block_x < 5 AND category_id IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET region_id = $1 WHERE (region_id = 'str' AND block_x < 5 AND category_id IS_NOT TRUE)",
             "condition": "region_id = 'str' AND block_x < 5 AND category_id IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET region_id = $2 WHERE (region_id = $1 AND block_x < 5 AND category_id IS_NOT TRUE)",
             "condition": "region_id = $1 AND block_x < 5 AND category_id IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET region_id = $3 WHERE (region_id = $1 AND block_x < 5 AND category_id IS_NOT $2)",
             "condition": "region_id = $1 AND block_x < 5 AND category_id IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET region_id = $4 WHERE (region_id = $1 AND block_x < $3 AND category_id IS_NOT $2)",
             "condition": "region_id = $1 AND block_x < $3 AND category_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, "str" ],
+            "queryParams": [ "str", true, 5, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET region_id = $1 WHERE (region_id = 'str' AND category_id IS_NOT TRUE AND block_x < 5 AND block_z >= 0 AND display_name IS NULL)",
             "condition": "region_id = 'str' AND category_id IS_NOT TRUE AND block_x < 5 AND block_z >= 0 AND display_name IS NULL",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET region_id = $2 WHERE (region_id = $1 AND category_id IS_NOT TRUE AND block_x < 5 AND block_z >= 0 AND display_name IS NULL)",
             "condition": "region_id = $1 AND category_id IS_NOT TRUE AND block_x < 5 AND block_z >= 0 AND display_name IS NULL",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET region_id = $3 WHERE (region_id = $1 AND category_id IS_NOT $2 AND block_x < 5 AND block_z >= 0 AND display_name IS NULL)",
             "condition": "region_id = $1 AND category_id IS_NOT $2 AND block_x < 5 AND block_z >= 0 AND display_name IS NULL",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET region_id = $4 WHERE (region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= 0 AND display_name IS NULL)",
             "condition": "region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= 0 AND display_name IS NULL",
-            "queryParams": [ "str", true, 5, "str" ],
+            "queryParams": [ "str", true, 5, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET region_id = $5 WHERE (region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= $4 AND display_name IS NULL)",
             "condition": "region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= $4 AND display_name IS NULL",
-            "queryParams": [ "str", true, 5, 0, "str" ],
+            "queryParams": [ "str", true, 5, 0, null ],
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET region_id = $6 WHERE (region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= $4 AND display_name IS $5)",
             "condition": "region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= $4 AND display_name IS $5",
-            "queryParams": [ "str", true, 5, 0, null, "str" ],
+            "queryParams": [ "str", true, 5, 0, null, null ],
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE locations SET block_x = $1, category_id = $2",
             "condition": null,
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET block_x = $1, category_id = $2 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET block_x = $2, category_id = $3 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET block_x = $1, category_id = $2 WHERE (block_x < 5 AND category_id IS_NOT TRUE)",
             "condition": "block_x < 5 AND category_id IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET block_x = $2, category_id = $3 WHERE (block_x < 5 AND category_id IS_NOT TRUE)",
             "condition": "block_x < 5 AND category_id IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET block_x = $3, category_id = $4 WHERE (block_x < 5 AND category_id IS_NOT $2)",
             "condition": "block_x < 5 AND category_id IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET block_x = $1, category_id = $2 WHERE (region_id = 'str' AND block_x < 5 AND category_id IS_NOT TRUE)",
             "condition": "region_id = 'str' AND block_x < 5 AND category_id IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET block_x = $2, category_id = $3 WHERE (region_id = $1 AND block_x < 5 AND category_id IS_NOT TRUE)",
             "condition": "region_id = $1 AND block_x < 5 AND category_id IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET block_x = $3, category_id = $4 WHERE (region_id = $1 AND block_x < 5 AND category_id IS_NOT $2)",
             "condition": "region_id = $1 AND block_x < 5 AND category_id IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET block_x = $4, category_id = $5 WHERE (region_id = $1 AND block_x < $3 AND category_id IS_NOT $2)",
             "condition": "region_id = $1 AND block_x < $3 AND category_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, true, true ],
+            "queryParams": [ "str", true, 5, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET block_x = $1, category_id = $2 WHERE (region_id = 'str' AND category_id IS_NOT TRUE AND block_x < 5 AND block_z >= 0 AND display_name IS NULL)",
             "condition": "region_id = 'str' AND category_id IS_NOT TRUE AND block_x < 5 AND block_z >= 0 AND display_name IS NULL",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET block_x = $2, category_id = $3 WHERE (region_id = $1 AND category_id IS_NOT TRUE AND block_x < 5 AND block_z >= 0 AND display_name IS NULL)",
             "condition": "region_id = $1 AND category_id IS_NOT TRUE AND block_x < 5 AND block_z >= 0 AND display_name IS NULL",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET block_x = $3, category_id = $4 WHERE (region_id = $1 AND category_id IS_NOT $2 AND block_x < 5 AND block_z >= 0 AND display_name IS NULL)",
             "condition": "region_id = $1 AND category_id IS_NOT $2 AND block_x < 5 AND block_z >= 0 AND display_name IS NULL",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET block_x = $4, category_id = $5 WHERE (region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= 0 AND display_name IS NULL)",
             "condition": "region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= 0 AND display_name IS NULL",
-            "queryParams": [ "str", true, 5, true, true ],
+            "queryParams": [ "str", true, 5, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET block_x = $5, category_id = $6 WHERE (region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= $4 AND display_name IS NULL)",
             "condition": "region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= $4 AND display_name IS NULL",
-            "queryParams": [ "str", true, 5, 0, true, true ],
+            "queryParams": [ "str", true, 5, 0, null, null ],
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET block_x = $6, category_id = $7 WHERE (region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= $4 AND display_name IS $5)",
             "condition": "region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= $4 AND display_name IS $5",
-            "queryParams": [ "str", true, 5, 0, null, true, true ],
+            "queryParams": [ "str", true, 5, 0, null, null, null ],
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": true
+                "block_x": "str",
+                "category_id": true
             }
         },
         {
             "query": "UPDATE locations SET region_id = $1, block_x = $2, category_id = $3",
             "condition": null,
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $1, block_x = $2, category_id = $3 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $2, block_x = $3, category_id = $4 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $1, block_x = $2, category_id = $3 WHERE (block_x < 5 AND category_id IS_NOT TRUE)",
             "condition": "block_x < 5 AND category_id IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $2, block_x = $3, category_id = $4 WHERE (block_x < 5 AND category_id IS_NOT TRUE)",
             "condition": "block_x < 5 AND category_id IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $3, block_x = $4, category_id = $5 WHERE (block_x < 5 AND category_id IS_NOT $2)",
             "condition": "block_x < 5 AND category_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $1, block_x = $2, category_id = $3 WHERE (region_id = 'str' AND block_x < 5 AND category_id IS_NOT TRUE)",
             "condition": "region_id = 'str' AND block_x < 5 AND category_id IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $2, block_x = $3, category_id = $4 WHERE (region_id = $1 AND block_x < 5 AND category_id IS_NOT TRUE)",
             "condition": "region_id = $1 AND block_x < 5 AND category_id IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $3, block_x = $4, category_id = $5 WHERE (region_id = $1 AND block_x < 5 AND category_id IS_NOT $2)",
             "condition": "region_id = $1 AND block_x < 5 AND category_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $4, block_x = $5, category_id = $6 WHERE (region_id = $1 AND block_x < $3 AND category_id IS_NOT $2)",
             "condition": "region_id = $1 AND block_x < $3 AND category_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, null, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $1, block_x = $2, category_id = $3 WHERE (region_id = 'str' AND category_id IS_NOT TRUE AND block_x < 5 AND block_z >= 0 AND display_name IS NULL)",
             "condition": "region_id = 'str' AND category_id IS_NOT TRUE AND block_x < 5 AND block_z >= 0 AND display_name IS NULL",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $2, block_x = $3, category_id = $4 WHERE (region_id = $1 AND category_id IS_NOT TRUE AND block_x < 5 AND block_z >= 0 AND display_name IS NULL)",
             "condition": "region_id = $1 AND category_id IS_NOT TRUE AND block_x < 5 AND block_z >= 0 AND display_name IS NULL",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $3, block_x = $4, category_id = $5 WHERE (region_id = $1 AND category_id IS_NOT $2 AND block_x < 5 AND block_z >= 0 AND display_name IS NULL)",
             "condition": "region_id = $1 AND category_id IS_NOT $2 AND block_x < 5 AND block_z >= 0 AND display_name IS NULL",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $4, block_x = $5, category_id = $6 WHERE (region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= 0 AND display_name IS NULL)",
             "condition": "region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= 0 AND display_name IS NULL",
-            "queryParams": [ "str", true, 5, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, null, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $5, block_x = $6, category_id = $7 WHERE (region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= $4 AND display_name IS NULL)",
             "condition": "region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= $4 AND display_name IS NULL",
-            "queryParams": [ "str", true, 5, 0, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, 0, null, null, null ],
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
             "query": "UPDATE locations SET region_id = $6, block_x = $7, category_id = $8 WHERE (region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= $4 AND display_name IS $5)",
             "condition": "region_id = $1 AND category_id IS_NOT $2 AND block_x < $3 AND block_z >= $4 AND display_name IS $5",
-            "queryParams": [ "str", true, 5, 0, null, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, 0, null, null, null, null ],
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "block_x": true,
+                "category_id": 5
             }
         },
         {
@@ -7949,7 +8251,11 @@ module.exports = {
             "queryParams": [ null, null, null, null, null ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
@@ -7959,7 +8265,11 @@ module.exports = {
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
@@ -7969,7 +8279,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
@@ -7979,7 +8293,11 @@ module.exports = {
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
@@ -7989,7 +8307,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
@@ -7999,7 +8321,11 @@ module.exports = {
             "conditionParams": [ "str", true ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
@@ -8009,7 +8335,11 @@ module.exports = {
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
@@ -8019,7 +8349,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
@@ -8029,7 +8363,11 @@ module.exports = {
             "conditionParams": [ "str", true ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
@@ -8039,7 +8377,11 @@ module.exports = {
             "conditionParams": [ "str", true, 5 ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
@@ -8049,7 +8391,11 @@ module.exports = {
             "conditionParams": [],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
@@ -8059,7 +8405,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
@@ -8069,7 +8419,11 @@ module.exports = {
             "conditionParams": [ "str", true ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
@@ -8079,7 +8433,11 @@ module.exports = {
             "conditionParams": [ "str", true, 5 ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
@@ -8089,7 +8447,11 @@ module.exports = {
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
@@ -8099,484 +8461,536 @@ module.exports = {
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "locations",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "category_id": true,
+                "block_x": 5,
+                "block_z": 0,
+                "display_name": null
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $1",
             "condition": null,
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $1 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $2 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $1 WHERE (size < 5 AND type_id IS_NOT TRUE)",
             "condition": "size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $2 WHERE (size < 5 AND type_id IS_NOT TRUE)",
             "condition": "size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $3 WHERE (size < 5 AND type_id IS_NOT $2)",
             "condition": "size < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $1 WHERE (region_id = 'str' AND size < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = 'str' AND size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $2 WHERE (region_id = $1 AND size < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = $1 AND size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $3 WHERE (region_id = $1 AND size < 5 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND size < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $4 WHERE (region_id = $1 AND size < $3 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND size < $3 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, "str" ],
+            "queryParams": [ "str", true, 5, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $1 WHERE (region_id = 'str' AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = 'str' AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $2 WHERE (region_id = $1 AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $3 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $4 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", true, 5, "str" ],
+            "queryParams": [ "str", true, 5, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $5 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS NULL",
-            "queryParams": [ "str", true, 5, 0, "str" ],
+            "queryParams": [ "str", true, 5, 0, null ],
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $6 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS $5)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS $5",
-            "queryParams": [ "str", true, 5, 0, null, "str" ],
+            "queryParams": [ "str", true, 5, 0, null, null ],
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $1, type_id = $2",
             "condition": null,
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $1, type_id = $2 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $2, type_id = $3 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $1, type_id = $2 WHERE (size < 5 AND type_id IS_NOT TRUE)",
             "condition": "size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $2, type_id = $3 WHERE (size < 5 AND type_id IS_NOT TRUE)",
             "condition": "size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $3, type_id = $4 WHERE (size < 5 AND type_id IS_NOT $2)",
             "condition": "size < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $1, type_id = $2 WHERE (region_id = 'str' AND size < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = 'str' AND size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $2, type_id = $3 WHERE (region_id = $1 AND size < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = $1 AND size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $3, type_id = $4 WHERE (region_id = $1 AND size < 5 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND size < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $4, type_id = $5 WHERE (region_id = $1 AND size < $3 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND size < $3 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, true, true ],
+            "queryParams": [ "str", true, 5, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $1, type_id = $2 WHERE (region_id = 'str' AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = 'str' AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $2, type_id = $3 WHERE (region_id = $1 AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $3, type_id = $4 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $4, type_id = $5 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", true, 5, true, true ],
+            "queryParams": [ "str", true, 5, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $5, type_id = $6 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS NULL",
-            "queryParams": [ "str", true, 5, 0, true, true ],
+            "queryParams": [ "str", true, 5, 0, null, null ],
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET size = $6, type_id = $7 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS $5)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS $5",
-            "queryParams": [ "str", true, 5, 0, null, true, true ],
+            "queryParams": [ "str", true, 5, 0, null, null, null ],
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $1, size = $2, type_id = $3",
             "condition": null,
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $1, size = $2, type_id = $3 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $2, size = $3, type_id = $4 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $1, size = $2, type_id = $3 WHERE (size < 5 AND type_id IS_NOT TRUE)",
             "condition": "size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $2, size = $3, type_id = $4 WHERE (size < 5 AND type_id IS_NOT TRUE)",
             "condition": "size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $3, size = $4, type_id = $5 WHERE (size < 5 AND type_id IS_NOT $2)",
             "condition": "size < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $1, size = $2, type_id = $3 WHERE (region_id = 'str' AND size < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = 'str' AND size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $2, size = $3, type_id = $4 WHERE (region_id = $1 AND size < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = $1 AND size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $3, size = $4, type_id = $5 WHERE (region_id = $1 AND size < 5 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND size < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $4, size = $5, type_id = $6 WHERE (region_id = $1 AND size < $3 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND size < $3 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, null, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $1, size = $2, type_id = $3 WHERE (region_id = 'str' AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = 'str' AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $2, size = $3, type_id = $4 WHERE (region_id = $1 AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $3, size = $4, type_id = $5 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $4, size = $5, type_id = $6 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", true, 5, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, null, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $5, size = $6, type_id = $7 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS NULL",
-            "queryParams": [ "str", true, 5, 0, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, 0, null, null, null ],
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles_staging SET region_id = $6, size = $7, type_id = $8 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS $5)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS $5",
-            "queryParams": [ "str", true, 5, 0, null, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, 0, null, null, null, null ],
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
@@ -8585,7 +8999,11 @@ module.exports = {
             "queryParams": [ null, null, null, null, null ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -8595,7 +9013,11 @@ module.exports = {
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -8605,7 +9027,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -8615,7 +9041,11 @@ module.exports = {
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -8625,7 +9055,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -8635,7 +9069,11 @@ module.exports = {
             "conditionParams": [ "str", true ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -8645,7 +9083,11 @@ module.exports = {
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -8655,7 +9097,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -8665,7 +9111,11 @@ module.exports = {
             "conditionParams": [ "str", true ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -8675,7 +9125,11 @@ module.exports = {
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -8685,7 +9139,11 @@ module.exports = {
             "conditionParams": [],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -8695,7 +9153,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -8705,7 +9167,11 @@ module.exports = {
             "conditionParams": [ "str", true ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -8715,7 +9181,11 @@ module.exports = {
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -8725,7 +9195,11 @@ module.exports = {
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -8735,484 +9209,536 @@ module.exports = {
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "map_tiles_staging",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $1",
             "condition": null,
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $1 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $2 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $1 WHERE (size < 5 AND type_id IS_NOT TRUE)",
             "condition": "size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $2 WHERE (size < 5 AND type_id IS_NOT TRUE)",
             "condition": "size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $3 WHERE (size < 5 AND type_id IS_NOT $2)",
             "condition": "size < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $1 WHERE (region_id = 'str' AND size < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = 'str' AND size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $2 WHERE (region_id = $1 AND size < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = $1 AND size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $3 WHERE (region_id = $1 AND size < 5 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND size < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $4 WHERE (region_id = $1 AND size < $3 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND size < $3 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, "str" ],
+            "queryParams": [ "str", true, 5, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $1 WHERE (region_id = 'str' AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = 'str' AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $2 WHERE (region_id = $1 AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $3 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $4 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", true, 5, "str" ],
+            "queryParams": [ "str", true, 5, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $5 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS NULL",
-            "queryParams": [ "str", true, 5, 0, "str" ],
+            "queryParams": [ "str", true, 5, 0, null ],
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $6 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS $5)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS $5",
-            "queryParams": [ "str", true, 5, 0, null, "str" ],
+            "queryParams": [ "str", true, 5, 0, null, null ],
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $1, type_id = $2",
             "condition": null,
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $1, type_id = $2 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $2, type_id = $3 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $1, type_id = $2 WHERE (size < 5 AND type_id IS_NOT TRUE)",
             "condition": "size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $2, type_id = $3 WHERE (size < 5 AND type_id IS_NOT TRUE)",
             "condition": "size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $3, type_id = $4 WHERE (size < 5 AND type_id IS_NOT $2)",
             "condition": "size < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $1, type_id = $2 WHERE (region_id = 'str' AND size < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = 'str' AND size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $2, type_id = $3 WHERE (region_id = $1 AND size < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = $1 AND size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $3, type_id = $4 WHERE (region_id = $1 AND size < 5 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND size < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $4, type_id = $5 WHERE (region_id = $1 AND size < $3 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND size < $3 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, true, true ],
+            "queryParams": [ "str", true, 5, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $1, type_id = $2 WHERE (region_id = 'str' AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = 'str' AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $2, type_id = $3 WHERE (region_id = $1 AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $3, type_id = $4 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $4, type_id = $5 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", true, 5, true, true ],
+            "queryParams": [ "str", true, 5, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $5, type_id = $6 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS NULL",
-            "queryParams": [ "str", true, 5, 0, true, true ],
+            "queryParams": [ "str", true, 5, 0, null, null ],
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET size = $6, type_id = $7 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS $5)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS $5",
-            "queryParams": [ "str", true, 5, 0, null, true, true ],
+            "queryParams": [ "str", true, 5, 0, null, null, null ],
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": true
+                "size": "str",
+                "type_id": true
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $1, size = $2, type_id = $3",
             "condition": null,
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $1, size = $2, type_id = $3 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $2, size = $3, type_id = $4 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $1, size = $2, type_id = $3 WHERE (size < 5 AND type_id IS_NOT TRUE)",
             "condition": "size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $2, size = $3, type_id = $4 WHERE (size < 5 AND type_id IS_NOT TRUE)",
             "condition": "size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $3, size = $4, type_id = $5 WHERE (size < 5 AND type_id IS_NOT $2)",
             "condition": "size < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $1, size = $2, type_id = $3 WHERE (region_id = 'str' AND size < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = 'str' AND size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $2, size = $3, type_id = $4 WHERE (region_id = $1 AND size < 5 AND type_id IS_NOT TRUE)",
             "condition": "region_id = $1 AND size < 5 AND type_id IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $3, size = $4, type_id = $5 WHERE (region_id = $1 AND size < 5 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND size < 5 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $4, size = $5, type_id = $6 WHERE (region_id = $1 AND size < $3 AND type_id IS_NOT $2)",
             "condition": "region_id = $1 AND size < $3 AND type_id IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, null, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $1, size = $2, type_id = $3 WHERE (region_id = 'str' AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = 'str' AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $2, size = $3, type_id = $4 WHERE (region_id = $1 AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT TRUE AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $3, size = $4, type_id = $5 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < 5 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < 5 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $4, size = $5, type_id = $6 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= 0 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= 0 AND block_z IS NULL",
-            "queryParams": [ "str", true, 5, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, null, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $5, size = $6, type_id = $7 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS NULL)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS NULL",
-            "queryParams": [ "str", true, 5, 0, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, 0, null, null, null ],
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
             "query": "UPDATE map_tiles SET region_id = $6, size = $7, type_id = $8 WHERE (region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS $5)",
             "condition": "region_id = $1 AND type_id IS_NOT $2 AND size < $3 AND block_x >= $4 AND block_z IS $5",
-            "queryParams": [ "str", true, 5, 0, null, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, 0, null, null, null, null ],
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "size": true,
+                "type_id": 5
             }
         },
         {
@@ -9221,7 +9747,11 @@ module.exports = {
             "queryParams": [ null, null, null, null, null ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -9231,7 +9761,11 @@ module.exports = {
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -9241,7 +9775,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -9251,7 +9789,11 @@ module.exports = {
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -9261,7 +9803,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -9271,7 +9817,11 @@ module.exports = {
             "conditionParams": [ "str", true ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -9281,7 +9831,11 @@ module.exports = {
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -9291,7 +9845,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -9301,7 +9859,11 @@ module.exports = {
             "conditionParams": [ "str", true ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -9311,7 +9873,11 @@ module.exports = {
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -9321,7 +9887,11 @@ module.exports = {
             "conditionParams": [],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -9331,7 +9901,11 @@ module.exports = {
             "conditionParams": [ "str" ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -9341,7 +9915,11 @@ module.exports = {
             "conditionParams": [ "str", true ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -9351,7 +9929,11 @@ module.exports = {
             "conditionParams": [ "str", true, 5 ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -9361,7 +9943,11 @@ module.exports = {
             "conditionParams": [ "str", true, 5, 0 ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
@@ -9371,630 +9957,694 @@ module.exports = {
             "conditionParams": [ "str", true, 5, 0, null ],
             "table": "map_tiles",
             "columnValues": {
-                "[object Object]": null
+                "region_id": "str",
+                "type_id": true,
+                "size": 5,
+                "block_x": 0,
+                "block_z": null
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $1",
             "condition": null,
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": "str"
+                "type_id": "str"
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $1 WHERE (type_id = 'str')",
             "condition": "type_id = 'str'",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": "str"
+                "type_id": "str"
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $2 WHERE (type_id = $1)",
             "condition": "type_id = $1",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": "str"
+                "type_id": "str"
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $1 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": "str"
+                "type_id": "str"
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $2 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": "str"
+                "type_id": "str"
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $3 WHERE (icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": "str"
+                "type_id": "str"
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $1 WHERE (type_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "type_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": "str"
+                "type_id": "str"
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $2 WHERE (type_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "type_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": "str"
+                "type_id": "str"
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $3 WHERE (type_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "type_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": "str"
+                "type_id": "str"
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $4 WHERE (type_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2)",
             "condition": "type_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, 5, "str" ],
+            "queryParams": [ "str", true, 5, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": "str"
+                "type_id": "str"
             }
         },
         {
             "query": "UPDATE map_types SET icon_uri = $1, display_name = $2",
             "condition": null,
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE map_types SET icon_uri = $1, display_name = $2 WHERE (type_id = 'str')",
             "condition": "type_id = 'str'",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE map_types SET icon_uri = $2, display_name = $3 WHERE (type_id = $1)",
             "condition": "type_id = $1",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE map_types SET icon_uri = $1, display_name = $2 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE map_types SET icon_uri = $2, display_name = $3 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE map_types SET icon_uri = $3, display_name = $4 WHERE (icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE map_types SET icon_uri = $1, display_name = $2 WHERE (type_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "type_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE map_types SET icon_uri = $2, display_name = $3 WHERE (type_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "type_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE map_types SET icon_uri = $3, display_name = $4 WHERE (type_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "type_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE map_types SET icon_uri = $4, display_name = $5 WHERE (type_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2)",
             "condition": "type_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, 5, true, true ],
+            "queryParams": [ "str", true, 5, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $1, icon_uri = $2, display_name = $3",
             "condition": null,
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": 5
+                "type_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $1, icon_uri = $2, display_name = $3 WHERE (type_id = 'str')",
             "condition": "type_id = 'str'",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": 5
+                "type_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $2, icon_uri = $3, display_name = $4 WHERE (type_id = $1)",
             "condition": "type_id = $1",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": 5
+                "type_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $1, icon_uri = $2, display_name = $3 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": 5
+                "type_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $2, icon_uri = $3, display_name = $4 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": 5
+                "type_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $3, icon_uri = $4, display_name = $5 WHERE (icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": 5
+                "type_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $1, icon_uri = $2, display_name = $3 WHERE (type_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "type_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": 5
+                "type_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $2, icon_uri = $3, display_name = $4 WHERE (type_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "type_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": 5
+                "type_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $3, icon_uri = $4, display_name = $5 WHERE (type_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "type_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": 5
+                "type_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE map_types SET type_id = $4, icon_uri = $5, display_name = $6 WHERE (type_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2)",
             "condition": "type_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, null, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "map_types",
             "columnValues": {
-                "[object Object]": 5
+                "type_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE regions SET region_id = $1",
             "condition": null,
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE regions SET region_id = $1 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "regions",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE regions SET region_id = $2 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE regions SET region_id = $1 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "regions",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE regions SET region_id = $2 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE regions SET region_id = $3 WHERE (icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE regions SET region_id = $1 WHERE (region_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "region_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "regions",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE regions SET region_id = $2 WHERE (region_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "region_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE regions SET region_id = $3 WHERE (region_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "region_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, "str" ],
+            "queryParams": [ "str", true, null ],
             "conditionParams": [ "str", true ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE regions SET region_id = $4 WHERE (region_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2)",
             "condition": "region_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, 5, "str" ],
+            "queryParams": [ "str", true, 5, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": "str"
+                "region_id": "str"
             }
         },
         {
             "query": "UPDATE regions SET icon_uri = $1, display_name = $2",
             "condition": null,
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE regions SET icon_uri = $1, display_name = $2 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "regions",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE regions SET icon_uri = $2, display_name = $3 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE regions SET icon_uri = $1, display_name = $2 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "regions",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE regions SET icon_uri = $2, display_name = $3 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE regions SET icon_uri = $3, display_name = $4 WHERE (icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE regions SET icon_uri = $1, display_name = $2 WHERE (region_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "region_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ true, true ],
+            "queryParams": [ null, null ],
             "conditionParams": [],
             "table": "regions",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE regions SET icon_uri = $2, display_name = $3 WHERE (region_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "region_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", true, true ],
+            "queryParams": [ "str", null, null ],
             "conditionParams": [ "str" ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE regions SET icon_uri = $3, display_name = $4 WHERE (region_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "region_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, true, true ],
+            "queryParams": [ "str", true, null, null ],
             "conditionParams": [ "str", true ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE regions SET icon_uri = $4, display_name = $5 WHERE (region_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2)",
             "condition": "region_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, 5, true, true ],
+            "queryParams": [ "str", true, 5, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": true
+                "icon_uri": "str",
+                "display_name": true
             }
         },
         {
             "query": "UPDATE regions SET region_id = $1, icon_uri = $2, display_name = $3",
             "condition": null,
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE regions SET region_id = $1, icon_uri = $2, display_name = $3 WHERE (region_id = 'str')",
             "condition": "region_id = 'str'",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "regions",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE regions SET region_id = $2, icon_uri = $3, display_name = $4 WHERE (region_id = $1)",
             "condition": "region_id = $1",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE regions SET region_id = $1, icon_uri = $2, display_name = $3 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "regions",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE regions SET region_id = $2, icon_uri = $3, display_name = $4 WHERE (icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE regions SET region_id = $3, icon_uri = $4, display_name = $5 WHERE (icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE regions SET region_id = $1, icon_uri = $2, display_name = $3 WHERE (region_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "region_id = 'str' AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ 5, 5, 5 ],
+            "queryParams": [ null, null, null ],
             "conditionParams": [],
             "table": "regions",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE regions SET region_id = $2, icon_uri = $3, display_name = $4 WHERE (region_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE)",
             "condition": "region_id = $1 AND icon_uri < 5 AND display_name IS_NOT TRUE",
-            "queryParams": [ "str", 5, 5, 5 ],
+            "queryParams": [ "str", null, null, null ],
             "conditionParams": [ "str" ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE regions SET region_id = $3, icon_uri = $4, display_name = $5 WHERE (region_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2)",
             "condition": "region_id = $1 AND icon_uri < 5 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5 ],
+            "queryParams": [ "str", true, null, null, null ],
             "conditionParams": [ "str", true ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE regions SET region_id = $4, icon_uri = $5, display_name = $6 WHERE (region_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2)",
             "condition": "region_id = $1 AND icon_uri < $3 AND display_name IS_NOT $2",
-            "queryParams": [ "str", true, 5, 5, 5, 5 ],
+            "queryParams": [ "str", true, 5, null, null, null ],
             "conditionParams": [ "str", true, 5 ],
             "table": "regions",
             "columnValues": {
-                "[object Object]": 5
+                "region_id": "str",
+                "icon_uri": true,
+                "display_name": 5
             }
         },
         {
             "query": "UPDATE tile_sizes SET size = $1",
             "condition": null,
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "table": "tile_sizes",
             "columnValues": {
-                "[object Object]": "str"
+                "size": "str"
             }
         },
         {
             "query": "UPDATE tile_sizes SET size = $1 WHERE (size = 'str')",
             "condition": "size = 'str'",
-            "queryParams": [ "str" ],
+            "queryParams": [ null ],
             "conditionParams": [],
             "table": "tile_sizes",
             "columnValues": {
-                "[object Object]": "str"
+                "size": "str"
             }
         },
         {
             "query": "UPDATE tile_sizes SET size = $2 WHERE (size = $1)",
             "condition": "size = $1",
-            "queryParams": [ "str", "str" ],
+            "queryParams": [ "str", null ],
             "conditionParams": [ "str" ],
             "table": "tile_sizes",
             "columnValues": {
-                "[object Object]": "str"
+                "size": "str"
             }
         }
     ],
