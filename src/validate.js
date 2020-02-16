@@ -222,9 +222,13 @@ Validate.assertCorrectType = function(value, typeName, messagePrefix) {
  *                       assertion fails.
  */
 Validate.assertIsEnumValue = function(value, enumType, messagePrefix) { 
+    this.assertCorrectType(enumType, "object", "Invalid Enum class");
+    this.assert(this.isDefined(enumType.className)
+            && this.isDefined(enumType.isValid),
+            "Invalid Enum class object '" + enumType + "'");
     this.assert(enumType.isValid(value), handlePrefix(messagePrefix) + "'"
             + valueStr(value) + "' is not a valid enum value of type '"
-            + enumType.name + "'", TypeError);
+            + enumType.className + "'", TypeError);
 }.bind(Validate);
 
 /**
