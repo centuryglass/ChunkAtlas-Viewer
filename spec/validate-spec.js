@@ -8,6 +8,11 @@ describe("Validate", function() {
     const Validate = require("../src/validate.js");
     const EnumBuilder = require("../src/enum-builder.js");
 
+    // Disable logging:
+    const Logger = require("../src/logger.js");
+    beforeAll(function() { Logger.disableLogging(); });
+    afterAll(function() { Logger.enableLogging(); });
+
     /**
      * Tests a predicate function against a set of values, expecting them to
      * either all return true, or all return false.

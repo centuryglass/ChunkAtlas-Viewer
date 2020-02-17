@@ -6,7 +6,6 @@
 
 const fs = require("fs");
 const winston = require("winston");
-const logger = require("../../src/logger.js");
 const { isDefined, assertInstanceOf } = require("../../src/validate.js");
 
 // Relevant environment variables:
@@ -27,11 +26,6 @@ const ERROR_LOG_PATH                = "IMPORTANT_LOG";
 // Test env definition file path (keep this in .gitignore!)
 const TEST_ENV_PATH = "./spec/support/TEST_ENV";
 
-// When testing, add a console logger transport.
-// TODO: find a more elegant place to put this.
-const consoleTransport = new winston.transports.Console({level: "info"});
-logger.add(consoleTransport);
-
 const envMap = {};
 
 /**
@@ -48,7 +42,7 @@ function setEnv(varName, errorMsg) {
         }
     }
     else {
-        logger.info(varName + " = " + envMap[varName]);
+        //logger.info(varName + " = " + envMap[varName]);
         process.env[varName] = envMap[varName];
     }
 }
@@ -80,5 +74,10 @@ module.exports = {
         setEnv(FULL_LOG_PATH);
         setEnv(GENERAL_LOG_PATH);
         setEnv(ERROR_LOG_PATH);
+
+        // When testing, add a console logger transport.
+        const logger = require("../../src/logger.js");
+        logger.enableConsoleLogging();
     }
 };
+

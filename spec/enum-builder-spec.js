@@ -8,6 +8,11 @@ describe("EnumBuilder", function() {
     const EnumBuilder = require("../src/enum-builder.js");
     const FormatError = require("../src/error/format-error.js");
 
+    // Disable logging:
+    const Logger = require("../src/logger.js");
+    beforeAll(function() { Logger.disableLogging(); });
+    afterAll(function() { Logger.enableLogging(); });
+
     // Define valid and invalid parameter values for testing:
     const testClassName = "TestEnum";
     const valid = {
@@ -445,5 +450,4 @@ describe("EnumBuilder", function() {
             }
         });
     });
-
 });

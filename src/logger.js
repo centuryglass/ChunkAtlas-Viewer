@@ -34,6 +34,16 @@ for (let file of logFiles) {
             handleExceptions: true }));
     }
 }
+const consoleTransport = new winston.transports.Console({level: "info"});
+
+class NullTransport extends winston.Transport {
+    constructor(opts) { super(opts); }
+
+    log(info, callback) {
+        // Do nothing, discard input.
+    }
+}
+const nullTransport = new NullTransport();
 
 // Define how log lines will be formatted:
 const lineFormat = format.printf((info) => {
@@ -41,7 +51,7 @@ const lineFormat = format.printf((info) => {
 });
 
 // Initialize logging:
-const logger = winston.createLogger({
+const winstonLogger = winston.createLogger({
     level: 'debug',
     format: format.combine(
         format.timestamp({ format: "MM/DD/YYYY hh:mm:ssa: " }),
@@ -50,4 +60,67 @@ const logger = winston.createLogger({
     transports: fileTransports
 });
 
-module.exports = logger;
+let loggingEnabled = true;
+let consoleLoggingEnabled = false;
+
+const Logger = {
+    enableConsoleLogging: function() {
+        if (! consoleLoggingEnabled) {
+            consoleLoggingEnabled = true;
+            if (loggingEnabled) {
+                winstonLogger.add(consoleTransport);
+            }
+        }
+    },
+
+    enableLogging: function() {
+        if (! loggingEnabled) {
+            loggingEnabled = true;
+        }
+    },
+
+    disableLogging: function() {
+        if (loggingEnabled) {
+            loggingEnabled = false;
+        }
+    }
+};
+
+const loggingMethods = [
+    "log",
+    "error",
+    "warn",
+    "info",
+    "http",
+    "verbose",
+    "debug",
+    "silly",
+];
+
+for (let method of loggingMethods) {
+    Logger[method] = function() {
+        if (loggingEnabled) {
+            winstonLogger[method].apply(winstonLogger, arguments);
+        }
+    };
+}
+
+const otherMethods = [
+    "startTimer",
+    "profile",
+    "query",
+    "on",
+    "end",
+    "add",
+    "remove",
+    "clear"
+];
+
+for (let method of otherMethods) {
+    Logger[method] = function() {
+        winstonLogger[method].apply(winstonLogger, arguments);
+    };
+}
+Object.freeze(Logger);
+
+module.exports = Logger;
