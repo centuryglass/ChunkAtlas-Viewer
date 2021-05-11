@@ -28,12 +28,11 @@ describe("Validate", function() {
     function testPredicate(values, predicate, shouldBeTrue) {
         try  {
         for (let value of values) {
-            const context = "value = '" + value + "'";
             if (shouldBeTrue) {
-                expect(predicate(value)).withContext(context).toBeTrue();
+                expect(predicate(value)).toBe(true);
             }
             else {
-                expect(predicate(value)).withContext(context).toBeFalse();
+                expect(predicate(value)).toBe(false);
             }
         }
         }
@@ -41,15 +40,6 @@ describe("Validate", function() {
             console.dir(values);
             throw err;
         }
-    }
-
-    /**
-     * Tests that a given action throws an error of a particular type.
-     *
-     * @param errorType  The class of error object that should be thrown.
-     */
-    function expectErrClass(action, errorType) {
-        expect(action).toThrowMatching((err) => err instanceof errorType);
     }
 
     // Reusable value sets:
@@ -140,7 +130,7 @@ describe("Validate", function() {
             expect(() => Validate.assert(true)).not.toThrow();
             expect(() => Validate.assert(true, "with message param"))
                     .not.toThrow();
-            expect(() => Validate.assert(true), "msg", TypeError)
+            expect(() => Validate.assert(true, "msg", TypeError))
                     .not.toThrow();
         });
 
@@ -152,24 +142,21 @@ describe("Validate", function() {
         it("should use the provided message parameter if an error is thrown,"
                 + " or a generic message if none is given.", function() {
             const DEFAULT_MESSAGE = "ASSERTION FAILED";
-            expect(() => Validate.assert(false)).toThrowMatching(
-                    (err) => err.message === DEFAULT_MESSAGE);
+            expect(() => Validate.assert(false)).toThrow(DEFAULT_MESSAGE);
             const messages = [ "", DEFAULT_MESSAGE, "test message" ];
             for (let message of messages) {
                 expect(() => Validate.assert(false, message))
-                        .withContext("Expected message: '" + message + "'")
-                        .toThrowMatching((err) => err.message === message);
+                        .toThrow(message);
             }
         });
         it("should use the provided error class if an error is thrown, or "
                 + "the Error class if none is given.", function() {
-            expect(() => Validate.assert(false)).toThrowMatching(
-                    (err) => err instanceof Error);
+            expect(() => Validate.assert(false)).toThrow(Error);
             const errorTypes = [ Error, RangeError, ReferenceError,
                     SyntaxError, TypeError, URIError ];
             for (let errType of errorTypes) {
-                expectErrClass(() => Validate.assert(false, "", errType),
-                        errType);
+                expect(() => Validate.assert(false, "", errType))
+                    .toThrow(errType);
             }
         });
     });
@@ -183,8 +170,8 @@ describe("Validate", function() {
         it("should throw a TypeError if the tested value is not a string.",
                 function() {
             for (let nonStr of values.NONSTRING) {
-                expectErrClass(() => Validate.assertIsString(nonStr),
-                        TypeError);
+                expect(() => Validate.assertIsString(nonStr))
+                        .toThrow(TypeError);
             }
         });
     });
@@ -220,14 +207,14 @@ describe("Validate", function() {
 
         it("should throw a TypeError if the tested value is not an object of "
                 + "the given class type.", function() {
-            expectErrClass(() => Validate.assertInstanceOf(testStr,
-                    TestClass), TypeError);
-            expectErrClass(() => Validate.assertInstanceOf(testObject,
-                    String), TypeError);
-            expectErrClass(() => Validate.assertInstanceOf(null, TestClass),
-                    TypeError);
-            expectErrClass(() => Validate.assertInstanceOf(this, TestClass),
-                    TypeError);
+            expect(() => Validate.assertInstanceOf(testStr, TestClass))
+                    .toThrow(TypeError);
+            expect(() => Validate.assertInstanceOf(testObject, String))
+                    .toThrow(TypeError);
+            expect(() => Validate.assertInstanceOf(null, TestClass))
+                    .toThrow(TypeError);
+            expect(() => Validate.assertInstanceOf(this, TestClass))
+                    .toThrow(TypeError);
         });
     });
 
@@ -257,8 +244,8 @@ describe("Validate", function() {
                 if (valueIdx === typeExamples.length) { valueIdx = 0; }
                 const type = typeExamples[typeIdx][0];
                 const value = typeExamples[valueIdx][1];
-                expectErrClass(() => Validate.assertCorrectType(value, type),
-                        TypeError);
+                expect(() => Validate.assertCorrectType(value, type))
+                        .toThrow(TypeError);
             }
         });
     });
@@ -283,8 +270,8 @@ describe("Validate", function() {
                 + "class.", function() {
             const invalidValues = [ 0, TestEnum.count + 1, "", this ];
             for (let value of invalidValues) {
-                expectErrClass(() => Validate.assertIsEnumValue(value,
-                        TestEnum), TypeError);
+                expect(() => Validate.assertIsEnumValue(value, TestEnum))
+                        .toThrow(TypeError);
             }
         });
     });
@@ -303,26 +290,26 @@ describe("Validate", function() {
                 + "predicate.", function() {
             for (let str of passingStrings) {
                 expect(() => Validate.assertCorrectFormat(str, testPredicate,
-                        testFormat)).withContext(str).not.toThrow();
+                        testFormat)).not.toThrow();
             }
         });
 
         it("should throw a TypeError if the value given is not a string "
                 + "or the predicate is not a function.", function() {
 
-            expectErrClass(() => Validate.assertCorrectFormat("", "",
-                    testFormat), TypeError);
+            expect(() => Validate.assertCorrectFormat("", "", testFormat))
+                    .toThrow(TypeError);
             for (let value of values.NONSTRING) {
-                expectErrClass(() => Validate.assertCorrectFormat(value,
-                        testPredicate, testFormat), TypeError);
+                expect(() => Validate.assertCorrectFormat(value, testPredicate,
+                            testFormat)).toThrow(TypeError);
             }
         });
 
         it("should throw a FormatError if the value given fails the "
                 + "predicate.", function() {
             for (let str of failingStrings) {
-                expectErrClass(() => Validate.assertCorrectFormat(str,
-                        testPredicate, testFormat), FormatError);
+                expect(() => Validate.assertCorrectFormat(str, testPredicate,
+                            testFormat)).toThrow(FormatError);
             }
         });
 

@@ -108,10 +108,8 @@ describe("QueryBuilder", function() {
         getContextStr = () => JSON.stringify(testQuery, null, 1)
             + "\nLast Query: " + lastQuery
             + "\nLast Params: " + paramStr(lastParams);
-        expect(lastQuery).withContext(getContextStr())
-                .toEqual(testQuery.query);
-        expect(paramsMatch(testQuery.queryParams)).withContext(
-                getContextStr()).toBeTrue();
+        expect(lastQuery).toEqual(testQuery.query);
+        expect(paramsMatch(testQuery.queryParams)).toBe(true);
     }
 
     describe("selectQuery", () => {

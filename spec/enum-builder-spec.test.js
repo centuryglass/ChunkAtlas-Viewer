@@ -57,12 +57,10 @@ describe("EnumBuilder", function() {
                 + " or a TypeError if constructed with a non-string name.",
                 function() {
             for (let name of badFormat.ENUM_CLASS_NAME) {
-                expect(() => new EnumBuilder(name)).toThrowMatching((err) =>
-                        err instanceof FormatError);
+                expect(() => new EnumBuilder(name)).toThrow(FormatError);
             }
             for (let name of invalid) {
-                expect(() => new EnumBuilder(name)).toThrowMatching((err) =>
-                        err instanceof TypeError);
+                expect(() => new EnumBuilder(name)).toThrow(TypeError);
             }
         });
     });
@@ -77,7 +75,7 @@ describe("EnumBuilder", function() {
         // Checks that an addProperty call fails with the expected error type
         function expectError(builder, name, type, classType, errType) {
             expect(() => builder.addProperty(name, type, classType))
-                    .toThrowMatching((err) => err instanceof errType);
+                    .toThrow(errType);
         }
 
         it("should run without errors if given valid parameters and called "
@@ -194,7 +192,7 @@ describe("EnumBuilder", function() {
         // type:
         function expectError(builder, name, value, errType) {
             expect(() => builder.addEnumClassProperty(name, value))
-                    .toThrowMatching((err) => err instanceof errType);
+                    .toThrow(errType);
         }
 
         it("should add new properties with valid names without errors.",
@@ -262,8 +260,7 @@ describe("EnumBuilder", function() {
 
         // Expect that an addValue call fails with a certain error type:
         function expectError(builder, value, props, errType) {
-            expect(() => builder.addValue(value, props)).toThrowMatching(
-                    (err) => err instanceof errType);
+            expect(() => builder.addValue(value, props)).toThrow(errType);
         }
 
 

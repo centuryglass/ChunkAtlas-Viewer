@@ -34,10 +34,19 @@ describe("ResultHandler", function() {
     const DBRows = require("../support/data/db-rows.js");
 
 
-    // Checks that an error has an appropriate error class and error type.
-    function checkError(error, errorClass, errorType) {
-        return (error instanceof errorClass)
-                && (error.errorType === errorType);
+    // Checks that an action throws with an appropriate error class and error
+    // type.
+    function checkError(action, errorClass, errorType) {
+        let thrown = false;
+        try {
+            action();
+        }
+        catch(err) {
+            expect(err).toBeInstanceOf(errorClass);
+            expect(err.errorType).toEqual(errorType);
+            thrown = true;
+        }
+        expect(thrown).toBe(true);
     }
 
     // Performs an action on the results of SELECT queries for each table.
@@ -107,24 +116,21 @@ describe("ResultHandler", function() {
     describe("returnedData", function() {
         it("should return true if a result returned rows.", function() {
             foreachResult(ConditionEnum.EXCLUDE_NONE, (result) => {
-                expect(ResultHandler.returnedData(result)).withContext(result)
-                        .toBeTrue();
+                expect(ResultHandler.returnedData(result)).toBe(true);
             });
         });
 
         it("Should return false if a result returned no rows.", function() {
             foreachResult(ConditionEnum.EXCLUDE_ALL, (result) => {
-                expect(ResultHandler.returnedData(result)).withContext(result)
-                        .toBeFalse();
+                expect(ResultHandler.returnedData(result)).toBe(false);
             });
         });
 
         it("Should throw an INVALID_RESULT ResultError if given an invalid "
                 + "result object.", function() {
             for (let result of invalidResults) {
-                expect(() => ResultHandler.returnedData(result))
-                .toThrowMatching((err) => checkError(err, ResultError,
-                            ResultErrorEnum.INVALID_RESULT));
+                checkError(() => ResultHandler.returnedData(result),
+                        ResultError, ResultErrorEnum.INVALID_RESULT);
             }
         });
     });
@@ -150,9 +156,8 @@ describe("ResultHandler", function() {
         it("should reject with an INVALID_RESULT ResultError if the result "
                 + "parameter was invalid.", function() {
             for (let result of invalidResults) {
-                expect(() => ResultHandler.getResultRows(result))
-                .toThrowMatching((err) => checkError(err, ResultError,
-                            ResultErrorEnum.INVALID_RESULT));
+                checkError(() => ResultHandler.getResultRows(result),
+                        ResultError, ResultErrorEnum.INVALID_RESULT);
             }
         });
     });
@@ -177,7 +182,7 @@ describe("ResultHandler", function() {
                         colValueMap[columnValue] = true;
                     }
                     for (let key of Object.keys(colValueMap)) {
-                        expect(colValueMap[key]).toBeTrue();
+                        expect(colValueMap[key]).toBe(true);
                     }
                 }
             });
@@ -191,7 +196,7 @@ describe("ResultHandler", function() {
                     expect(() => columns = ResultHandler.getColumnValues(
                             result, table.tableEnum, column))
                     .not.toThrow();
-                    expect(Array.isArray(columns)).toBeTrue();
+                    expect(Array.isArray(columns)).toBe(true);
                     expect(columns.length).toBe(0);
                 }
             });
@@ -200,9 +205,8 @@ describe("ResultHandler", function() {
         it("should reject with an INVALID_RESULT ResultError if the result "
                 + "parameter was invalid.", function() {
             for (let result of invalidResults) {
-                expect(() => ResultHandler.getColumnValues(result, 1))
-                .toThrowMatching((err) => checkError(err, ResultError,
-                            ResultErrorEnum.INVALID_RESULT));
+                checkError(() => ResultHandler.getColumnValues(result, 1),
+                        ResultError, ResultErrorEnum.INVALID_RESULT);
             }
         });
     });
@@ -215,8 +219,7 @@ describe("ResultHandler", function() {
                     expect(() => cell = ResultHandler.getCell(result, column))
                     .not.toThrow();
 
-                    expect(cell).withContext(result)
-                    .toEqual(result.rows[0][column.columnName]);
+                    expect(cell).toEqual(result.rows[0][column.columnName]);
                 }
             });
         });
@@ -225,9 +228,8 @@ describe("ResultHandler", function() {
                 + " were found.", function() {
             foreachResult(ConditionEnum.EXCLUDE_NONE, (result, table) => {
                 for (let column of table.tableEnum) {
-                    expect(() => ResultHandler.getCell(result, column))
-                    .toThrowMatching((err) => checkError(err, ResultError,
-                                ResultErrorEnum.EXTRA_RESULTS));
+                    checkError(() => ResultHandler.getCell(result, column),
+                            ResultError, ResultErrorEnum.EXTRA_RESULTS);
                 }
             });
         });
@@ -236,9 +238,8 @@ describe("ResultHandler", function() {
                 + "found.", function() {
             foreachResult(ConditionEnum.EXCLUDE_ALL, (result, table) => {
                 for (let column of table.tableEnum) {
-                    expect(() => ResultHandler.getCell(result, column))
-                    .toThrowMatching((err) => checkError(err,
-                            ResultError, ResultErrorEnum.NO_RESULTS));
+                    checkError(() => ResultHandler.getCell(result, column),
+                            ResultError, ResultErrorEnum.NO_RESULTS);
                 }
             });
         });
@@ -246,9 +247,8 @@ describe("ResultHandler", function() {
         it("should reject with an INVALID_RESULT ResultError if the result"
                 + " parameter was invalid.", function() {
             for (let result of invalidResults) {
-                expect(() => ResultHandler.getColumnValues(result, 1))
-                .toThrowMatching((err) => checkError(err, ResultError,
-                            ResultErrorEnum.INVALID_RESULT));
+                checkError(() => ResultHandler.getColumnValues(result, 1),
+                        ResultError, ResultErrorEnum.INVALID_RESULT);
             }
         });
     });
