@@ -46,4 +46,4 @@ GEN_PUBLIC_KEY_PATH="./webTestKeys/genPublic.pub" \
 FULL_LOG="./FullServerLog" \
 GENERAL_LOG="./ServerLog" \
 IMPORTANT_LOG="./ImportantServerLog" \
-node src/server.js
+node inspect src/server.js

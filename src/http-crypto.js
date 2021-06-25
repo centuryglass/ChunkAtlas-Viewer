@@ -50,6 +50,8 @@ module.exports = {
             // request has no body, and uses HTTP method GET, HEAD, or OPTIONS.
             if (! isDefined(req.body) && (req.method === "GET" ||
                     req.method === "HEAD" || req.method === "OPTIONS")) {
+                logger.debug("Got " + req.method + " call with no body, no"
+                        + " encryption/signature required.");
                 next();
                 return;
             }

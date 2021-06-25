@@ -23,11 +23,7 @@ const validate = require("./validate.js");
 const httpCrypto = require("./http-crypto.js");
 // Logging:
 const logger = require("./logger.js");
-const errorhandler = require('errorhandler')
-
-// REST API resources:
-const PrimaryResource = require("./rest/resources/primary-resource.js");
-const RegionResource = require("./rest/resources/region_resources.js");
+const errorhandler = require('errorhandler');
 
 // Log uncaught exceptions:
 process.on("uncaughtException", (exception) => {
@@ -145,12 +141,6 @@ app.use(errorhandler({ dumpExceptions: true, showStack: true }));
 app.use(updatePaths, updateMiddleware);
 app.use(express.static(Paths.Data.PUBLIC));
 
-// TESTING: initialize new REST API resource handling.
-const resources = [
-    new PrimaryResource(app),
-    new RegionResource(app)
-];
-
 // Pending image files:
 var pendingImages = {};
 
@@ -191,6 +181,8 @@ app.post(Paths.In.UPDATE, (req, res) => {
                         + maxLength + " characters.");
                 stringValue = stringValue.substring(0, (maxLength - 3))
                         + "...";
+                logger.warn("Trimmed value: '" + jsonKey + "' = '"
+                        + stringValue);
             }
             keyInsertValues.push(stringValue);
         }
@@ -205,6 +197,7 @@ app.post(Paths.In.UPDATE, (req, res) => {
 
     // Build updated tile insertion query:
     const tileList = updateMessage[JSONKeys.In.TILES]
+    logger.info("Processing " + Object.values(tileList).length + " map tile updates");
     let tileInsert = SQL.TILE_INSERT;
     let firstValueInserted = false;
     const tileInsertValues = [];
@@ -243,6 +236,7 @@ app.post(Paths.In.UPDATE, (req, res) => {
                         return;
                     }
                     const coordinates = match[1] + ", " + match[2];
+                    logger.info("Got tile coordinates " + coordinates + " for region " + region);
                     // Add value insert row for tile:
                     if (firstValueInserted) {
                         tileInsert += ",\n";
@@ -263,13 +257,15 @@ app.post(Paths.In.UPDATE, (req, res) => {
     });
 
     // Add all map keys to the database, saving region and map types:
-    let updateQuery = dbWriter.query(keyInsert, keyInsertValues).then(() => {
+    let updateQuery = dbWriter._pool.query(keyInsert, keyInsertValues).then(() => {
         // For each region and type, add all map tiles to the database:
-        return dbWriter.query(tileInsert, tileInsertValues);
+        logger.info("Tile " + tileInsertValues[0] + " region " + tileInsertValues[1] + " updated in DB");
+        return dbWriter._pool.query(tileInsert, tileInsertValues);
     }).then(() => { // Get the list of images that need to be loaded:
-        return dbReader.query(SQL.FIND_MISSING_IMG, (err, pendingRes) => {
+        return dbReader._pool.query(SQL.FIND_MISSING_IMG, (err, pendingRes) => {
             if (! validate.isDefined(pendingRes)
                     || ! validate.isDefined(pendingRes.rows)) {
+                logger.error("Failed to get missing tiles from the DB!");
                 res.end();
                 return;
             }
@@ -278,15 +274,20 @@ app.post(Paths.In.UPDATE, (req, res) => {
                 urls.push(row.image_url);
                 pendingImages[row.image_url] = true;
             });
-            httpCrypto.signResult(res, JSON.stringify(urls));
-            res.json(urls);
+            logger.info("Responding with " + urls.length + " requested URLs");
+            const signedResponse = httpCrypto.signResponse(res, JSON.stringify(urls));
+            signedResponse.send(urls);
         });
-    }).catch(e => console.error(e.stack));
+    }).catch(e => {
+        console.error("Unexpected error when querying the DB for missing tiles: " + e);
+        console.error(e.stack)
+    });
 });
 
 // Handle image uploads:
 app.post(Paths.In.IMAGE_UPLOAD, (req, res) => {
     const imagePath = req.headers.path;
+    logger.info("Image upload received for path " + req.headers.path);
     if (imagePath.includes("..") || imagePath.includes("~")
             || ! validate.isDefined(pendingImages[imagePath])) {
         logger.warn("Illegal image upload path \"" + imagePath + "\" from "
@@ -305,7 +306,7 @@ app.post(Paths.In.IMAGE_UPLOAD, (req, res) => {
     const keyCount = Object.keys(pendingImages).length;
     if (keyCount == 0) {
         logger.info("All images loaded, committing changes:");
-        dbWriter.query(SQL.APPLY_STAGING, (err, dbRes) => {
+        dbWriter._pool.query(SQL.APPLY_STAGING, (err, dbRes) => {
             logger.info("update committed to database.");
         });
     }
@@ -337,7 +338,7 @@ function adjustUploadedImagePaths(dbResult) {
 app.get(Paths.In.KEY_REQUEST, (req, res) => {
     logger.info("Got key request from [" + req.ips.toString()
             + "], querying DB for keys.");
-    dbReader.query(SQL.GET_KEYS, (err, dbRes) => {
+    dbReader._pool.query(SQL.GET_KEYS, (err, dbRes) => {
         if (! validate.isDefined(dbRes) || ! validate.isDefined(dbRes.rows)) {
             logger.info("No keys found, ending result.");
             res.end();
@@ -353,7 +354,7 @@ app.get(Paths.In.KEY_REQUEST, (req, res) => {
 app.get(Paths.In.TILE_REQUEST, (req, res) => {
     logger.info("Got tile request from [" + req.ips.toString()
             + "], querying DB for tiles.");
-    dbReader.query(SQL.GET_TILES, (err, dbRes) => {
+    dbReader._pool.query(SQL.GET_TILES, (err, dbRes) => {
         if (! validate.isDefined(dbRes) || ! validate.isDefined(dbRes.rows)) {
             logger.info("No tiles found, ending result.");
             res.end();
@@ -364,5 +365,12 @@ app.get(Paths.In.TILE_REQUEST, (req, res) => {
         res.json(dbRes.rows);
     });
 });
+
+// Log any unhandled HTTP requests:
+app.all("*", (req, res) => {
+    logger.info("Got unexpected '" + req.method + "' request from ["
+            + req.ips.toString() + "] at '" + req.originalUrl + "'.");
+});
+
 console.log("starting server..");
 app.listen(port, () => logger.info('listening on port ' + port));
